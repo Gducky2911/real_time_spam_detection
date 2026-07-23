@@ -1,0 +1,3374 @@
+
+import java.net.*;
+import java.util.Arrays;
+
+public class timsoconthieu {
+    public static void main(String[] args) throws Exception {
+
+        DatagramSocket ketNoi = new DatagramSocket();
+
+        InetAddress diaChiServer =
+                InetAddress.getByName("36.50.135.242");
+
+        int congServer = 2207;
+
+        String maGui = ";B21DCCN900;cVxwn5Sv";
+
+        byte[] duLieuGui = maGui.getBytes();
+
+        DatagramPacket goiGui =
+                new DatagramPacket(
+                        duLieuGui,
+                        duLieuGui.length,
+                        diaChiServer,
+                        congServer
+                );
+
+        ketNoi.send(goiGui);
+
+        byte[] duLieuNhan = new byte[1024];
+
+        DatagramPacket goiNhan =
+                new DatagramPacket(
+                        duLieuNhan,
+                        duLieuNhan.length
+                );
+
+        ketNoi.receive(goiNhan);
+
+        String chuoiNhan = new String(
+                goiNhan.getData(),
+                0,
+                goiNhan.getLength()
+        ).trim();
+
+        System.out.println("Chuoi nhan: " + chuoiNhan);
+
+        String[] cacPhan = chuoiNhan.split(";");
+
+        String maYeuCau = cacPhan[0];
+
+        int n = Integer.parseInt(cacPhan[1].trim());
+
+        String[] danhSachSo = cacPhan[2].split(",");
+
+        boolean[] daXuatHien = new boolean[n + 1];
+
+        for (String so : danhSachSo) {
+
+            int giaTri = Integer.parseInt(so.trim());
+
+            if (giaTri >= 1 && giaTri <= n) {
+                daXuatHien[giaTri] = true;
+            }
+        }
+
+        String soConThieu = "";
+
+        for (int i = 1; i <= n; i++) {
+
+            if (!daXuatHien[i]) {
+
+                if (!soConThieu.isEmpty()) {
+                    soConThieu += ",";
+                }
+
+                soConThieu += i;
+            }
+        }
+
+        String ketQua = maYeuCau + ";" + soConThieu;
+
+        System.out.println("Ket qua: " + ketQua);
+
+        byte[] duLieuKetQua = ketQua.getBytes();
+
+        DatagramPacket goiKetQua =
+                new DatagramPacket(
+                        duLieuKetQua,
+                        duLieuKetQua.length,
+                        diaChiServer,
+                        congServer
+                );
+
+        ketNoi.send(goiKetQua);
+
+        ketNoi.close();
+    }
+}
+
+
+public class kytuxuathiennhieunhat {
+    public static void main(String[] args) throws Exception {
+
+        DatagramSocket socket = new DatagramSocket();
+
+        InetAddress address =
+                InetAddress.getByName("36.50.135.242");
+
+        int port = 2208;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String code = ";B21DCCN900;E75TpJe9";
+        byte[] sendData = code.getBytes();
+
+        DatagramPacket sendPacket = new DatagramPacket(
+                sendData,
+                sendData.length,
+                address,
+                port
+        );
+
+        socket.send(sendPacket);
+
+        // b. Nhận dữ liệu từ server
+        byte[] buffer = new byte[1024];
+
+        DatagramPacket receivePacket =
+                new DatagramPacket(buffer, buffer.length);
+
+        socket.receive(receivePacket);
+
+        String received = new String(
+                receivePacket.getData(),
+                0,
+                receivePacket.getLength()
+        ).trim();
+
+        System.out.println("Server gửi: " + received);
+
+        // Tách requestId và data
+        String[] parts = received.split(";", 2);
+
+        String requestId = parts[0];
+        String data = parts[1].trim();
+
+        // c. Đếm số lần xuất hiện của từng ký tự
+        int[] count = new int[256];
+
+        for (int i = 0; i < data.length(); i++) {
+            char c = data.charAt(i);
+            count[c]++;
+        }
+
+        // Tìm ký tự xuất hiện nhiều nhất
+        char maxCharacter = data.charAt(0);
+        int maxCount = count[maxCharacter];
+
+        for (int i = 1; i < data.length(); i++) {
+            char c = data.charAt(i);
+
+            if (count[c] > maxCount) {
+                maxCount = count[c];
+                maxCharacter = c;
+            }
+        }
+
+        // Tìm các vị trí xuất hiện của ký tự đó
+        String positions = "";
+
+        for (int i = 0; i < data.length(); i++) {
+            if (data.charAt(i) == maxCharacter) {
+                positions += (i + 1) + ",";
+            }
+        }
+
+        // Tạo kết quả
+        String result =
+                requestId + ";" + maxCharacter + ":" + positions;
+
+        System.out.println("Gửi lại: " + result);
+
+        // Gửi kết quả lên server
+        byte[] resultData = result.getBytes();
+
+        DatagramPacket resultPacket = new DatagramPacket(
+                resultData,
+                resultData.length,
+                address,
+                port
+        );
+
+        socket.send(resultPacket);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+public class timgiatriminmax {
+    public static void main(String[] args) throws Exception {
+
+        DatagramSocket socket = new DatagramSocket();
+
+        InetAddress address =
+                InetAddress.getByName("36.50.135.242");
+
+        int port = 2207;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String code = ";B21DCCN900;dJLVmWYN";
+
+        byte[] sendData = code.getBytes();
+
+        DatagramPacket sendPacket =
+                new DatagramPacket(
+                        sendData,
+                        sendData.length,
+                        address,
+                        port
+                );
+
+        socket.send(sendPacket);
+
+        // b. Nhận dữ liệu từ server
+        byte[] buffer = new byte[1024];
+
+        DatagramPacket receivePacket =
+                new DatagramPacket(buffer, buffer.length);
+
+        socket.receive(receivePacket);
+
+        String s = new String(
+                receivePacket.getData(),
+                0,
+                receivePacket.getLength()
+        ).trim();
+
+        System.out.println("Server gui: " + s);
+
+        // Tách requestId và danh sách số
+        String[] parts = s.split(";", 2);
+
+        String requestId = parts[0];
+
+        String[] values = parts[1].split(",");
+
+        // Chuyển phần tử đầu tiên thành số
+        int firstNumber = Integer.parseInt(values[0].trim());
+
+        int max = firstNumber;
+        int min = firstNumber;
+
+        // c. Tìm giá trị lớn nhất và nhỏ nhất
+        for (int i = 1; i < values.length; i++) {
+
+            int number =
+                    Integer.parseInt(values[i].trim());
+
+            if (number > max) {
+                max = number;
+            }
+
+            if (number < min) {
+                min = number;
+            }
+        }
+
+        // Tạo kết quả theo định dạng requestId;max,min
+        String result =
+                requestId + ";" + max + "," + min;
+
+        System.out.println("Gui lai: " + result);
+
+        // Gửi kết quả lên server
+        byte[] resultData = result.getBytes();
+
+        DatagramPacket resultPacket =
+                new DatagramPacket(
+                        resultData,
+                        resultData.length,
+                        address,
+                        port
+                );
+
+        socket.send(resultPacket);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+
+import java.net.*;
+public class chuanhoaxaukytu {
+    public static void main(String[] args) throws Exception {
+
+        DatagramSocket socket = new DatagramSocket();
+
+        InetAddress address =
+                InetAddress.getByName("36.50.135.242");
+
+        int port = 2208;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String code = ";B21DCCN900;6CX8aygU";
+
+        byte[] sendData = code.getBytes();
+
+        DatagramPacket sendPacket =
+                new DatagramPacket(
+                        sendData,
+                        sendData.length,
+                        address,
+                        port
+                );
+
+        socket.send(sendPacket);
+
+        // b. Nhận dữ liệu từ server
+        byte[] buffer = new byte[1024];
+
+        DatagramPacket receivePacket =
+                new DatagramPacket(buffer, buffer.length);
+
+        socket.receive(receivePacket);
+
+        String s = new String(
+                receivePacket.getData(),
+                0,
+                receivePacket.getLength()
+        ).trim();
+
+        System.out.println("Server gửi: " + s);
+
+        // Tách requestId và data
+        String[] parts = s.split(";", 2);
+
+        String requestId = parts[0];
+        String data = parts[1].trim();
+
+        // c. Chuẩn hóa chuỗi
+        String[] words = data.split("\\s+");
+
+        String normalized = "";
+
+        for (int i = 0; i < words.length; i++) {
+
+            String word = words[i].toLowerCase();
+
+            String firstCharacter =
+                    word.substring(0, 1).toUpperCase();
+
+            String remainingCharacters =
+                    word.substring(1);
+
+            String normalizedWord =
+                    firstCharacter + remainingCharacters;
+
+            if (!normalized.isEmpty()) {
+                normalized += " ";
+            }
+
+            normalized += normalizedWord;
+        }
+
+        // Tạo kết quả theo định dạng requestId;data
+        String result =
+                requestId + ";" + normalized;
+
+        System.out.println("Gửi lại: " + result);
+
+        // Gửi kết quả lên server
+        byte[] resultData = result.getBytes();
+
+        DatagramPacket resultPacket =
+                new DatagramPacket(
+                        resultData,
+                        resultData.length,
+                        address,
+                        port
+                );
+
+        socket.send(resultPacket);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+
+import java.net.*;
+import java.util.Arrays;
+public class timsolont2vanhot2 {
+    public static void main(String[] args) throws Exception {
+
+        DatagramSocket socket = new DatagramSocket();
+
+        InetAddress address =
+                InetAddress.getByName("36.50.135.242");
+
+        int port = 2207;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String code = ";B21DCCN900;oQifsr90";
+
+        byte[] sendData = code.getBytes();
+
+        DatagramPacket sendPacket =
+                new DatagramPacket(
+                        sendData,
+                        sendData.length,
+                        address,
+                        port
+                );
+
+        socket.send(sendPacket);
+
+        // b. Nhận dữ liệu từ server
+        byte[] buffer = new byte[1024];
+
+        DatagramPacket receivePacket =
+                new DatagramPacket(buffer, buffer.length);
+
+        socket.receive(receivePacket);
+
+        String s = new String(
+                receivePacket.getData(),
+                0,
+                receivePacket.getLength()
+        ).trim();
+
+        System.out.println("Server gửi: " + s);
+
+        // Tách requestId và danh sách số
+        String[] parts = s.split(";", 2);
+
+        String requestId = parts[0];
+
+        String[] values = parts[1].split(",");
+
+        // Chuyển mảng chuỗi thành mảng số nguyên
+        int[] numbers = new int[values.length];
+
+        for (int i = 0; i < values.length; i++) {
+            numbers[i] =
+                    Integer.parseInt(values[i].trim());
+        }
+
+        // Sắp xếp mảng tăng dần
+        Arrays.sort(numbers);
+
+        // Tìm số nhỏ thứ hai
+        int secondMin = numbers[0];
+
+        for (int i = 1; i < numbers.length; i++) {
+            if (numbers[i] != numbers[0]) {
+                secondMin = numbers[i];
+                break;
+            }
+        }
+
+        // Tìm số lớn thứ hai
+        int secondMax = numbers[numbers.length - 1];
+
+        for (int i = numbers.length - 2; i >= 0; i--) {
+            if (numbers[i] != numbers[numbers.length - 1]) {
+                secondMax = numbers[i];
+                break;
+            }
+        }
+
+        // c. Tạo kết quả theo định dạng:
+        // requestId;secondMax,secondMin
+        String result =
+                requestId + ";" + secondMax + "," + secondMin;
+
+        System.out.println("Gửi lại: " + result);
+
+        // Gửi kết quả lên server
+        byte[] resultData = result.getBytes();
+
+        DatagramPacket resultPacket =
+                new DatagramPacket(
+                        resultData,
+                        resultData.length,
+                        address,
+                        port
+                );
+
+        socket.send(resultPacket);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+
+import java.net.*;
+public class demsolanxuathien {
+    public static void main(String[] args) throws Exception {
+
+        DatagramSocket socket = new DatagramSocket();
+
+        InetAddress address =
+                InetAddress.getByName("36.50.135.242");
+
+        int port = 2208;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String code = ";B21DCCN900;vSgxl3HQ";
+
+        byte[] sendData = code.getBytes();
+
+        DatagramPacket sendPacket =
+                new DatagramPacket(
+                        sendData,
+                        sendData.length,
+                        address,
+                        port
+                );
+
+        socket.send(sendPacket);
+
+        // b. Nhận dữ liệu từ server
+        byte[] buffer = new byte[1024];
+
+        DatagramPacket receivePacket =
+                new DatagramPacket(buffer, buffer.length);
+
+        socket.receive(receivePacket);
+
+        String received = new String(
+                receivePacket.getData(),
+                0,
+                receivePacket.getLength()
+        ).trim();
+
+        System.out.println("Server gửi: " + received);
+
+        // Tách requestId và data
+        String[] parts = received.split(";", 2);
+
+        String requestId = parts[0];
+        String data = parts[1].trim();
+
+        // c. Đếm số lần xuất hiện của từng ký tự
+        int[] count = new int[256];
+
+        for (int i = 0; i < data.length(); i++) {
+            char character = data.charAt(i);
+            count[character]++;
+        }
+
+        // Đánh dấu ký tự nào đã được thêm vào kết quả
+        boolean[] appeared = new boolean[256];
+
+        String processedData = "";
+
+        for (int i = 0; i < data.length(); i++) {
+
+            char character = data.charAt(i);
+
+            if (!appeared[character]) {
+
+                processedData += count[character];
+                processedData += character;
+
+                appeared[character] = true;
+            }
+        }
+
+        // Tạo chuỗi gửi lại
+        String result =
+                requestId + ";" + processedData;
+
+        System.out.println("Gửi lại: " + result);
+
+        byte[] resultData = result.getBytes();
+
+        DatagramPacket resultPacket =
+                new DatagramPacket(
+                        resultData,
+                        resultData.length,
+                        address,
+                        port
+                );
+
+        socket.send(resultPacket);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+
+
+public class lockytuUDP {
+    public static void main(String[] args) throws Exception {
+
+        DatagramSocket socket = new DatagramSocket();
+
+        InetAddress address =
+                InetAddress.getByName("36.50.135.242");
+
+        int port = 2208;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String code = ";B21DCCN900;GfeNSBMT";
+
+        byte[] sendData = code.getBytes();
+
+        DatagramPacket sendPacket =
+                new DatagramPacket(
+                        sendData,
+                        sendData.length,
+                        address,
+                        port
+                );
+
+        socket.send(sendPacket);
+
+        // b. Nhận dữ liệu từ server
+        byte[] buffer = new byte[1024];
+
+        DatagramPacket receivePacket =
+                new DatagramPacket(buffer, buffer.length);
+
+        socket.receive(receivePacket);
+
+        String received = new String(
+                receivePacket.getData(),
+                0,
+                receivePacket.getLength()
+        ).trim();
+
+        System.out.println("Server gửi: " + received);
+
+        // Tách requestId và chuỗi cần xử lý
+        String[] parts = received.split(";", 2);
+
+        String requestId = parts[0];
+        String strInput = parts[1];
+
+        // c. Loại bỏ ký tự đặc biệt, số và ký tự trùng
+        boolean[] appeared = new boolean[256];
+
+        String strOutput = "";
+
+        for (int i = 0; i < strInput.length(); i++) {
+
+            char character = strInput.charAt(i);
+
+            if (Character.isLetter(character)
+                    && !appeared[character]) {
+
+                strOutput += character;
+                appeared[character] = true;
+            }
+        }
+
+        // Tạo kết quả gửi lại server
+        String result =
+                requestId + ";" + strOutput;
+
+        System.out.println("Gửi lại: " + result);
+
+        byte[] resultData = result.getBytes();
+
+        DatagramPacket resultPacket =
+                new DatagramPacket(
+                        resultData,
+                        resultData.length,
+                        address,
+                        port
+                );
+
+        socket.send(resultPacket);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+
+public class mahoaceasar {
+    public static void main(String[] args) throws Exception {
+
+        // Tạo socket UDP
+        DatagramSocket socket = new DatagramSocket();
+
+        // Địa chỉ và cổng server
+        InetAddress address =
+                InetAddress.getByName("36.50.135.242");
+
+        int port = 2207;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String code = ";B21DCCN900;J5SE2YXc";
+
+        byte[] sendData = code.getBytes();
+
+        DatagramPacket sendPacket =
+                new DatagramPacket(
+                        sendData,
+                        sendData.length,
+                        address,
+                        port
+                );
+
+        socket.send(sendPacket);
+
+        // b. Nhận dữ liệu từ server
+        byte[] buffer = new byte[1024];
+
+        DatagramPacket receivePacket =
+                new DatagramPacket(buffer, buffer.length);
+
+        socket.receive(receivePacket);
+
+        String received = new String(
+                receivePacket.getData(),
+                0,
+                receivePacket.getLength()
+        ).trim();
+
+        System.out.println("Server gửi: " + received);
+
+        // Dữ liệu có dạng: requestId;strEncode;s
+        String[] parts = received.split(";", 3);
+
+        String requestId = parts[0];
+        String strEncode = parts[1];
+        int s = Integer.parseInt(parts[2].trim());
+
+        // Đưa độ dịch về khoảng từ 0 đến 25
+        s = ((s % 26) + 26) % 26;
+
+        // c. Giải mã chuỗi Caesar
+        String strDecode = "";
+
+        for (int i = 0; i < strEncode.length(); i++) {
+
+            char character = strEncode.charAt(i);
+
+            // Nếu là chữ hoa
+            if (character >= 'A' && character <= 'Z') {
+
+                char decodedCharacter =
+                        (char) ((character - 'A' - s + 26) % 26 + 'A');
+
+                strDecode += decodedCharacter;
+            }
+
+            // Nếu là chữ thường
+            else if (character >= 'a' && character <= 'z') {
+
+                char decodedCharacter =
+                        (char) ((character - 'a' - s + 26) % 26 + 'a');
+
+                strDecode += decodedCharacter;
+            }
+
+            // Nếu không phải chữ cái thì giữ nguyên
+            else {
+                strDecode += character;
+            }
+        }
+
+        // Tạo kết quả theo định dạng requestId;strDecode
+        String result =
+                requestId + ";" + strDecode;
+
+        System.out.println("Chuỗi giải mã: " + strDecode);
+        System.out.println("Gửi lại: " + result);
+
+        // Gửi kết quả lên server
+        byte[] resultData = result.getBytes();
+
+        DatagramPacket resultPacket =
+                new DatagramPacket(
+                        resultData,
+                        resultData.length,
+                        address,
+                        port
+                );
+
+        socket.send(resultPacket);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+import java.net.*;
+
+public class hieu2tapkytu {
+    public static void main(String[] args) throws Exception {
+
+        // Tạo socket UDP
+        DatagramSocket socket = new DatagramSocket();
+
+        // Địa chỉ và cổng server
+        InetAddress address =
+                InetAddress.getByName("36.50.135.242");
+
+        int port = 2208;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String code = ";B21DCCN900;E75TpJe9";
+
+        byte[] sendData = code.getBytes();
+
+        DatagramPacket sendPacket =
+                new DatagramPacket(
+                        sendData,
+                        sendData.length,
+                        address,
+                        port
+                );
+
+        socket.send(sendPacket);
+
+        // b. Nhận dữ liệu từ server
+        byte[] buffer = new byte[1024];
+
+        DatagramPacket receivePacket =
+                new DatagramPacket(buffer, buffer.length);
+
+        socket.receive(receivePacket);
+
+        String received = new String(
+                receivePacket.getData(),
+                0,
+                receivePacket.getLength()
+        ).trim();
+
+        System.out.println("Server gửi: " + received);
+
+        // Dữ liệu có dạng: requestId;str1;str2
+        String[] parts = received.split(";", 3);
+
+        String requestId = parts[0];
+        String str1 = parts[1];
+        String str2 = parts[2];
+
+        // c. Loại bỏ ký tự đặc biệt và ký tự trùng
+        // Đồng thời bỏ các ký tự trong str1 xuất hiện trong str2
+        boolean[] appeared = new boolean[256];
+
+        String strOutput = "";
+
+        for (int i = 0; i < str1.length(); i++) {
+
+            char character = str1.charAt(i);
+
+            // Chỉ xử lý chữ cái
+            if (Character.isLetter(character)) {
+
+                // Kiểm tra ký tự có xuất hiện trong str2 không
+                boolean existsInStr2 = false;
+
+                for (int j = 0; j < str2.length(); j++) {
+
+                    if (character == str2.charAt(j)) {
+                        existsInStr2 = true;
+                        break;
+                    }
+                }
+
+                // Nếu không có trong str2 và chưa xuất hiện
+                // thì thêm vào kết quả
+                if (!existsInStr2 && !appeared[character]) {
+
+                    strOutput += character;
+                    appeared[character] = true;
+                }
+            }
+        }
+
+        // Tạo kết quả gửi lại server
+        String result =
+                requestId + ";" + strOutput;
+
+        System.out.println("Gửi lại: " + result);
+
+        byte[] resultData = result.getBytes();
+
+        DatagramPacket resultPacket =
+                new DatagramPacket(
+                        resultData,
+                        resultData.length,
+                        address,
+                        port
+                );
+
+        socket.send(resultPacket);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+import java.net.*;
+
+public class tongcacchuso {
+    public static void main(String[] args) throws Exception {
+
+        // Tạo socket UDP
+        DatagramSocket socket = new DatagramSocket();
+
+        // Địa chỉ và cổng server
+        InetAddress address =
+                InetAddress.getByName("36.50.135.242");
+
+        int port = 2207;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String code = ";B21DCCN900;0Iend7Pp";
+
+        byte[] sendData = code.getBytes();
+
+        DatagramPacket sendPacket =
+                new DatagramPacket(
+                        sendData,
+                        sendData.length,
+                        address,
+                        port
+                );
+
+        socket.send(sendPacket);
+
+        // b. Nhận dữ liệu từ server
+        byte[] buffer = new byte[1024];
+
+        DatagramPacket receivePacket =
+                new DatagramPacket(buffer, buffer.length);
+
+        socket.receive(receivePacket);
+
+        String received = new String(
+                receivePacket.getData(),
+                0,
+                receivePacket.getLength()
+        ).trim();
+
+        System.out.println("Server gửi: " + received);
+
+        // Dữ liệu có dạng: requestId;num
+        String[] parts = received.split(";", 2);
+
+        String requestId = parts[0];
+        String num = parts[1];
+
+        // c. Tính tổng các chữ số
+        int sumDigits = 0;
+
+        for (int i = 0; i < num.length(); i++) {
+
+            char character = num.charAt(i);
+
+            sumDigits += character - '0';
+        }
+
+        // Tạo chuỗi gửi lại server
+        String result =
+                requestId + ";" + sumDigits;
+
+        System.out.println("Gửi lại: " + result);
+
+        byte[] resultData = result.getBytes();
+
+        DatagramPacket resultPacket =
+                new DatagramPacket(
+                        resultData,
+                        resultData.length,
+                        address,
+                        port
+                );
+
+        socket.send(resultPacket);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+import java.net.*;
+
+public class lietkesonguyento {
+
+    // Hàm kiểm tra một số có phải số nguyên tố hay không
+    public static boolean laSoNguyenTo(int so) {
+
+        if (so < 2) {
+            return false;
+        }
+
+        for (int i = 2; i * i <= so; i++) {
+
+            if (so % i == 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        // Tạo socket UDP
+        DatagramSocket socket = new DatagramSocket();
+
+        // Địa chỉ và cổng server
+        InetAddress diaChi =
+                InetAddress.getByName("36.50.135.242");
+
+        int cong = 2207;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String maGui = ";B21DCCN900;78CCQ6xD";
+
+        byte[] duLieuGui = maGui.getBytes();
+
+        DatagramPacket goiGui =
+                new DatagramPacket(
+                        duLieuGui,
+                        duLieuGui.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiGui);
+
+        // b. Nhận dữ liệu từ server
+        byte[] boDem = new byte[1024];
+
+        DatagramPacket goiNhan =
+                new DatagramPacket(boDem, boDem.length);
+
+        socket.receive(goiNhan);
+
+        String duLieuNhan = new String(
+                goiNhan.getData(),
+                0,
+                goiNhan.getLength()
+        ).trim();
+
+        System.out.println("Server gửi: " + duLieuNhan);
+
+        // Dữ liệu dạng: requestId;n
+        String[] parts = duLieuNhan.split(";", 2);
+
+        String requestId = parts[0];
+
+        // Loại bỏ dấu phẩy nếu server gửi n kèm dấu phẩy
+        String chuoiN = parts[1].replace(",", "").trim();
+
+        int n = Integer.parseInt(chuoiN);
+
+        // c. Tìm n số nguyên tố đầu tiên
+        String danhSachSoNguyenTo = "";
+
+        int dem = 0;
+        int soDangKiemTra = 2;
+
+        while (dem < n) {
+
+            if (laSoNguyenTo(soDangKiemTra)) {
+
+                if (!danhSachSoNguyenTo.isEmpty()) {
+                    danhSachSoNguyenTo += ",";
+                }
+
+                danhSachSoNguyenTo += soDangKiemTra;
+
+                dem++;
+            }
+
+            soDangKiemTra++;
+        }
+
+        // Tạo kết quả gửi lại server
+        String ketQua =
+                requestId + ";" + danhSachSoNguyenTo;
+
+        System.out.println("Gửi lại: " + ketQua);
+
+        byte[] duLieuKetQua = ketQua.getBytes();
+
+        DatagramPacket goiKetQua =
+                new DatagramPacket(
+                        duLieuKetQua,
+                        duLieuKetQua.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiKetQua);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+import java.net.*;
+import java.math.BigInteger;
+
+public class tong2songuyenlon {
+
+    public static void main(String[] args) throws Exception {
+
+        // Tạo socket UDP
+        DatagramSocket socket = new DatagramSocket();
+
+        // Địa chỉ và cổng của server
+        InetAddress diaChi =
+                InetAddress.getByName("36.50.135.242");
+
+        int cong = 2207;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String maGui = ";B21DCCN900;2sIjAYaU";
+
+        byte[] duLieuGui = maGui.getBytes();
+
+        DatagramPacket goiGui =
+                new DatagramPacket(
+                        duLieuGui,
+                        duLieuGui.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiGui);
+
+        // b. Nhận dữ liệu từ server
+        byte[] boDem = new byte[2048];
+
+        DatagramPacket goiNhan =
+                new DatagramPacket(boDem, boDem.length);
+
+        socket.receive(goiNhan);
+
+        String duLieuNhan = new String(
+                goiNhan.getData(),
+                0,
+                goiNhan.getLength()
+        ).trim();
+
+        System.out.println("Server gửi: " + duLieuNhan);
+
+        /*
+         * Server có thể gửi:
+         * requestId;a;b
+         * hoặc requestId;a,b
+         */
+
+        // Tách requestId khỏi phần chứa hai số
+        String[] phanChinh = duLieuNhan.split(";", 2);
+
+        String requestId = phanChinh[0];
+        String chuoiHaiSo = phanChinh[1];
+
+        // Tách a và b bằng dấu ; hoặc dấu ,
+        String[] haiSo = chuoiHaiSo.split("[;,]");
+
+        String chuoiA = haiSo[0].trim();
+        String chuoiB = haiSo[1].trim();
+
+        // Chuyển hai chuỗi thành BigInteger
+        BigInteger a = new BigInteger(chuoiA);
+        BigInteger b = new BigInteger(chuoiB);
+
+        // c. Tính tổng và hiệu
+        BigInteger tong = a.add(b);
+        BigInteger hieu = a.subtract(b);
+
+        // Tạo kết quả theo ví dụ: requestId;sum,difference
+        String ketQua =
+                requestId + ";" + tong + "," + hieu;
+
+        System.out.println("Tổng: " + tong);
+        System.out.println("Hiệu: " + hieu);
+        System.out.println("Gửi lại: " + ketQua);
+
+        // Chuyển kết quả thành mảng byte
+        byte[] duLieuKetQua = ketQua.getBytes();
+
+        // Tạo gói tin gửi kết quả
+        DatagramPacket goiKetQua =
+                new DatagramPacket(
+                        duLieuKetQua,
+                        duLieuKetQua.length,
+                        diaChi,
+                        cong
+                );
+
+        // Gửi kết quả lên server
+        socket.send(goiKetQua);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+import java.net.*;
+import java.util.Arrays;
+import java.util.Collections;
+
+public class sapxeptudiennguoc {
+
+    public static void main(String[] args) throws Exception {
+
+        // Tạo socket UDP
+        DatagramSocket socket = new DatagramSocket();
+
+        // Địa chỉ và cổng server
+        InetAddress diaChi =
+                InetAddress.getByName("36.50.135.242");
+
+        int cong = 2208;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String maGui = ";B21DCCN900;9UfU4Vky";
+
+        byte[] duLieuGui = maGui.getBytes();
+
+        DatagramPacket goiGui =
+                new DatagramPacket(
+                        duLieuGui,
+                        duLieuGui.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiGui);
+
+        // b. Nhận dữ liệu từ server
+        byte[] boDem = new byte[1024];
+
+        DatagramPacket goiNhan =
+                new DatagramPacket(boDem, boDem.length);
+
+        socket.receive(goiNhan);
+
+        String duLieuNhan = new String(
+                goiNhan.getData(),
+                0,
+                goiNhan.getLength()
+        ).trim();
+
+        System.out.println("Server gửi: " + duLieuNhan);
+
+        // Dữ liệu dạng: requestId;data
+        String[] parts = duLieuNhan.split(";", 2);
+
+        String requestId = parts[0];
+        String data = parts[1].trim();
+
+        // Tách các từ theo một hoặc nhiều dấu cách
+        String[] cacTu = data.split("\\s+");
+
+        // c. Sắp xếp theo thứ tự từ điển ngược
+        Arrays.sort(cacTu, Collections.reverseOrder());
+
+        // Ghép các từ bằng dấu phẩy
+        String ketQuaSapXep = "";
+
+        for (int i = 0; i < cacTu.length; i++) {
+
+            if (i > 0) {
+                ketQuaSapXep += ",";
+            }
+
+            ketQuaSapXep += cacTu[i];
+        }
+
+        // Tạo chuỗi gửi lại server
+        String ketQua =
+                requestId + ";" + ketQuaSapXep;
+
+        System.out.println("Gửi lại: " + ketQua);
+
+        byte[] duLieuKetQua = ketQua.getBytes();
+
+        DatagramPacket goiKetQua =
+                new DatagramPacket(
+                        duLieuKetQua,
+                        duLieuKetQua.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiKetQua);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+import java.net.*;
+
+public class phantulonnhatcuadaycon {
+
+    public static void main(String[] args) throws Exception {
+
+        // Tạo socket UDP
+        DatagramSocket socket = new DatagramSocket();
+
+        // Địa chỉ và cổng server
+        InetAddress diaChi =
+                InetAddress.getByName("36.50.135.242");
+
+        int cong = 2207;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String maGui = ";B21DCCN900;iv00Hrq6";
+
+        byte[] duLieuGui = maGui.getBytes();
+
+        DatagramPacket goiGui =
+                new DatagramPacket(
+                        duLieuGui,
+                        duLieuGui.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiGui);
+
+        // b. Nhận dữ liệu từ server
+        byte[] boDem = new byte[2048];
+
+        DatagramPacket goiNhan =
+                new DatagramPacket(
+                        boDem,
+                        boDem.length
+                );
+
+        socket.receive(goiNhan);
+
+        String duLieuNhan = new String(
+                goiNhan.getData(),
+                0,
+                goiNhan.getLength()
+        ).trim();
+
+        System.out.println("Server gửi: " + duLieuNhan);
+
+        /*
+         * Dữ liệu có dạng:
+         * requestId;n;k;z1,z2,...,zn
+         */
+        String[] parts = duLieuNhan.split(";", 4);
+
+        String requestId = parts[0];
+
+        int n = Integer.parseInt(parts[1].trim());
+
+        int k = Integer.parseInt(parts[2].trim());
+
+        String[] chuoiSo = parts[3].split(",");
+
+        // Chuyển các phần tử từ String sang int
+        int[] daySo = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            daySo[i] = Integer.parseInt(chuoiSo[i].trim());
+        }
+
+        // c. Tìm giá trị lớn nhất trong mỗi cửa sổ
+        String ketQuaCacMax = "";
+
+        /*
+         * Số cửa sổ trượt là:
+         * n - k + 1
+         */
+        for (int i = 0; i <= n - k; i++) {
+
+            // Giả sử phần tử đầu tiên của cửa sổ là lớn nhất
+            int max = daySo[i];
+
+            // Duyệt các phần tử nằm trong cửa sổ hiện tại
+            for (int j = i; j < i + k; j++) {
+
+                if (daySo[j] > max) {
+                    max = daySo[j];
+                }
+            }
+
+            // Thêm dấu phẩy trước các kết quả từ vị trí thứ hai
+            if (!ketQuaCacMax.isEmpty()) {
+                ketQuaCacMax += ",";
+            }
+
+            ketQuaCacMax += max;
+        }
+
+        // Tạo chuỗi gửi lại server
+        String ketQua =
+                requestId + ";" + ketQuaCacMax;
+
+        System.out.println("Gửi lại: " + ketQua);
+
+        byte[] duLieuKetQua = ketQua.getBytes();
+
+        DatagramPacket goiKetQua =
+                new DatagramPacket(
+                        duLieuKetQua,
+                        duLieuKetQua.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiKetQua);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+import java.net.*;
+
+public class sapxeptheovitribandau {
+
+    public static void main(String[] args) throws Exception {
+
+        // Tạo socket UDP
+        DatagramSocket socket = new DatagramSocket();
+
+        // Địa chỉ và cổng server
+        InetAddress diaChi =
+                InetAddress.getByName("36.50.135.242");
+
+        int cong = 2207;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String maGui = ";B21DCCN900;aKZwZxWk";
+
+        byte[] duLieuGui = maGui.getBytes();
+
+        DatagramPacket goiGui =
+                new DatagramPacket(
+                        duLieuGui,
+                        duLieuGui.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiGui);
+
+        // b. Nhận dữ liệu từ server
+        byte[] boDem = new byte[2048];
+
+        DatagramPacket goiNhan =
+                new DatagramPacket(
+                        boDem,
+                        boDem.length
+                );
+
+        socket.receive(goiNhan);
+
+        String duLieuNhan = new String(
+                goiNhan.getData(),
+                0,
+                goiNhan.getLength()
+        ).trim();
+
+        System.out.println("Server gửi: " + duLieuNhan);
+
+        /*
+         * Dữ liệu có dạng:
+         * requestId;chuoi1:viTri,chuoi2:viTri,...
+         */
+        String[] parts = duLieuNhan.split(";", 2);
+
+        String requestId = parts[0];
+        String chuoiXaoTron = parts[1];
+
+        // Tách các cặp chuỗi:vị trí
+        String[] cacCap = chuoiXaoTron.split(",");
+
+        // Tạo mảng lưu các chuỗi theo đúng vị trí
+        String[] ketQuaSapXep = new String[cacCap.length];
+
+        for (int i = 0; i < cacCap.length; i++) {
+
+            // Ví dụ: M6dpWTE:1
+            String[] thongTin = cacCap[i].split(":");
+
+            String chuoiCon = thongTin[0];
+            int viTri = Integer.parseInt(thongTin[1].trim());
+
+            /*
+             * Vị trí server cho bắt đầu từ 1
+             * Chỉ số mảng Java bắt đầu từ 0
+             */
+            ketQuaSapXep[viTri - 1] = chuoiCon;
+        }
+
+        // Ghép các chuỗi theo đúng thứ tự
+        String chuoiKetQua = "";
+
+        for (int i = 0; i < ketQuaSapXep.length; i++) {
+
+            if (i > 0) {
+                chuoiKetQua += ",";
+            }
+
+            chuoiKetQua += ketQuaSapXep[i];
+        }
+
+        // c. Tạo chuỗi gửi lại server
+        String ketQua =
+                requestId + ";" + chuoiKetQua;
+
+        System.out.println("Gửi lại: " + ketQua);
+
+        byte[] duLieuKetQua = ketQua.getBytes();
+
+        DatagramPacket goiKetQua =
+                new DatagramPacket(
+                        duLieuKetQua,
+                        duLieuKetQua.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiKetQua);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+import java.net.*;
+import java.math.BigInteger;
+
+public class tong2sonhiphan {
+
+    public static void main(String[] args) throws Exception {
+
+        // Tạo socket UDP
+        DatagramSocket socket = new DatagramSocket();
+
+        // Địa chỉ và cổng server
+        InetAddress diaChi =
+                InetAddress.getByName("36.50.135.242");
+
+        int cong = 2208;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String maGui = ";B21DCCN900;lIQVug9S";
+
+        byte[] duLieuGui = maGui.getBytes();
+
+        DatagramPacket goiGui =
+                new DatagramPacket(
+                        duLieuGui,
+                        duLieuGui.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiGui);
+
+        // b. Nhận dữ liệu từ server
+        byte[] boDem = new byte[2048];
+
+        DatagramPacket goiNhan =
+                new DatagramPacket(
+                        boDem,
+                        boDem.length
+                );
+
+        socket.receive(goiNhan);
+
+        String duLieuNhan = new String(
+                goiNhan.getData(),
+                0,
+                goiNhan.getLength()
+        ).trim();
+
+        System.out.println("Server gửi: " + duLieuNhan);
+
+        /*
+         * Dữ liệu có dạng:
+         * requestId;b1,b2
+         */
+        String[] parts = duLieuNhan.split(";", 2);
+
+        String requestId = parts[0];
+        String chuoiHaiSo = parts[1];
+
+        // Tách hai số nhị phân bằng dấu phẩy
+        String[] haiSoNhiPhan = chuoiHaiSo.split(",");
+
+        String b1 = haiSoNhiPhan[0].trim();
+        String b2 = haiSoNhiPhan[1].trim();
+
+        /*
+         * Chuyển chuỗi nhị phân thành số BigInteger.
+         * Số 2 có nghĩa là chuỗi đang ở hệ cơ số 2.
+         */
+        BigInteger soThuNhat = new BigInteger(b1, 2);
+        BigInteger soThuHai = new BigInteger(b2, 2);
+
+        // c. Tính tổng ở dạng thập phân
+        BigInteger tong = soThuNhat.add(soThuHai);
+
+        // Tạo kết quả theo định dạng requestId;sum
+        String ketQua = requestId + ";" + tong;
+
+        System.out.println("Số thứ nhất dạng thập phân: " + soThuNhat);
+        System.out.println("Số thứ hai dạng thập phân: " + soThuHai);
+        System.out.println("Tổng: " + tong);
+        System.out.println("Gửi lại: " + ketQua);
+
+        // Chuyển kết quả thành mảng byte
+        byte[] duLieuKetQua = ketQua.getBytes();
+
+        // Tạo gói tin gửi kết quả
+        DatagramPacket goiKetQua =
+                new DatagramPacket(
+                        duLieuKetQua,
+                        duLieuKetQua.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiKetQua);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+
+import java.io.*;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
+public class thongtinsinhvien {
+
+    // Hàm chuẩn hóa tên
+    public static String chuanHoaTen(String ten) {
+
+        ten = ten.trim().toLowerCase();
+
+        String[] cacTu = ten.split("\\s+");
+
+        String ketQua = "";
+
+        for (int i = 0; i < cacTu.length; i++) {
+
+            String tu = cacTu[i];
+
+            String tuChuanHoa =
+                    tu.substring(0, 1).toUpperCase()
+                    + tu.substring(1);
+
+            if (i > 0) {
+                ketQua += " ";
+            }
+
+            ketQua += tuChuanHoa;
+        }
+
+        return ketQua;
+    }
+
+    // Hàm tạo email từ tên
+    public static String taoEmail(String ten) {
+
+        ten = ten.trim().toLowerCase();
+
+        String[] cacTu = ten.split("\\s+");
+
+        // Từ cuối cùng là tên
+        String email = cacTu[cacTu.length - 1];
+
+        // Lấy chữ cái đầu của họ và tên đệm
+        for (int i = 0; i < cacTu.length - 1; i++) {
+            email += cacTu[i].charAt(0);
+        }
+
+        email += "@ptit.edu.vn";
+
+        return email;
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        // Tạo socket UDP
+        DatagramSocket socket = new DatagramSocket();
+
+        // Địa chỉ và cổng server
+        InetAddress diaChi =
+                InetAddress.getByName("36.50.135.242");
+
+        int cong = 2209;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String maGui = ";B21DCCN900;n1J91Lfu";
+
+        byte[] duLieuGui =
+                maGui.getBytes(StandardCharsets.UTF_8);
+
+        DatagramPacket goiGui =
+                new DatagramPacket(
+                        duLieuGui,
+                        duLieuGui.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiGui);
+
+        // b. Nhận dữ liệu từ server
+        byte[] boDem = new byte[65535];
+
+        DatagramPacket goiNhan =
+                new DatagramPacket(
+                        boDem,
+                        boDem.length
+                );
+
+        socket.receive(goiNhan);
+
+        int doDaiDuLieuNhan = goiNhan.getLength();
+
+        /*
+         * 8 byte đầu là requestId
+         */
+        byte[] requestIdBytes =
+                Arrays.copyOfRange(
+                        goiNhan.getData(),
+                        0,
+                        8
+                );
+
+        String requestId =
+                new String(
+                        requestIdBytes,
+                        StandardCharsets.UTF_8
+                );
+
+        /*
+         * Các byte còn lại là đối tượng Student
+         */
+        byte[] objectBytes =
+                Arrays.copyOfRange(
+                        goiNhan.getData(),
+                        8,
+                        doDaiDuLieuNhan
+                );
+
+        ByteArrayInputStream byteInput =
+                new ByteArrayInputStream(objectBytes);
+
+        ObjectInputStream objectInput =
+                new ObjectInputStream(byteInput);
+
+        Student sinhVien =
+                (Student) objectInput.readObject();
+
+        objectInput.close();
+
+        System.out.println("Request ID: " + requestId);
+        System.out.println("ID: " + sinhVien.getId());
+        System.out.println("Tên ban đầu: " + sinhVien.getName());
+
+        // c. Chuẩn hóa tên
+        String tenChuanHoa =
+                chuanHoaTen(sinhVien.getName());
+
+        sinhVien.setName(tenChuanHoa);
+
+        // Tạo email
+        String email =
+                taoEmail(tenChuanHoa);
+
+        sinhVien.setEmail(email);
+
+        System.out.println("Tên sau chuẩn hóa: "
+                + sinhVien.getName());
+
+        System.out.println("Email: "
+                + sinhVien.getEmail());
+
+        /*
+         * Chuyển đối tượng Student thành mảng byte
+         */
+        ByteArrayOutputStream byteOutput =
+                new ByteArrayOutputStream();
+
+        ObjectOutputStream objectOutput =
+                new ObjectOutputStream(byteOutput);
+
+        objectOutput.writeObject(sinhVien);
+        objectOutput.flush();
+
+        byte[] studentBytes =
+                byteOutput.toByteArray();
+
+        objectOutput.close();
+
+        /*
+         * Tạo dữ liệu gửi:
+         * 8 byte đầu là requestId
+         * các byte sau là đối tượng Student
+         */
+        byte[] requestBytes =
+                requestId.getBytes(StandardCharsets.UTF_8);
+
+        byte[] duLieuKetQua =
+                new byte[8 + studentBytes.length];
+
+        // Sao chép 8 byte requestId vào đầu
+        System.arraycopy(
+                requestBytes,
+                0,
+                duLieuKetQua,
+                0,
+                8
+        );
+
+        // Sao chép đối tượng Student vào sau requestId
+        System.arraycopy(
+                studentBytes,
+                0,
+                duLieuKetQua,
+                8,
+                studentBytes.length
+        );
+
+        DatagramPacket goiKetQua =
+                new DatagramPacket(
+                        duLieuKetQua,
+                        duLieuKetQua.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiKetQua);
+
+        // d. Đóng socket
+        socket.close();
+    }
+}
+
+
+import java.io.Serializable;
+
+public class Student implements Serializable {
+
+    private static final long serialVersionUID = 20171107L;
+
+    private String id;
+    private String code;
+    private String name;
+    private String email;
+
+    public Student(String id, String code, String name, String email) {
+        this.id = id;
+        this.code = code;
+        this.name = name;
+        this.email = email;
+    }
+
+    public Student(String code) {
+        this.code = code;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+}
+
+
+import java.io.*;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
+public class khachhang {
+
+    // Chuẩn hóa một từ:
+    // ngUYEN -> Nguyen
+    public static String vietHoaChuDau(String tu) {
+
+        tu = tu.toLowerCase();
+
+        return tu.substring(0, 1).toUpperCase()
+                + tu.substring(1);
+    }
+
+    /*
+     * Chuẩn hóa tên:
+     * nguyen van hai duong
+     * ->
+     * DUONG, Nguyen Van Hai
+     */
+    public static String chuanHoaTen(String ten) {
+
+        ten = ten.trim().toLowerCase();
+
+        String[] cacTu = ten.split("\\s+");
+
+        // Từ cuối cùng là tên
+        String tenChinh =
+                cacTu[cacTu.length - 1].toUpperCase();
+
+        // Chuẩn hóa họ và tên đệm
+        String hoVaTenDem = "";
+
+        for (int i = 0; i < cacTu.length - 1; i++) {
+
+            if (i > 0) {
+                hoVaTenDem += " ";
+            }
+
+            hoVaTenDem += vietHoaChuDau(cacTu[i]);
+        }
+
+        return tenChinh + ", " + hoVaTenDem;
+    }
+
+    /*
+     * Đổi ngày sinh:
+     * mm-dd-yyyy
+     * ->
+     * dd/mm/yyyy
+     */
+    public static String doiNgaySinh(String ngaySinh) {
+
+        String[] parts = ngaySinh.trim().split("-");
+
+        String thang = parts[0];
+        String ngay = parts[1];
+        String nam = parts[2];
+
+        return ngay + "/" + thang + "/" + nam;
+    }
+
+    /*
+     * Tạo tài khoản:
+     * nguyen van hai duong
+     * ->
+     * nvhduong
+     */
+    public static String taoTaiKhoan(String tenBanDau) {
+
+        tenBanDau = tenBanDau.trim().toLowerCase();
+
+        String[] cacTu = tenBanDau.split("\\s+");
+
+        String taiKhoan = "";
+
+        // Lấy chữ cái đầu của họ và tên đệm
+        for (int i = 0; i < cacTu.length - 1; i++) {
+            taiKhoan += cacTu[i].charAt(0);
+        }
+
+        // Thêm toàn bộ tên ở cuối
+        taiKhoan += cacTu[cacTu.length - 1];
+
+        return taiKhoan;
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        // Tạo UDP socket
+        DatagramSocket socket = new DatagramSocket();
+
+        // Địa chỉ và cổng server
+        InetAddress diaChi =
+                InetAddress.getByName("36.50.135.242");
+
+        int cong = 2209;
+
+        // Gửi mã sinh viên và mã câu hỏi
+        String maGui = ";B21DCCN900;kq8BRboJ";
+
+        byte[] duLieuGui =
+                maGui.getBytes(StandardCharsets.UTF_8);
+
+        DatagramPacket goiGui =
+                new DatagramPacket(
+                        duLieuGui,
+                        duLieuGui.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiGui);
+
+        // Nhận dữ liệu từ server
+        byte[] boDem = new byte[65535];
+
+        DatagramPacket goiNhan =
+                new DatagramPacket(
+                        boDem,
+                        boDem.length
+                );
+
+        socket.receive(goiNhan);
+
+        int doDaiDuLieuNhan =
+                goiNhan.getLength();
+
+        /*
+         * 8 byte đầu là requestId
+         */
+        byte[] requestIdBytes =
+                Arrays.copyOfRange(
+                        goiNhan.getData(),
+                        0,
+                        8
+                );
+
+        String requestId =
+                new String(
+                        requestIdBytes,
+                        StandardCharsets.UTF_8
+                );
+
+        /*
+         * Các byte còn lại là đối tượng Customer
+         */
+        byte[] customerBytes =
+                Arrays.copyOfRange(
+                        goiNhan.getData(),
+                        8,
+                        doDaiDuLieuNhan
+                );
+
+        ByteArrayInputStream byteInput =
+                new ByteArrayInputStream(customerBytes);
+
+        ObjectInputStream objectInput =
+                new ObjectInputStream(byteInput);
+
+        Customer khachHang =
+                (Customer) objectInput.readObject();
+
+        objectInput.close();
+
+        // In thông tin ban đầu
+        System.out.println("Request ID: " + requestId);
+        System.out.println("ID: " + khachHang.getId());
+        System.out.println("Code: " + khachHang.getCode());
+        System.out.println("Tên ban đầu: " + khachHang.getName());
+        System.out.println(
+                "Ngày sinh ban đầu: "
+                        + khachHang.getDayOfBirth()
+        );
+
+        /*
+         * Phải lưu tên ban đầu trước khi chuẩn hóa.
+         * Vì tài khoản được tạo từ tên gốc:
+         * nguyen van hai duong -> nvhduong
+         */
+        String tenBanDau =
+                khachHang.getName();
+
+        // Chuẩn hóa tên
+        String tenChuanHoa =
+                chuanHoaTen(tenBanDau);
+
+        khachHang.setName(tenChuanHoa);
+
+        // Đổi định dạng ngày sinh
+        String ngaySinhMoi =
+                doiNgaySinh(khachHang.getDayOfBirth());
+
+        khachHang.setDayOfBirth(ngaySinhMoi);
+
+        // Tạo tài khoản
+        String taiKhoan =
+                taoTaiKhoan(tenBanDau);
+
+        khachHang.setUserName(taiKhoan);
+
+        // In thông tin sau xử lý
+        System.out.println(
+                "Tên sau chuẩn hóa: "
+                        + khachHang.getName()
+        );
+
+        System.out.println(
+                "Ngày sinh mới: "
+                        + khachHang.getDayOfBirth()
+        );
+
+        System.out.println(
+                "Tài khoản: "
+                        + khachHang.getUserName()
+        );
+
+        /*
+         * Chuyển đối tượng Customer thành mảng byte
+         */
+        ByteArrayOutputStream byteOutput =
+                new ByteArrayOutputStream();
+
+        ObjectOutputStream objectOutput =
+                new ObjectOutputStream(byteOutput);
+
+        objectOutput.writeObject(khachHang);
+        objectOutput.flush();
+
+        byte[] doiTuongKetQua =
+                byteOutput.toByteArray();
+
+        objectOutput.close();
+
+        /*
+         * Tạo dữ liệu gửi lại:
+         * 8 byte đầu là requestId
+         * các byte sau là đối tượng Customer
+         */
+        byte[] requestBytes =
+                requestId.getBytes(StandardCharsets.UTF_8);
+
+        byte[] duLieuKetQua =
+                new byte[8 + doiTuongKetQua.length];
+
+        // Sao chép requestId vào 8 byte đầu
+        System.arraycopy(
+                requestBytes,
+                0,
+                duLieuKetQua,
+                0,
+                8
+        );
+
+        // Sao chép đối tượng Customer vào sau requestId
+        System.arraycopy(
+                doiTuongKetQua,
+                0,
+                duLieuKetQua,
+                8,
+                doiTuongKetQua.length
+        );
+
+        // Tạo gói UDP gửi lại server
+        DatagramPacket goiKetQua =
+                new DatagramPacket(
+                        duLieuKetQua,
+                        duLieuKetQua.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiKetQua);
+
+        // Đóng socket
+        socket.close();
+    }
+}
+
+
+import java.io.Serializable;
+
+public class Customer implements Serializable {
+
+    private static final long serialVersionUID = 20151107L;
+
+    private String id;
+    private String code;
+    private String name;
+    private String dayOfBirth;
+    private String userName;
+
+    public Customer(
+            String id,
+            String code,
+            String name,
+            String dayOfBirth,
+            String userName
+    ) {
+        this.id = id;
+        this.code = code;
+        this.name = name;
+        this.dayOfBirth = dayOfBirth;
+        this.userName = userName;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDayOfBirth() {
+        return dayOfBirth;
+    }
+
+    public void setDayOfBirth(String dayOfBirth) {
+        this.dayOfBirth = dayOfBirth;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+}
+
+
+import java.io.*;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
+public class sanpham {
+
+    /*
+     * Đổi chỗ từ đầu tiên và từ cuối cùng.
+     *
+     * Ví dụ:
+     * T520 thinkpad lenovo
+     * ->
+     * lenovo thinkpad T520
+     */
+    public static String suaTenSanPham(String ten) {
+
+        // Xóa khoảng trắng thừa ở đầu và cuối
+        ten = ten.trim();
+
+        // Tách tên thành các từ
+        String[] cacTu = ten.split("\\s+");
+
+        /*
+         * Nếu tên chỉ có một từ thì không cần đổi chỗ
+         */
+        if (cacTu.length <= 1) {
+            return ten;
+        }
+
+        // Đổi chỗ từ đầu tiên và từ cuối cùng
+        String tam = cacTu[0];
+
+        cacTu[0] = cacTu[cacTu.length - 1];
+
+        cacTu[cacTu.length - 1] = tam;
+
+        // Ghép các từ lại bằng dấu cách
+        String ketQua = "";
+
+        for (int i = 0; i < cacTu.length; i++) {
+
+            if (i > 0) {
+                ketQua += " ";
+            }
+
+            ketQua += cacTu[i];
+        }
+
+        return ketQua;
+    }
+
+    /*
+     * Đảo ngược các chữ số của số lượng.
+     *
+     * Ví dụ:
+     * 9981 -> 1899
+     */
+    public static int suaSoLuong(int soLuong) {
+
+        int ketQua = 0;
+
+        while (soLuong > 0) {
+
+            // Lấy chữ số cuối cùng
+            int chuSoCuoi = soLuong % 10;
+
+            // Thêm chữ số cuối vào kết quả
+            ketQua = ketQua * 10 + chuSoCuoi;
+
+            // Bỏ chữ số cuối của số lượng
+            soLuong = soLuong / 10;
+        }
+
+        return ketQua;
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        // Tạo socket UDP
+        DatagramSocket socket = new DatagramSocket();
+
+        // Địa chỉ và cổng server
+        InetAddress diaChi =
+                InetAddress.getByName("36.50.135.242");
+
+        int cong = 2209;
+
+        // Gửi mã sinh viên và mã câu hỏi
+        String maGui = ";B21DCCN900;kZqFKEDL";
+
+        byte[] duLieuGui =
+                maGui.getBytes(StandardCharsets.UTF_8);
+
+        DatagramPacket goiGui =
+                new DatagramPacket(
+                        duLieuGui,
+                        duLieuGui.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiGui);
+
+        // Nhận dữ liệu từ server
+        byte[] boDem = new byte[65535];
+
+        DatagramPacket goiNhan =
+                new DatagramPacket(
+                        boDem,
+                        boDem.length
+                );
+
+        socket.receive(goiNhan);
+
+        int doDaiDuLieuNhan =
+                goiNhan.getLength();
+
+        /*
+         * 8 byte đầu là requestId
+         */
+        byte[] requestIdBytes =
+                Arrays.copyOfRange(
+                        goiNhan.getData(),
+                        0,
+                        8
+                );
+
+        String requestId =
+                new String(
+                        requestIdBytes,
+                        StandardCharsets.UTF_8
+                );
+
+        /*
+         * Các byte từ vị trí 8 trở đi
+         * là đối tượng Product
+         */
+        byte[] productBytes =
+                Arrays.copyOfRange(
+                        goiNhan.getData(),
+                        8,
+                        doDaiDuLieuNhan
+                );
+
+        // Chuyển mảng byte thành đối tượng Product
+        ByteArrayInputStream byteInput =
+                new ByteArrayInputStream(productBytes);
+
+        ObjectInputStream objectInput =
+                new ObjectInputStream(byteInput);
+
+        Product sanPham =
+                (Product) objectInput.readObject();
+
+        objectInput.close();
+
+        // In thông tin ban đầu
+        System.out.println("Request ID: " + requestId);
+
+        System.out.println(
+                "ID sản phẩm: "
+                        + sanPham.getId()
+        );
+
+        System.out.println(
+                "Tên ban đầu: "
+                        + sanPham.getName()
+        );
+
+        System.out.println(
+                "Số lượng ban đầu: "
+                        + sanPham.getQuantity()
+        );
+
+        /*
+         * Sửa tên sản phẩm
+         */
+        String tenMoi =
+                suaTenSanPham(sanPham.getName());
+
+        sanPham.setName(tenMoi);
+
+        /*
+         * Sửa số lượng sản phẩm
+         */
+        int soLuongMoi =
+                suaSoLuong(sanPham.getQuantity());
+
+        sanPham.setQuantity(soLuongMoi);
+
+        // In thông tin sau khi xử lý
+        System.out.println(
+                "Tên sau khi sửa: "
+                        + sanPham.getName()
+        );
+
+        System.out.println(
+                "Số lượng sau khi sửa: "
+                        + sanPham.getQuantity()
+        );
+
+        /*
+         * Chuyển đối tượng Product đã sửa thành byte
+         */
+        ByteArrayOutputStream byteOutput =
+                new ByteArrayOutputStream();
+
+        ObjectOutputStream objectOutput =
+                new ObjectOutputStream(byteOutput);
+
+        objectOutput.writeObject(sanPham);
+        objectOutput.flush();
+
+        byte[] doiTuongKetQua =
+                byteOutput.toByteArray();
+
+        objectOutput.close();
+
+        /*
+         * Tạo dữ liệu gửi lại:
+         *
+         * 8 byte đầu: requestId
+         * Các byte sau: đối tượng Product
+         */
+        byte[] requestBytes =
+                requestId.getBytes(StandardCharsets.UTF_8);
+
+        byte[] duLieuKetQua =
+                new byte[8 + doiTuongKetQua.length];
+
+        // Sao chép requestId vào đầu mảng
+        System.arraycopy(
+                requestBytes,
+                0,
+                duLieuKetQua,
+                0,
+                8
+        );
+
+        // Sao chép đối tượng Product vào sau requestId
+        System.arraycopy(
+                doiTuongKetQua,
+                0,
+                duLieuKetQua,
+                8,
+                doiTuongKetQua.length
+        );
+
+        // Tạo gói tin gửi kết quả
+        DatagramPacket goiKetQua =
+                new DatagramPacket(
+                        duLieuKetQua,
+                        duLieuKetQua.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiKetQua);
+
+        // Đóng socket
+        socket.close();
+    }
+}
+
+
+import java.io.Serializable;
+
+public class Product implements Serializable {
+
+    private static final long serialVersionUID = 20161107L;
+
+    private String id;
+    private String code;
+    private String name;
+    private int quantity;
+
+    public Product(
+            String id,
+            String code,
+            String name,
+            int quantity
+    ) {
+        this.id = id;
+        this.code = code;
+        this.name = name;
+        this.quantity = quantity;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+}
+
+
+import java.io.*;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
+public class chuanhoasach {
+
+    /*
+     * Chuẩn hóa một từ:
+     * jaVA -> Java
+     */
+    public static String vietHoaChuDau(String tu) {
+
+        tu = tu.toLowerCase();
+
+        return tu.substring(0, 1).toUpperCase()
+                + tu.substring(1);
+    }
+
+    /*
+     * Chuẩn hóa tiêu đề:
+     *
+     * lap TRINH mang may tinh
+     * ->
+     * Lap Trinh Mang May Tinh
+     */
+    public static String chuanHoaTieuDe(String tieuDe) {
+
+        tieuDe = tieuDe.trim().toLowerCase();
+
+        String[] cacTu = tieuDe.split("\\s+");
+
+        String ketQua = "";
+
+        for (int i = 0; i < cacTu.length; i++) {
+
+            if (i > 0) {
+                ketQua += " ";
+            }
+
+            ketQua += vietHoaChuDau(cacTu[i]);
+        }
+
+        return ketQua;
+    }
+
+    /*
+     * Chuẩn hóa tác giả:
+     *
+     * nguyen van anh
+     * ->
+     * NGUYEN, Van Anh
+     */
+    public static String chuanHoaTacGia(String tacGia) {
+
+        tacGia = tacGia.trim().toLowerCase();
+
+        String[] cacTu = tacGia.split("\\s+");
+
+        // Từ đầu tiên là họ, viết hoa toàn bộ
+        String ho = cacTu[0].toUpperCase();
+
+        // Các từ còn lại là tên
+        String ten = "";
+
+        for (int i = 1; i < cacTu.length; i++) {
+
+            if (i > 1) {
+                ten += " ";
+            }
+
+            ten += vietHoaChuDau(cacTu[i]);
+        }
+
+        /*
+         * Nếu chỉ có một từ thì chỉ trả về họ.
+         * Bình thường tên tác giả sẽ có từ hai từ trở lên.
+         */
+        if (cacTu.length == 1) {
+            return ho;
+        }
+
+        return ho + ", " + ten;
+    }
+
+    /*
+     * Chuẩn hóa ISBN:
+     *
+     * 9783161484100
+     * ->
+     * 978-3-16-148410-0
+     */
+    public static String chuanHoaISBN(String isbn) {
+
+        /*
+         * Xóa toàn bộ ký tự không phải chữ số,
+         * ví dụ dấu gạch ngang hoặc khoảng trắng.
+         */
+        String cacChuSo = isbn.replaceAll("\\D", "");
+
+        /*
+         * ISBN theo ví dụ có 13 chữ số:
+         *
+         * 978 | 3 | 16 | 148410 | 0
+         */
+        String phan1 = cacChuSo.substring(0, 3);
+        String phan2 = cacChuSo.substring(3, 4);
+        String phan3 = cacChuSo.substring(4, 6);
+        String phan4 = cacChuSo.substring(6, 12);
+        String phan5 = cacChuSo.substring(12, 13);
+
+        return phan1 + "-"
+                + phan2 + "-"
+                + phan3 + "-"
+                + phan4 + "-"
+                + phan5;
+    }
+
+    /*
+     * Chuyển ngày xuất bản:
+     *
+     * yyyy-mm-dd
+     * ->
+     * mm/yyyy
+     *
+     * Ví dụ:
+     * 2025-11-07
+     * ->
+     * 11/2025
+     */
+    public static String doiNgayXuatBan(String ngayXuatBan) {
+
+        String[] cacPhan =
+                ngayXuatBan.trim().split("-");
+
+        String nam = cacPhan[0];
+        String thang = cacPhan[1];
+
+        return thang + "/" + nam;
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        // Tạo socket UDP
+        DatagramSocket socket = new DatagramSocket();
+
+        // Địa chỉ và cổng server
+        InetAddress diaChi =
+                InetAddress.getByName("36.50.135.242");
+
+        int cong = 2209;
+
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String maGui = ";B21DCCN900;LFACr5Bi";
+
+        byte[] duLieuGui =
+                maGui.getBytes(StandardCharsets.UTF_8);
+
+        DatagramPacket goiGui =
+                new DatagramPacket(
+                        duLieuGui,
+                        duLieuGui.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiGui);
+
+        // b. Nhận dữ liệu từ server
+        byte[] boDem = new byte[65535];
+
+        DatagramPacket goiNhan =
+                new DatagramPacket(
+                        boDem,
+                        boDem.length
+                );
+
+        socket.receive(goiNhan);
+
+        int doDaiDuLieuNhan =
+                goiNhan.getLength();
+
+        /*
+         * Lấy 8 byte đầu làm requestId
+         */
+        byte[] requestIdBytes =
+                Arrays.copyOfRange(
+                        goiNhan.getData(),
+                        0,
+                        8
+                );
+
+        String requestId =
+                new String(
+                        requestIdBytes,
+                        StandardCharsets.UTF_8
+                );
+
+        /*
+         * Các byte còn lại là đối tượng Book
+         */
+        byte[] bookBytes =
+                Arrays.copyOfRange(
+                        goiNhan.getData(),
+                        8,
+                        doDaiDuLieuNhan
+                );
+
+        // Chuyển byte thành đối tượng Book
+        ByteArrayInputStream byteInput =
+                new ByteArrayInputStream(bookBytes);
+
+        ObjectInputStream objectInput =
+                new ObjectInputStream(byteInput);
+
+        Book sach =
+                (Book) objectInput.readObject();
+
+        objectInput.close();
+
+        // In thông tin ban đầu
+        System.out.println("Request ID: " + requestId);
+        System.out.println("ID: " + sach.getId());
+        System.out.println("Tiêu đề ban đầu: " + sach.getTitle());
+        System.out.println("Tác giả ban đầu: " + sach.getAuthor());
+        System.out.println("ISBN ban đầu: " + sach.getIsbn());
+        System.out.println(
+                "Ngày xuất bản ban đầu: "
+                        + sach.getPublishDate()
+        );
+
+        // c1. Chuẩn hóa title
+        String tieuDeMoi =
+                chuanHoaTieuDe(sach.getTitle());
+
+        sach.setTitle(tieuDeMoi);
+
+        // c2. Chuẩn hóa author
+        String tacGiaMoi =
+                chuanHoaTacGia(sach.getAuthor());
+
+        sach.setAuthor(tacGiaMoi);
+
+        // c3. Chuẩn hóa ISBN
+        String isbnMoi =
+                chuanHoaISBN(sach.getIsbn());
+
+        sach.setIsbn(isbnMoi);
+
+        // c4. Đổi ngày xuất bản
+        String ngayXuatBanMoi =
+                doiNgayXuatBan(sach.getPublishDate());
+
+        sach.setPublishDate(ngayXuatBanMoi);
+
+        // In thông tin sau xử lý
+        System.out.println(
+                "Tiêu đề sau chuẩn hóa: "
+                        + sach.getTitle()
+        );
+
+        System.out.println(
+                "Tác giả sau chuẩn hóa: "
+                        + sach.getAuthor()
+        );
+
+        System.out.println(
+                "ISBN sau chuẩn hóa: "
+                        + sach.getIsbn()
+        );
+
+        System.out.println(
+                "Ngày xuất bản mới: "
+                        + sach.getPublishDate()
+        );
+
+        /*
+         * Chuyển đối tượng Book đã sửa thành byte
+         */
+        ByteArrayOutputStream byteOutput =
+                new ByteArrayOutputStream();
+
+        ObjectOutputStream objectOutput =
+                new ObjectOutputStream(byteOutput);
+
+        objectOutput.writeObject(sach);
+        objectOutput.flush();
+
+        byte[] doiTuongKetQua =
+                byteOutput.toByteArray();
+
+        objectOutput.close();
+
+        /*
+         * Tạo dữ liệu gửi lại:
+         *
+         * 8 byte đầu là requestId
+         * Các byte sau là đối tượng Book
+         */
+        byte[] requestBytes =
+                requestId.getBytes(StandardCharsets.UTF_8);
+
+        byte[] duLieuKetQua =
+                new byte[8 + doiTuongKetQua.length];
+
+        // Sao chép requestId vào đầu
+        System.arraycopy(
+                requestBytes,
+                0,
+                duLieuKetQua,
+                0,
+                8
+        );
+
+        // Sao chép đối tượng Book vào sau requestId
+        System.arraycopy(
+                doiTuongKetQua,
+                0,
+                duLieuKetQua,
+                8,
+                doiTuongKetQua.length
+        );
+
+        // d. Gửi dữ liệu về server
+        DatagramPacket goiKetQua =
+                new DatagramPacket(
+                        duLieuKetQua,
+                        duLieuKetQua.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiKetQua);
+
+        // e. Đóng socket
+        socket.close();
+    }
+}
+
+
+
+
+import java.io.Serializable;
+
+public class Book implements Serializable {
+
+    private static final long serialVersionUID = 20251107L;
+
+    private String id;
+    private String title;
+    private String author;
+    private String isbn;
+    private String publishDate;
+
+    public Book(
+            String id,
+            String title,
+            String author,
+            String isbn,
+            String publishDate
+    ) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.isbn = isbn;
+        this.publishDate = publishDate;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public String getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(String publishDate) {
+        this.publishDate = publishDate;
+    }
+}
+
+
+import java.io.*;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
+public class quanlynhanvien {
+
+    /*
+     * Chuẩn hóa tên:
+     *
+     * john DOE
+     * ->
+     * John Doe
+     */
+    public static String chuanHoaTen(String ten) {
+
+        ten = ten.trim().toLowerCase();
+
+        String[] cacTu = ten.split("\\s+");
+
+        String ketQua = "";
+
+        for (int i = 0; i < cacTu.length; i++) {
+
+            String tu = cacTu[i];
+
+            String tuChuanHoa =
+                    tu.substring(0, 1).toUpperCase()
+                    + tu.substring(1);
+
+            if (i > 0) {
+                ketQua += " ";
+            }
+
+            ketQua += tuChuanHoa;
+        }
+
+        return ketQua;
+    }
+
+    /*
+     * Tính tổng các chữ số của năm sinh.
+     *
+     * Ví dụ:
+     * 2000 -> 2 + 0 + 0 + 0 = 2
+     */
+    public static int tinhTongChuSoNamSinh(int namSinh) {
+
+        int tong = 0;
+
+        while (namSinh > 0) {
+
+            int chuSoCuoi = namSinh % 10;
+
+            tong += chuSoCuoi;
+
+            namSinh = namSinh / 10;
+        }
+
+        return tong;
+    }
+
+    /*
+     * Tăng lương x%.
+     *
+     * Ví dụ:
+     * lương = 10.000.000
+     * x = 2
+     *
+     * lương mới = 10.000.000 + 10.000.000 * 2 / 100
+     */
+    public static double tangLuong(
+            double luong,
+            int phanTram
+    ) {
+        return luong + luong * phanTram / 100;
+    }
+
+    /*
+     * Đổi ngày tuyển dụng:
+     *
+     * yyyy-mm-dd
+     * ->
+     * dd/mm/yyyy
+     */
+    public static String doiNgayTuyenDung(String ngay) {
+
+        String[] cacPhan =
+                ngay.trim().split("-");
+
+        String nam = cacPhan[0];
+        String thang = cacPhan[1];
+        String ngayTrongThang = cacPhan[2];
+
+        return ngayTrongThang
+                + "/"
+                + thang
+                + "/"
+                + nam;
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        // Tạo socket UDP
+        DatagramSocket socket = new DatagramSocket();
+
+        // Địa chỉ server
+        InetAddress diaChi =
+                InetAddress.getByName("36.50.135.242");
+
+        // Cổng của bài đối tượng
+        int cong = 2209;
+
+        /*
+         * a. Gửi mã sinh viên và mã câu hỏi
+         */
+        String maGui =
+                ";B21DCCN900;ySsumsIE";
+
+        byte[] duLieuGui =
+                maGui.getBytes(StandardCharsets.UTF_8);
+
+        DatagramPacket goiGui =
+                new DatagramPacket(
+                        duLieuGui,
+                        duLieuGui.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiGui);
+
+        /*
+         * b. Nhận dữ liệu từ server
+         */
+        byte[] boDem = new byte[65535];
+
+        DatagramPacket goiNhan =
+                new DatagramPacket(
+                        boDem,
+                        boDem.length
+                );
+
+        socket.receive(goiNhan);
+
+        int doDaiDuLieuNhan =
+                goiNhan.getLength();
+
+        /*
+         * 8 byte đầu là requestId
+         */
+        byte[] requestIdBytes =
+                Arrays.copyOfRange(
+                        goiNhan.getData(),
+                        0,
+                        8
+                );
+
+        String requestId =
+                new String(
+                        requestIdBytes,
+                        StandardCharsets.UTF_8
+                );
+
+        /*
+         * Các byte còn lại là đối tượng Employee
+         */
+        byte[] employeeBytes =
+                Arrays.copyOfRange(
+                        goiNhan.getData(),
+                        8,
+                        doDaiDuLieuNhan
+                );
+
+        /*
+         * Chuyển byte thành đối tượng Employee
+         */
+        ByteArrayInputStream byteInput =
+                new ByteArrayInputStream(employeeBytes);
+
+        ObjectInputStream objectInput =
+                new ObjectInputStream(byteInput);
+
+        Employee nhanVien =
+                (Employee) objectInput.readObject();
+
+        objectInput.close();
+
+        /*
+         * In thông tin ban đầu để kiểm tra
+         */
+        System.out.println(
+                "Request ID: " + requestId
+        );
+
+        System.out.println(
+                "ID: " + nhanVien.getId()
+        );
+
+        System.out.println(
+                "Tên ban đầu: "
+                        + nhanVien.getName()
+        );
+
+        System.out.println(
+                "Lương ban đầu: "
+                        + nhanVien.getSalary()
+        );
+
+        System.out.println(
+                "Ngày tuyển dụng ban đầu: "
+                        + nhanVien.getHireDate()
+        );
+
+        /*
+         * c1. Chuẩn hóa tên
+         */
+        String tenMoi =
+                chuanHoaTen(nhanVien.getName());
+
+        nhanVien.setName(tenMoi);
+
+        /*
+         * c2. Tính phần trăm tăng lương
+         *
+         * Năm sinh của bạn là 2000:
+         * 2 + 0 + 0 + 0 = 2
+         */
+        int namSinh = 2000;
+
+        int phanTramTang =
+                tinhTongChuSoNamSinh(namSinh);
+
+        double luongMoi =
+                tangLuong(
+                        nhanVien.getSalary(),
+                        phanTramTang
+                );
+
+        nhanVien.setSalary(luongMoi);
+
+        /*
+         * c3. Đổi định dạng ngày tuyển dụng
+         */
+        String ngayTuyenDungMoi =
+                doiNgayTuyenDung(
+                        nhanVien.getHireDate()
+                );
+
+        nhanVien.setHireDate(ngayTuyenDungMoi);
+
+        /*
+         * In thông tin sau khi xử lý
+         */
+        System.out.println(
+                "Tên sau chuẩn hóa: "
+                        + nhanVien.getName()
+        );
+
+        System.out.println(
+                "Phần trăm tăng lương: "
+                        + phanTramTang + "%"
+        );
+
+        System.out.println(
+                "Lương sau khi tăng: "
+                        + nhanVien.getSalary()
+        );
+
+        System.out.println(
+                "Ngày tuyển dụng mới: "
+                        + nhanVien.getHireDate()
+        );
+
+        /*
+         * Chuyển đối tượng Employee đã sửa thành byte
+         */
+        ByteArrayOutputStream byteOutput =
+                new ByteArrayOutputStream();
+
+        ObjectOutputStream objectOutput =
+                new ObjectOutputStream(byteOutput);
+
+        objectOutput.writeObject(nhanVien);
+        objectOutput.flush();
+
+        byte[] doiTuongKetQua =
+                byteOutput.toByteArray();
+
+        objectOutput.close();
+
+        /*
+         * Tạo dữ liệu gửi lại:
+         *
+         * 8 byte đầu là requestId
+         * Các byte sau là đối tượng Employee
+         */
+        byte[] requestBytes =
+                requestId.getBytes(StandardCharsets.UTF_8);
+
+        byte[] duLieuKetQua =
+                new byte[8 + doiTuongKetQua.length];
+
+        // Sao chép 8 byte requestId
+        System.arraycopy(
+                requestBytes,
+                0,
+                duLieuKetQua,
+                0,
+                8
+        );
+
+        // Sao chép đối tượng Employee vào phía sau
+        System.arraycopy(
+                doiTuongKetQua,
+                0,
+                duLieuKetQua,
+                8,
+                doiTuongKetQua.length
+        );
+
+        /*
+         * Gửi dữ liệu đã xử lý về server
+         */
+        DatagramPacket goiKetQua =
+                new DatagramPacket(
+                        duLieuKetQua,
+                        duLieuKetQua.length,
+                        diaChi,
+                        cong
+                );
+
+        socket.send(goiKetQua);
+
+        /*
+         * d. Đóng socket
+         */
+        socket.close();
+    }
+}
+
+import java.io.Serializable;
+
+public class Employee implements Serializable {
+
+    private static final long serialVersionUID = 20261107L;
+
+    private String id;
+    private String name;
+    private double salary;
+    private String hireDate;
+
+    public Employee(
+            String id,
+            String name,
+            double salary,
+            String hireDate
+    ) {
+        this.id = id;
+        this.name = name;
+        this.salary = salary;
+        this.hireDate = hireDate;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+    public String getHireDate() {
+        return hireDate;
+    }
+
+    public void setHireDate(String hireDate) {
+        this.hireDate = hireDate;
+    }
+}

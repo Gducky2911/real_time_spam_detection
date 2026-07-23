@@ -1,0 +1,1892 @@
+import java.io.*;
+import java.net.*;
+
+public class edu {
+    public static void main(String[] args) throws Exception {
+        try (Socket socket = new Socket("36.50.135.242", 2208);
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
+
+            String code = "B21DCCN900;W1hpfBHi";
+            out.write(code);
+            out.newLine();
+            out.flush();
+
+            String s = in.readLine();
+            String[] domains = s.split(",");
+            String result = "";
+
+            for (String domain : domains) {
+                if (domain.trim().endsWith(".edu")) {
+                    result += domain.trim() + ", ";
+                }
+            }
+
+            if (result.length() > 0) {
+                result = result.substring(0, result.length() - 2);
+            }
+
+            out.write(result);
+            out.newLine();
+            out.flush();
+        }
+    }
+}
+public class khoangcachnhonhat2so {
+    public static void main(String[] args ) throws Exception {
+        Socket socket = new Socket("36.50.135.242", 2206);
+        InputStream in = socket.getInputStream();
+        OutputStream out = socket.getOutputStream();
+        String code = "B21DCCN900;E8XZy0VE";
+        out.write(code.getBytes());
+        out.flush();
+        
+        byte[] buffer = new byte [1024];
+        int n = in.read(buffer);
+        String s = new String(buffer,0,n).trim();
+        String [] numbers = s.split(",");
+        int[] a = new int[numbers.length];
+        
+        for(int i=0 ;i<numbers.length;i++) {
+            a[i] = Integer.parseInt(numbers[i].trim());
+        }
+        Arrays.sort(a);
+        int min = Integer.MAX_VALUE;
+        int x=0,y=0;
+        for (int i=1;i<a.length;i++){
+            int diff=a[i]-a[i-1];
+            if(diff<=min){
+                min = diff;
+                x=a[i-1];
+                y=a[i];
+            }
+        }
+        String result = min + "," + x + "," + y;
+        out.write(result.getBytes());
+        out.flush();
+        socket.close();
+    }
+}
+
+import java.io.*;
+import java.net.*;
+public class loaibonguyenam{
+    public static void main(String[] args) throws Exception{
+        Socket socket = new Socket ("36.50.135.242",2208);
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        
+        String code = "B21DCCN900;Ov12N2xM";
+        out.write(code);
+        out.newLine();
+        out.flush();
+        
+        String s = in.readLine();
+        System.out.println("day la:" + s);
+        String result = "";
+        for (int i = 0;i<s.length();i++){
+            char c = s.charAt(i);
+            
+            if(c!='a'&& c !='e' && c!= 'i'&& c!='o' && c!='u' ){
+                result += c;
+            }
+        }
+        System.out.println("ket qua:"+result);
+        out.write(result);
+        out.flush();
+
+        socket.close();
+        
+    }
+}
+public class tongcacsonguyento {
+
+    // Hàm kiểm tra một số có phải số nguyên tố hay không
+    public static boolean isPrime(int n) {
+
+        // Các số nhỏ hơn 2 không phải số nguyên tố
+        if (n < 2) {
+            return false;
+        }
+
+        // Chỉ cần kiểm tra từ 2 đến căn bậc hai của n
+        for (int i = 2; i * i <= n; i++) {
+
+            // Nếu n chia hết cho i thì n không phải số nguyên tố
+            if (n % i == 0) {
+                return false;
+            }
+        }
+
+        // Không tìm thấy ước nào khác 1 và chính nó
+        return true;
+    }
+
+    public static void main(String[] args) throws Exception {
+        Socket socket = new Socket("36.50.135.242", 2206);
+        InputStream in = socket.getInputStream();
+        OutputStream out = socket.getOutputStream();
+        String code = "B21DCCN900;E8XZy0VE";
+        out.write(code.getBytes());
+        out.flush();
+        byte[] buffer = new byte[1024];
+
+        int n = in.read(buffer);
+        String s = new String(buffer, 0, n).trim();
+        
+        System.out.println("Chuoi nhan duoc: " + s);
+        String[] parts = s.split(",");
+        int sum = 0;
+
+        // Duyệt từng số trong chuỗi
+        for (int i = 0; i < parts.length; i++) {
+
+            // Chuyển chuỗi thành số nguyên
+            int number = Integer.parseInt(parts[i].trim());
+
+            // Nếu là số nguyên tố thì cộng vào tổng
+            if (isPrime(number)) {
+                sum += number;
+            }
+        }
+
+        System.out.println("Tong cac so nguyen to: " + sum);
+        String result = String.valueOf(sum);
+        
+        out.write(result.getBytes());
+        out.flush();
+        socket.close();
+    }
+}
+public class sapxeptheododai {
+    public static void main(String[] args) throws Exception {
+
+        // Kết nối tới server
+        Socket socket = new Socket("36.50.135.242", 2208);
+
+        // Luồng nhận dữ liệu từ server
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(socket.getInputStream())
+        );
+
+        // Luồng gửi dữ liệu lên server
+        BufferedWriter out = new BufferedWriter(
+                new OutputStreamWriter(socket.getOutputStream())
+        );
+
+        // Mã sinh viên và mã câu hỏi
+        String code = "B21DCCN900;Ov12N2xM";
+
+        // Gửi mã sinh viên và mã câu hỏi
+        out.write(code);
+        out.newLine();
+        out.flush();
+
+        // Nhận chuỗi từ server
+        String s = in.readLine();
+
+        System.out.println("Chuoi nhan duoc: " + s);
+
+        // Tách chuỗi thành các từ
+        String[] words = s.trim().split("\\s+");
+
+        // Sắp xếp các từ theo độ dài tăng dần
+        // Chỉ đổi vị trí nếu từ trước dài hơn từ sau
+        for (int i = 0; i < words.length - 1; i++) {
+
+            for (int j = 0; j < words.length - 1 - i; j++) {
+
+                if (words[j].length() > words[j + 1].length()) {
+
+                    String temp = words[j];
+                    words[j] = words[j + 1];
+                    words[j + 1] = temp;
+                }
+            }
+        }
+        // Ghép các từ thành chuỗi kết quả
+        String result = "";
+
+        for (int i = 0; i < words.length; i++) {
+
+            result += words[i];
+
+            // Không thêm dấu phẩy sau từ cuối cùng
+            if (i < words.length - 1) {
+                result += ", ";
+            }
+        }
+        System.out.println("Ket qua: " + result);
+
+        // Gửi kết quả lên server
+        out.write(result);
+        out.newLine();
+        out.flush();
+
+        // Đóng kết nối
+        socket.close();
+    }
+}
+public class tonggapdoitrungbinh {
+    public static void main(String[] args) throws Exception {
+
+        // Kết nối tới server
+        Socket socket = new Socket("36.50.135.242", 2206);
+
+        // Luồng nhận dữ liệu từ server
+        InputStream in = socket.getInputStream();
+
+        // Luồng gửi dữ liệu lên server
+        OutputStream out = socket.getOutputStream();
+
+        // Mã sinh viên và mã câu hỏi
+        String code = "B21DCCN900;E8XZy0VE";
+
+        // Gửi mã sinh viên và mã câu hỏi
+        out.write(code.getBytes());
+        out.flush();
+
+        // Tạo mảng byte để nhận dữ liệu
+        byte[] buffer = new byte[1024];
+
+        // Nhận dữ liệu từ server
+        int n = in.read(buffer);
+
+        // Chuyển dữ liệu byte thành chuỗi
+        String s = new String(buffer, 0, n).trim();
+
+        System.out.println("Chuoi nhan duoc: " + s);
+
+        // Tách chuỗi theo dấu phẩy
+        String[] parts = s.split(",");
+
+        // Chuyển mảng String thành mảng int
+        int[] numbers = new int[parts.length];
+
+        int sum = 0;
+
+        for (int i = 0; i < parts.length; i++) {
+            numbers[i] = Integer.parseInt(parts[i].trim());
+            sum += numbers[i];
+        }
+
+        // Gấp đôi trung bình:
+        // 2 * trung bình = 2 * sum / số phần tử
+        double target = 2.0 * sum / numbers.length;
+
+        System.out.println("Gap doi trung binh: " + target);
+
+        // Khởi tạo cặp đầu tiên
+        int num1 = numbers[0];
+        int num2 = numbers[1];
+
+        // Độ chênh lệch nhỏ nhất ban đầu
+        double minDifference = Double.MAX_VALUE;
+
+        // Duyệt tất cả các cặp số khác nhau
+        for (int i = 0; i < numbers.length - 1; i++) {
+
+            for (int j = i + 1; j < numbers.length; j++) {
+
+                double difference =
+                        Math.abs(numbers[i] + numbers[j] - target);
+
+                if (difference < minDifference) {
+                    minDifference = difference;
+                    num1 = numbers[i];
+                    num2 = numbers[j];
+                }
+            }
+        }
+
+        // Tạo chuỗi kết quả
+        String result = num1 + "," + num2;
+
+        System.out.println("Ket qua: " + result);
+
+        // Gửi kết quả lên server
+        out.write(result.getBytes());
+        out.flush();
+
+        // Đóng kết nối
+        socket.close();
+    }
+}
+public class chuoimahoavadodich {
+    public static void main(String[] args) throws Exception {
+
+        Socket socket =
+                new Socket("36.50.135.242", 2207);
+
+        DataInputStream in =
+                new DataInputStream(
+                        socket.getInputStream());
+
+        DataOutputStream out =
+                new DataOutputStream(
+                        socket.getOutputStream());
+
+        String code =
+                "B21DCCN900;208wxU43";
+
+        out.writeUTF(code);
+        out.flush();
+
+        String s =
+                in.readUTF();
+
+        int shift =
+                in.readInt();
+
+        System.out.println("Chuoi ma hoa: " + s);
+        System.out.println("Do dich: " + shift);
+
+        String result =
+                "";
+
+        for (int i = 0; i < s.length(); i++) {
+
+            char c =
+                    s.charAt(i);
+
+            if (c >= 'A' && c <= 'Z') {
+
+                c =
+                        (char) ((c - 'A' - shift + 26) % 26 + 'A');
+
+            } else if (c >= 'a' && c <= 'z') {
+
+                c =
+                        (char) ((c - 'a' - shift + 26) % 26 + 'a');
+            }
+
+            result += c;
+        }
+
+        System.out.println("Giai ma: " + result);
+
+        out.writeUTF(result);
+        out.flush();
+
+        socket.close();
+    }
+}
+public class daonguocchuoi {
+    public static void main(String[] args) throws Exception {
+
+        Socket socket = new Socket("172.188.19.218", 1606);
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+
+        String code = "B21DCCN900;YOUR_QCODE";
+        out.write(code);
+        out.newLine();
+        out.flush();
+        String s = in.readLine();
+        System.out.println("Chuoi nhan duoc: " + s);
+        String result = "";
+        // Duyệt chuỗi từ cuối về đầu
+        for (int i = s.length() - 1; i >= 0; i--) {
+            result += s.charAt(i);
+        }
+
+        System.out.println("Chuoi dao nguoc: " + result);
+        out.write(result);
+        out.newLine();
+        out.flush();
+        socket.close();
+    }
+}
+public class daonguocdoandaiK {
+    public static void main(String[] args) throws Exception {
+
+        // Kết nối tới server
+        Socket socket = new Socket("36.50.135.242", 2207);
+
+        // Luồng nhận dữ liệu từ server
+        DataInputStream in =
+                new DataInputStream(socket.getInputStream());
+
+        // Luồng gửi dữ liệu lên server
+        DataOutputStream out =
+                new DataOutputStream(socket.getOutputStream());
+
+        // Mã sinh viên và mã câu hỏi
+        String code = "B21DCCN900;dCNDHojG";
+
+        // Gửi mã sinh viên và mã câu hỏi
+        out.writeUTF(code);
+        out.flush();
+
+        // Nhận số nguyên k trước
+        int k = in.readInt();
+
+        // Nhận chuỗi chứa mảng số nguyên sau
+        String s = in.readUTF();
+
+        System.out.println("k = " + k);
+        System.out.println("Mang nhan duoc: " + s);
+
+        // Tách chuỗi thành các phần tử
+        String[] parts = s.split(",");
+
+        // Chuyển mảng String thành mảng int
+        int[] numbers = new int[parts.length];
+
+        for (int i = 0; i < parts.length; i++) {
+            numbers[i] = Integer.parseInt(parts[i].trim());
+        }
+
+        // Đảo ngược từng đoạn dài k
+        for (int start = 0; start < numbers.length; start += k) {
+
+            int left = start;
+
+            int right = Math.min(
+                    start + k - 1,
+                    numbers.length - 1
+            );
+
+            while (left < right) {
+                int temp = numbers[left];
+                numbers[left] = numbers[right];
+                numbers[right] = temp;
+
+                left++;
+                right--;
+            }
+        }
+
+        // Tạo chuỗi kết quả
+        String result = "";
+
+        for (int i = 0; i < numbers.length; i++) {
+            result += numbers[i];
+
+            if (i < numbers.length - 1) {
+                result += ",";
+            }
+        }
+
+        System.out.println("Ket qua: " + result);
+
+        // Gửi chuỗi kết quả lên server
+        out.writeUTF(result);
+        out.flush();
+
+        // Đóng kết nối
+        socket.close();
+    }
+}
+public class dayconlientieptangdainhat {
+    public static void main(String[] args) throws Exception {
+        Socket socket = new Socket("36.50.135.242", 2206);
+        InputStream in = socket.getInputStream();
+        OutputStream out = socket.getOutputStream();
+        String code = "B21DCCN900;E8XZy0VE";
+        out.write(code.getBytes());
+        out.flush();
+
+        byte[] buffer = new byte[1024];
+
+        int n = in.read(buffer);
+
+        String s = new String(buffer, 0, n).trim();
+
+        System.out.println("Chuoi nhan duoc: " + s);
+
+        String[] parts = s.split(",");
+
+        int[] numbers = new int[parts.length];
+
+        for (int i = 0; i < parts.length; i++) {
+            numbers[i] = Integer.parseInt(parts[i].trim());
+        }
+
+        // Độ dài đoạn tăng hiện tại
+        int currentLength = 1;
+
+        // Độ dài đoạn tăng dài nhất
+        int maxLength = 1;
+
+        // Duyệt từ phần tử thứ hai
+        for (int i = 1; i < numbers.length; i++) {
+
+            // Nếu số hiện tại lớn hơn số đứng ngay trước
+            if (numbers[i] > numbers[i - 1]) {
+                currentLength++;
+            } else {
+                currentLength = 1;
+            }
+
+            // Cập nhật độ dài lớn nhất
+            if (currentLength > maxLength) {
+                maxLength = currentLength;
+            }
+        }
+
+        System.out.println("Do dai day tang dai nhat: " + maxLength);
+
+        // Chuyển kết quả thành chuỗi
+        String result = String.valueOf(maxLength);
+
+        // Gửi kết quả lên server
+        out.write(result.getBytes());
+        out.flush();
+
+        // Đóng kết nối
+        socket.close();
+    }
+    
+}
+public class demkytu{
+    public static void main(String[] args) throws Exception {
+
+        Socket socket = new Socket("36.50.135.242", 2208);
+
+        BufferedReader in =
+                new BufferedReader(
+                        new InputStreamReader(socket.getInputStream()));
+
+        BufferedWriter out =
+                new BufferedWriter(
+                        new OutputStreamWriter(socket.getOutputStream()));
+
+        String code = "B21DCCN900;Ov12N2xM";
+
+        out.write(code);
+        out.newLine();
+        out.flush();
+
+        String s = in.readLine();
+
+        int[] count = new int[256];
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            if (Character.isLetterOrDigit(c)) {
+                count[c]++;
+            }
+        }
+
+        String result = "";
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            if (Character.isLetterOrDigit(c) && count[c] > 1) {
+                result += c + ":" + count[c] + ",";
+                count[c] = 0;
+            }
+        }
+        
+        out.write(result);
+        out.newLine();
+        out.flush();
+
+        socket.close();
+    }
+}
+public class demso0va1 {
+    public static void main(String[] args) throws Exception {
+
+        Socket socket =
+                new Socket("36.50.135.242", 2206);
+
+        InputStream in =
+                socket.getInputStream();
+
+        OutputStream out =
+                socket.getOutputStream();
+
+        String code =
+                "B21DCCN900;8xOAxraE";
+
+        out.write((code + "\n").getBytes());
+        out.flush();
+
+        byte[] buffer =
+                new byte[1024];
+
+        int n =
+                in.read(buffer);
+
+        String s =
+                new String(buffer, 0, n).trim();
+
+        System.out.println(s);
+
+        int ones = 0;
+        int zeros = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+
+            char c =
+                    s.charAt(i);
+
+            if (c == '1') {
+                ones++;
+            }
+
+            if (c == '0') {
+                zeros++;
+            }
+        }
+
+        String result =
+                "ones=" + ones +
+                ";zeros=" + zeros;
+
+        System.out.println(result);
+
+        out.write((result + "\n").getBytes());
+        out.flush();
+
+        socket.close();
+    }
+}
+public class lockytu {
+    public static void main(String[] args) throws Exception {
+
+        // Kết nối tới server
+        Socket socket = new Socket("36.50.135.242", 2208);
+
+        // Luồng nhận dữ liệu
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(socket.getInputStream())
+        );
+
+        // Luồng gửi dữ liệu
+        BufferedWriter out = new BufferedWriter(
+                new OutputStreamWriter(socket.getOutputStream())
+        );
+
+        // Mã sinh viên và mã câu hỏi
+        String code = "B21DCCN900;mhUhFT2v";
+
+        // Gửi mã lên server
+        out.write(code);
+        out.newLine();
+        out.flush();
+
+        // Nhận chuỗi từ server
+        String s = in.readLine();
+
+        System.out.println("Chuoi nhan duoc: " + s);
+
+        // Đánh dấu ký tự đã xuất hiện
+        boolean[] appeared = new boolean[256];
+
+        // Chuỗi kết quả
+        String result = "";
+
+        // Duyệt từng ký tự
+        for (int i = 0; i < s.length(); i++) {
+
+            char c = s.charAt(i);
+
+            // Chỉ giữ chữ cái và ký tự chưa xuất hiện
+            if (Character.isLetter(c) && !appeared[c]) {
+                result += c;
+                appeared[c] = true;
+            }
+        }
+
+        System.out.println("Ket qua: " + result);
+
+        // Gửi kết quả lên server
+        out.write(result);
+        out.newLine();
+        out.flush();
+
+        // Đóng kết nối
+        socket.close();
+    }
+}
+public class lũy_thừa {
+    public static void main(String[] args) throws Exception {
+
+        // 1. Kết nối đến server
+        Socket socket = new Socket("172.188.19.218", 1604);
+
+        // 2. Tạo luồng nhận và gửi dữ liệu
+        InputStream in = socket.getInputStream();
+        OutputStream out = socket.getOutputStream();
+
+        // 3. Gửi mã sinh viên và mã bài tập
+        String code = "B21DCCN900;nxMRj8z";
+
+        out.write(code.getBytes(StandardCharsets.UTF_8));
+        out.flush();
+
+        // 4. Nhận chuỗi dạng a|b từ server
+        byte[] buffer = new byte[1024];
+
+        int n = in.read(buffer);
+
+        String s = new String(buffer,0,n,StandardCharsets.UTF_8).trim();
+
+        System.out.println("Du lieu nhan duoc: " + s);
+
+        // 5. Tách a và b
+        String[] parts = s.split("\\|");
+
+        int a = Integer.parseInt(parts[0].trim());
+        int b = Integer.parseInt(parts[1].trim());
+
+        // 6. Tính a mũ b
+        long result = 1;
+
+        for (int i = 0; i < b; i++) {
+            result *= a;
+        }
+
+        System.out.println(a + "^" + b + " = " + result);
+
+        // 7. Chuyển kết quả thành chuỗi và gửi lên server
+        String response = String.valueOf(result);
+
+        out.write(response.getBytes(StandardCharsets.UTF_8));
+        out.flush();
+
+        socket.close();
+    }
+}
+public class solonthu2 {
+    public static void main(String[] args) throws Exception {
+        Socket socket = new Socket("36.50.135.242", 2206);
+
+        InputStream in = socket.getInputStream();
+        OutputStream out = socket.getOutputStream();
+
+        String code = "B21DCCN900;2HOw3OHA";
+        out.write((code + "\n").getBytes());
+        out.flush();
+
+        byte[] buffer = new byte[1024];
+        int n = in.read(buffer);
+        String s = new String(buffer, 0, n).trim();
+
+        System.out.println(s);
+
+        String[] numbers = s.split(",");
+
+        int max1 = Integer.MIN_VALUE;
+        int max2 = Integer.MIN_VALUE;
+        int index1 = -1;
+        int index2 = -1;
+
+        for (int i = 0; i < numbers.length; i++) {
+            int value = Integer.parseInt(numbers[i].trim());
+
+            if (value > max1) {
+                max2 = max1;
+                index2 = index1;
+
+                max1 = value;
+                index1 = i;
+            } else if (value > max2 && value < max1) {
+                max2 = value;
+                index2 = i;
+            }
+        }
+
+        String result = max2 + "," + index2;
+        System.out.println(result);
+
+        out.write((result + "\n").getBytes());
+        out.flush();
+
+        socket.close();
+    }
+    
+}
+public class tinhchecksum {
+    public static void main(String[] args) throws Exception {
+
+        Socket socket =
+                new Socket("36.50.135.242", 2206);
+
+        InputStream in =
+                socket.getInputStream();
+
+        OutputStream out =
+                socket.getOutputStream();
+
+        String code =
+                "B21DCCN900;Bilfk4xB";
+
+        out.write((code + "\n").getBytes());
+        out.flush();
+
+        byte[] buffer =
+                new byte[1024];
+
+        int n =
+                in.read(buffer);
+
+        String s =
+                new String(buffer, 0, n).trim();
+
+        System.out.println(s);
+
+        String[] numbers =
+                s.split(",");
+
+        int sum = 0;
+
+        for (String num : numbers) {
+            sum += Integer.parseInt(num.trim());
+        }
+
+        int checksum =
+                sum % 256;
+
+        String result =
+                String.valueOf(checksum);
+
+        System.out.println(result);
+
+        out.write((result + "\n").getBytes());
+        out.flush();
+
+        socket.close();
+    }
+}
+public class tinhtongcuadayso {
+    public static void main(String[] args) throws Exception {
+	    Socket socket = new Socket("36.50.135.242",2206);
+		InputStream in = socket.getInputStream();
+		OutputStream out = socket.getOutputStream();
+		String code = "B21DCCN900;oEoenZ7Z";
+		out.write((code + "\n").getBytes());
+		out.flush();
+		byte[]buffer = new byte[1024];
+		int n = in.read(buffer);
+		String s = new String(buffer,0,n).trim();
+		System.out.println("SV gui :" + s);
+		String[] parts = s.split("\\|");
+		int sum = 0;
+		for (String part : parts) {
+		    sum +=Integer.parseInt(part.trim());
+		}
+		String result = String.valueOf(sum);
+                System.out.println("ket qua =" +result);
+                
+		out.write(result.getBytes());
+                
+		out.flush();
+		socket.close();
+	}
+}
+public class tinhtongvatich {
+    public static void main(String[] args) throws Exception {
+
+        Socket socket =
+                new Socket("36.50.135.242", 2207);
+
+        DataInputStream in =
+                new DataInputStream(
+                        socket.getInputStream());
+
+        DataOutputStream out =
+                new DataOutputStream(
+                        socket.getOutputStream());
+
+        String code =
+                "B21DCCN900;KUg9ak0A";
+
+        out.writeUTF(code);
+        out.flush();
+
+        int a = in.readInt();
+        int b = in.readInt();
+
+        System.out.println("a = " + a);
+        System.out.println("b = " + b);
+
+        int sum = a + b;
+        int mul = a * b;
+        
+
+        System.out.println("sum = " + sum);
+        System.out.println("mul = " + mul);
+       
+
+        out.writeInt(sum);
+        out.writeInt(mul);
+      
+        out.flush();
+
+        socket.close();
+    }
+}
+public class daonguocdoandaiK {
+    public static void main(String[] args) throws Exception {
+
+        // Kết nối tới server
+        Socket socket = new Socket("36.50.135.242", 2207);
+
+        // Luồng nhận dữ liệu từ server
+        DataInputStream in =
+                new DataInputStream(socket.getInputStream());
+
+        // Luồng gửi dữ liệu lên server
+        DataOutputStream out =
+                new DataOutputStream(socket.getOutputStream());
+
+        // Mã sinh viên và mã câu hỏi
+        String code = "B21DCCN900;dCNDHojG";
+
+        // Gửi mã sinh viên và mã câu hỏi
+        out.writeUTF(code);
+        out.flush();
+
+        // Nhận số nguyên k trước
+        int k = in.readInt();
+
+        // Nhận chuỗi chứa mảng số nguyên sau
+        String s = in.readUTF();
+
+        System.out.println("k = " + k);
+        System.out.println("Mang nhan duoc: " + s);
+
+        // Tách chuỗi thành các phần tử
+        String[] parts = s.split(",");
+
+        // Chuyển mảng String thành mảng int
+        int[] numbers = new int[parts.length];
+
+        for (int i = 0; i < parts.length; i++) {
+            numbers[i] = Integer.parseInt(parts[i].trim());
+        }
+
+        // Đảo ngược từng đoạn dài k
+        for (int start = 0; start < numbers.length; start += k) {
+
+            int left = start;
+
+            int right = Math.min(
+                    start + k - 1,
+                    numbers.length - 1
+            );
+
+            while (left < right) {
+                int temp = numbers[left];
+                numbers[left] = numbers[right];
+                numbers[right] = temp;
+
+                left++;
+                right--;
+            }
+        }
+
+        // Tạo chuỗi kết quả
+        String result = "";
+
+        for (int i = 0; i < numbers.length; i++) {
+            result += numbers[i];
+
+            if (i < numbers.length - 1) {
+                result += ",";
+            }
+        }
+
+        System.out.println("Ket qua: " + result);
+
+        // Gửi chuỗi kết quả lên server
+        out.writeUTF(result);
+        out.flush();
+
+        // Đóng kết nối
+        socket.close();
+    }
+}
+public class daonguocchuoi {
+    public static void main(String[] args) throws Exception {
+
+        Socket socket = new Socket("172.188.19.218", 1606);
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+
+        String code = "B21DCCN900;YOUR_QCODE";
+        out.write(code);
+        out.newLine();
+        out.flush();
+        String s = in.readLine();
+        System.out.println("Chuoi nhan duoc: " + s);
+        String result = "";
+        // Duyệt chuỗi từ cuối về đầu
+        for (int i = s.length() - 1; i >= 0; i--) {
+            result += s.charAt(i);
+        }
+
+        System.out.println("Chuoi dao nguoc: " + result);
+        out.write(result);
+        out.newLine();
+        out.flush();
+        socket.close();
+    }
+}
+import java.io.*;
+import java.net.*;
+import java.util.*;
+public class DoiChieuBienThien {
+    public static void main(String[] args) throws IOException{
+        Socket socket = new Socket("203.162.10.109", 2207);
+        DataInputStream in = new DataInputStream(socket.getInputStream());
+        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+        String code = "B21DCCN169;oNGj55wV";
+        out.writeUTF(code);
+        out.flush();
+        //Nhận dãy số
+        String s = in.readUTF(); System.out.println(s);
+        //Chuyển chuỗi thành dãy số
+        ArrayList<Integer>a = new ArrayList<>();
+        String []tmp = s.trim().split(",");
+        for(String x: tmp) a.add(Integer.parseInt(x.trim()));
+        //Chuyển vào dãy kết quả
+        int bienThien = 0, n = a.size();
+        for(int i = 0;i< n - 1;i++) bienThien+=Math.abs(a.get(i) - a.get(i + 1));
+        int doiChieu = 0;
+        for (int i = 1; i < n - 1; i++) {
+            if ((a.get(i) > a.get(i - 1) && a.get(i) > a.get(i + 1)) ||(a.get(i) < a.get(i - 1) && a.get(i) < a.get(i + 1)))  doiChieu++;
+        }
+        out.writeInt(doiChieu); System.out.println(doiChieu);
+        out.writeInt(bienThien); System.out.println(bienThien);
+        in.close(); out.close(); socket.close();
+    }
+}
+import java.io.*;
+import java.net.*;
+import java.util.*;
+public class NenRLE {
+    public static String xauDao(String s){
+        String res = "";
+        for(int i = s.length() - 1;i>=0;i--) res+=String.format("%c", s.charAt(i));
+        return res;
+    }
+    public static String RLE(String s){
+        int cnt = 1;
+        String ans = "";
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i) == s.charAt(i - 1))cnt++;
+            else {
+                ans+=String.format("%c", s.charAt(i - 1));
+                if(cnt >=2) ans+= String.format("%d", cnt);
+                cnt = 1;
+            }
+        }
+        ans+=String.format("%c", s.charAt(s.length() - 1));
+        if(cnt >=2) ans+= String.format("%d", cnt);
+        return ans;
+    }
+    public static void main(String[] args) throws Exception{
+        Socket socket = new Socket("203.162.10.109", 2208);
+        BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        String code = "B21DCCN169;ji3fQD3Q";
+        bw.write(code); bw.newLine(); bw.flush();
+        //Nhận xâu
+        String s = br.readLine(); System.out.println(s);
+        String []tmp = s.trim().split("\\s+");
+        ArrayList<String>a = new ArrayList<>();
+         // Đảo ngược từng từ rồi nén RLE
+        for (String word : tmp) {
+            String dao = xauDao(word);
+            String nen = RLE(dao);
+            a.add(nen);
+        }
+        // Ghép lại thành chuỗi kết quả
+        String res = String.join(" ", a);
+        System.out.println(res);
+        bw.write(res); bw.newLine(); bw.flush();
+        br.close();
+        bw.close();
+        socket.close();
+    }
+
+}
+import java.io.*;
+import java.net.*;
+import java.util.*;
+public class HeCoSo8va16 {
+    public static void main(String[] args) throws Exception{
+        Socket socket = new Socket("203.162.10.109", 2207);
+        DataInputStream in = new DataInputStream(socket.getInputStream());
+        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+        String code = "B21DCCN377;0LTGyX4p";
+        out.writeUTF(code);
+        out.flush();
+        int n = in.readInt(); System.out.println(n);
+        String oct = Integer.toOctalString(n), hex = Integer.toHexString(n).toUpperCase();
+        out.writeUTF(oct + ";" + hex); out.flush();
+        in.close();out.close();socket.close();
+    }
+}
+import java.io.*;
+import java.net.*;
+import java.util.*;
+public class TungXucXac {
+    public static void main(String[] args) throws IOException{
+        Socket socket = new Socket("203.162.10.109", 2207);
+        DataInputStream in = new DataInputStream(socket.getInputStream());
+        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+        String code = "B21DCCN370;PpWEQ6F0";
+        out.writeUTF(code);
+        out.flush();
+        int n = in.readInt();
+        int []a = new int[n];
+        for(int i = 0;i<n;i++){
+            a[i] = in.readInt();
+            System.out.print(a[i] + " ");
+        }
+        System.out.println();
+        int []cnt = new int[15];
+        for(int x: a) cnt[x]++;
+        for(int i = 1;i<=6;i++){
+            out.writeFloat((float)cnt[i]/n);
+            System.out.print((float)cnt[i]/n + " ");
+        }
+        in.close();
+        out.close();
+        socket.close();
+    }
+}
+import java.io.*;
+import java.net.*;
+public class PhuongSai{
+    public static void main(String[] args) throws IOException{
+        Socket socket = new Socket("203.162.10.109", 2207);
+        DataInputStream in = new DataInputStream(socket.getInputStream());
+        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+        String code = "B21DCCN624;1pKJUCce";
+        out.writeUTF(code);
+        out.flush();
+        int n = in.readInt();
+        int []a = new int[n];
+        for(int i = 0;i<n;i++) a[i] = in.readInt();
+        int tong = 0;
+        for(int i = 0;i<n;i++) tong+=a[i];
+        float tbc = (float)tong/n;
+        float tmp = 0;
+        for(int i = 0;i<n;i++) tmp+=(float)(a[i] - tbc) * (a[i] - tbc);
+        float pSai = tmp/n;
+        out.writeInt(tong); out.flush();
+        out.writeFloat(tbc); out.flush();
+        out.writeFloat(pSai); out.flush();
+        in.close();
+        out.close();
+        socket.close();
+    }
+}
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+public class HieuHaiTapHop {
+    public static void main(String[] args) throws Exception{
+        Socket socket = new Socket("203.162.10.109", 2208);
+        BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        String code = "B21DCCN003;vYbP7vOA";
+        bw.write(code); bw.newLine(); bw.flush();
+        String s1 = br.readLine(); System.out.println(s1);
+        String s2 = br.readLine(); System.out.println(s2);
+        String ans = "";
+        int []cnt = new int[10005]; 
+        for(char x: s2.toCharArray()) cnt[x]++;
+        for(char x: s1.toCharArray()){
+            if(cnt[x]==0) ans+=x;
+        }
+        System.out.println(ans);
+        bw.write(ans); bw.newLine(); bw.flush();
+    }
+}
+import java.net.*;
+import java.util.*;
+public class HeCoSo2Va16 {
+    public static void main(String[] args) throws Exception{
+        Socket socket = new Socket("203.162.10.109", 2207);
+        DataInputStream in = new DataInputStream(socket.getInputStream());
+        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+        String code = "B22DCCN008;UsLuWWET ";
+        out.writeUTF(code);
+        out.flush();
+        int n = in.readInt(); System.out.println(n);
+        String bin = Integer.toBinaryString(n), hex = Integer.toHexString(n).toUpperCase();
+        out.writeUTF(bin + ";" + hex); out.flush();
+        in.close();out.close();socket.close();
+    }
+}
+import java.io.*;
+import java.net.*;
+import java.util.*;
+public class TachChuoi {
+    public static void main(String[] args) throws IOException{
+        Socket socket = new Socket("203.162.10.109", 2208);
+        BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        String code = "B21DCCN718;uQWRjN4f";
+        bw.write(code);
+        bw.newLine();
+        bw.flush();
+        String s = br.readLine();
+        System.out.println(s);
+        String s1 = "", s2 = "";
+        for(char x: s.toCharArray()){
+            if(Character.isDigit(x)||Character.isAlphabetic(x)) s1+=String.valueOf(x);
+            else s2+=String.valueOf(x);
+        }
+        System.out.println(s1);
+        System.out.println(s2);
+        //gui s1
+        bw.write(s1);
+        bw.newLine();
+        bw.flush();
+        //gui s2
+        bw.write(s2);
+        bw.newLine();
+        bw.flush();
+        //đóng kết nối
+        bw.newLine();
+        bw.flush();
+        br.close();
+        bw.close();
+        socket.close();
+    }
+}
+import java.io.*;
+import java.net.*;
+import java.util.*;
+public class TimTuDaiNhat {
+    public static void main(String[] args) throws IOException{
+        //
+        Socket socket = new Socket("203.162.10.109", 2208);
+        BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        //
+        String code = "B21DCCN008;oKOoB5Fc";
+        bw.write(code); bw.newLine(); bw.flush();
+        //
+        String s = br.readLine();
+        System.out.println(s);
+        String []a = s.trim().split("\\s+");
+        //
+        String ans = a[0];int res = a[0].length(); int pos = 1;
+        for(int i = 1;i<a.length;i++){
+            if(a[i].length() > res){
+                ans = a[i];
+                res = a[i].length();
+                pos = s.indexOf(ans);
+            }
+        }
+        System.out.println(ans);
+        System.out.println(pos);
+        bw.write(ans); bw.newLine(); bw.flush();
+        bw.write(pos + ""); bw.newLine(); bw.flush();
+    }
+}
+import java.io.*;
+import java.net.*;
+import java.util.*;
+public class PhepToanCoBan {
+    public static int UCLN(int a, int b){
+        while(b!=0){
+            int tmp = a%b;
+            a = b;
+            b = tmp;
+        }
+        return a;
+    }
+    public static void main(String[] args) throws IOException{
+        Socket socket = new Socket("203.162.10.109", 2207);
+        DataInputStream in = new DataInputStream(socket.getInputStream());
+        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+        String code = "B21DCCN222;nkBwM6AE";
+        out.writeUTF(code);
+        out.flush();
+        int a = in.readInt(), b = in.readInt();
+        int tong = a + b, tich = a * b, ucln = UCLN(a, b), bcnn = a * b/UCLN(a, b);
+        out.writeInt(ucln); out.writeInt(bcnn); out.writeInt(tong); out.writeInt(tich);
+        in.close();
+        out.close();
+        socket.close();
+    }
+}
+import java.io.*;
+import java.net.*;
+import java.util.*;
+public class DaySoCollazt{
+    public static void main(String[] args) throws IOException{
+        Socket socket = new Socket("203.162.10.109", 2206);
+        InputStream in = socket.getInputStream();
+        OutputStream out = socket.getOutputStream();
+        //Gửi mã sinh viên, mã đề
+        String code = "B22DCCN007;BDF0CKv5";
+        out.write(code.getBytes());
+        out.flush();
+        //Đọc luồng byte
+        byte[] buffer = new byte[1024];
+        int bytesRead = in.read(buffer);
+        String s = new String(buffer, 0, bytesRead);
+        System.out.println(s);
+        //Nhận số n
+        int n = Integer.parseInt(s);
+        ArrayList<Integer>ans = new ArrayList<>();
+        while (n != 1){
+            ans.add(n);
+            if (n % 2 == 1) n = 3 * n + 1;
+            else n /= 2;
+        }
+        ans.add(1);
+        int S = ans.size();
+        String res = "";
+        for(int i = 0; i < S - 1; i++) res += String.format("%d ", ans.get(i));
+        res += String.format("%d; %d", ans.get(S - 1), S);
+        System.out.println(res);
+        out.write(res.getBytes()); out.flush();
+        //Đóng kết nối
+        in.close(); out.close(); socket.close();
+    }
+}
+
+import java.io.*;
+import java.net.*;
+
+public class UCLNvsBCNN {
+    public static void main(String[] args) throws Exception {
+
+        Socket socket = new Socket("36.50.135.242", 2207);
+
+        DataInputStream in =
+                new DataInputStream(socket.getInputStream());
+
+        DataOutputStream out =
+                new DataOutputStream(socket.getOutputStream());
+
+        String code = "B21DCCN900;i9VhkNb";
+
+        out.writeUTF(code);
+        out.flush();
+
+        int a = in.readInt();
+        int b = in.readInt();
+
+        int x = Math.abs(a);
+        int y = Math.abs(b);
+
+        while (y != 0) {
+            int r = x % y;
+            x = y;
+            y = r;
+        }
+
+        int ucln = x;
+
+        int bcnn;
+
+        if (a == 0 || b == 0) {
+            bcnn = 0;
+        } else {
+            bcnn = Math.abs(a / ucln * b);
+        }
+
+        out.writeInt(ucln);System.out.println(ucln);
+        out.writeInt(bcnn);System.out.println(bcnn);
+        out.flush();
+
+        socket.close();
+    }
+}
+import java.io.*;
+import java.net.*;
+import java.util.*;
+public class SapXepChanLe {
+    public static void main(String[] args) throws IOException {
+        Socket socket = new Socket("203.162.10.109", 2206);
+        InputStream in = socket.getInputStream();
+        OutputStream out = socket.getOutputStream();
+        String code = "B21DCCN222;rMdCliDV";
+        out.write(code.getBytes());
+        out.flush();
+        byte[] buffer = new byte[1024];
+        int bytesRead = in.read(buffer);
+        String s = new String(buffer, 0, bytesRead).trim();
+        System.out.println("b. Received from server: " + s);
+        String[] a = s.split(",");
+        ArrayList<Integer> chan = new ArrayList<>(), le = new ArrayList<>();
+        for (String x : a) {
+            int x1 = Integer.parseInt(x.trim());  
+            if (x1 % 2 == 0) chan.add(x1);
+            else le.add(x1);
+        }
+        Collections.sort(chan);
+        Collections.sort(le);
+        StringBuilder ans = new StringBuilder("[");
+        for (int i = 0; i < chan.size(); i++) {
+            ans.append(chan.get(i));
+            if (i != chan.size() - 1) ans.append(", ");
+        }
+        ans.append("];[");
+        for (int i = 0; i < le.size(); i++) {
+            ans.append(le.get(i));
+            if (i != le.size() - 1) ans.append(", ");
+        }
+        ans.append("]");
+        System.out.println("d. Sending to server: " + ans.toString());
+        out.write(ans.toString().getBytes());
+        out.flush();
+        in.close();
+        out.close();
+        socket.close();
+    }
+}
+import java.io.*;
+import java.net.*;
+import java.util.*;
+public class SapXepChuoi {
+    public static void main(String[] args) throws IOException{
+        Socket socket = new Socket("203.162.10.109", 2208);
+        BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        String code = "B21DCCN624;CZMrJdmx";
+        bw.write(code);
+        bw.newLine();
+        bw.flush();
+        String s = br.readLine();
+        System.out.println(s);
+        String []a = s.trim().split("\\s+");
+        ArrayList<String>res = new ArrayList<>();
+        String q = "";
+        for(String x: a) res.add(x);
+        Collections.sort(res);
+        for(int i = 0;i<res.size() - 1;i++) q+=res.get(i) + " ";
+        q+=res.get(res.size() - 1);
+        bw.write(q);
+        System.out.println(q);
+        bw.newLine();
+        bw.flush();
+        br.close();
+        bw.close();
+        socket.close();
+    }
+}
+import java.io.*;
+import java.net.*;
+import java.util.*;
+public class DayConKhongLapDaiNhat {
+    public static void main(String[] args) throws Exception{
+        //
+        Socket socket = new Socket("203.162.10.109", 2206);
+        InputStream in = socket.getInputStream();
+        OutputStream out = socket.getOutputStream();
+        //
+        String code = "B21DCCN214;HyHAk4P5";
+        out.write(code.getBytes());
+        out.flush();
+        //
+        byte[] buffer = new byte[1024];
+        int bytesRead = in.read(buffer);
+        String s = new String(buffer, 0, bytesRead);
+        System.out.println(s);
+        //
+        int ans = 0;//độ dài xâu con dài nhất không lặp
+        String strMax = "";//dãy con dài nhất không lặp
+        String res = "";
+        for(int i = 0;i<s.length();i++){
+            int []cnt = new int[256];
+            String tmp = "";
+            for(int j = i;j<s.length();j++){
+                if(cnt[s.charAt(j)]==1) break;
+                else{
+                    cnt[s.charAt(j)]=1;
+                    tmp+=s.charAt(j);
+                    if(tmp.length() > strMax.length()){ 
+                        strMax = tmp;
+                        ans = tmp.length();
+                    }
+                }
+            }
+        }
+        res = String.format("%s;%d", strMax, ans);
+        System.out.println(res);
+        //
+        out.write(res.getBytes());
+        out.flush();
+    }
+}
+import TCP.Laptop;
+
+import java.io.*;
+import java.net.*;
+
+public class sualaptop {
+
+    // Đổi lại từ đầu tiên và từ cuối cùng
+    public static String repairName(String name) {
+
+        String[] words = name.trim().split("\\s+");
+
+        if (words.length <= 1) {
+            return name.trim();
+        }
+
+        String temp = words[0];
+        words[0] = words[words.length - 1];
+        words[words.length - 1] = temp;
+
+        String result = "";
+
+        for (int i = 0; i < words.length; i++) {
+            result += words[i];
+
+            if (i < words.length - 1) {
+                result += " ";
+            }
+        }
+
+        return result;
+    }
+
+    // Đảo ngược các chữ số của số lượng
+    public static int repairQuantity(int quantity) {
+
+        int reversed = 0;
+
+        while (quantity > 0) {
+            int digit = quantity % 10;
+            reversed = reversed * 10 + digit;
+            quantity /= 10;
+        }
+
+        return reversed;
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        Socket socket = new Socket("36.50.135.242", 2209);
+
+        ObjectOutputStream out =
+                new ObjectOutputStream(socket.getOutputStream());
+
+        ObjectInputStream in =
+                new ObjectInputStream(socket.getInputStream());
+
+        String studentCode = "B21DCCN900;xUKwnjAM";
+
+        // Gửi đối tượng String
+        out.writeObject(studentCode);
+        out.flush();
+
+        // Nhận đối tượng Laptop
+        Laptop laptop = (Laptop) in.readObject();
+
+        System.out.println("Truoc khi sua: " + laptop);
+
+        // Sửa tên
+        String repairedName = repairName(laptop.getName());
+        laptop.setName(repairedName);
+
+        // Sửa số lượng
+        int repairedQuantity = repairQuantity(laptop.getQuantity());
+        laptop.setQuantity(repairedQuantity);
+
+        System.out.println("Sau khi sua: " + laptop);
+
+        // Gửi lại đối tượng Laptop đã sửa
+        out.writeObject(laptop);
+        out.flush();
+
+        socket.close();
+    }
+}
+package TCP;
+import java.io.*;
+public class Laptop implements Serializable {
+    private static final long serialVersionUID = 20150711;
+    private int id;
+    private String code, name;
+    private int quantity;
+    public Laptop(int id, String code, String name, int quantity) {
+        this.id = id;
+        this.code = code;
+        this.name = name;
+        this.quantity = quantity;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public int getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+    @Override
+    public String toString() {
+        return "Product{" + "id=" + id + ", code=" + code + ", name=" + name + ", quantity=" + quantity + '}';
+    }
+}
+import java.io.*;
+import java.net.*;
+import TCP.Address;
+public class DiaChi {
+    public static String chuanHoa0(String s){//Viết hoa chữ cái đầu, còn lại thường
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase();
+    }
+    public static String chuanHoa1 (String s){ //Chuẩn hoá địa chỉ
+        String ans = "";
+        String []tmp = s.trim().split("\\s+");
+        for(String x: tmp) ans+=chuanHoa0(loaiBo1(x)) + " ";
+        return ans;
+    }
+    public static String loaiBo1 (String s){ //Loại bỏ ký tự đặc biệt
+        String ans = "";
+        for(char x: s.toCharArray()){
+            if(Character.isAlphabetic(x) || Character.isDigit(x)) ans+=String.format("%c", x);
+        }
+        return ans;
+    }
+    public static String loaiBo2 (String s){ //Loại bỏ ký tự đặc biệt
+        String ans = "";
+        for(char x: s.toCharArray()){
+            if(Character.isDigit(x) || x=='-') ans+=String.format("%c", x);
+        }
+        return ans;
+    }
+    public static void main(String[] args) throws Exception{
+        Socket socket = new Socket("203.162.10.109", 2209);
+        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+        String code = "B22DCCN786;AjecapMw";
+        out.writeObject(code);
+        out.flush();
+        Address ad = (Address)in.readObject();
+        System.out.println(ad);
+        ad.setAddressLine(chuanHoa1(ad.getAddressLine()));
+        ad.setPostalCode(loaiBo2(ad.getPostalCode()));
+        System.out.println(ad);
+        out.writeObject(ad);
+        out.flush();
+        in.close();out.close();socket.close();
+    }
+}
+package TCP;
+import java.io.*;
+public class Address implements Serializable{
+    private static final long serialVersionUID = 20180801L;
+    private int id;
+    private String code, addressLine, city, postalCode;
+    public String getAddressLine() {
+        return addressLine;
+    }
+    public void setAddressLine(String addressLine) {
+        this.addressLine = addressLine;
+    }
+    public String getPostalCode() {
+        return postalCode;
+    }
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+    @Override
+    public String toString() {
+        return "Address{" + "id=" + id + ", code=" + code + ", addressLine=" + addressLine + ", city=" + city + ", postalCode=" + postalCode + '}';
+    }
+}
+package TCP;
+import java.io.*;
+import java.net.*;
+import TCP.Customer;
+public class KhachHang {
+    public static void main(String[] args) throws Exception{
+        // Kết nối tới server
+        Socket socket = new Socket("203.162.10.109", 2209);
+        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+        // a. Gửi mã sinh viên và mã câu hỏi
+        String code = "B21DCCN004;6Tw3qHNF";
+        out.writeObject(code);
+        out.flush();
+        // b. Nhận đối tượng Customer từ server
+        Customer customer = (Customer) in.readObject();
+        System.out.println(customer);
+        // c. Chuẩn hóa thông tin khách hàng
+        //Chuẩn hoá tên
+        String []tenTmp = customer.getName().split("\\s+");
+        String tenMoi = "";
+        tenMoi+=tenTmp[tenTmp.length - 1].toUpperCase()+", ";
+        for(int i = 0;i<tenTmp.length - 1;i++) tenMoi+=Character.toUpperCase(tenTmp[i].charAt(0)) + tenTmp[i].substring(1).toLowerCase() + " ";
+        customer.setName(tenMoi.trim());
+        //Chuẩn hoá ngày sinh
+        String []nsTmp = customer.getDayOfBirth().split("-");
+        String nsMoi = nsTmp[1] + "/" + nsTmp[0] + "/" + nsTmp[2];
+        customer.setDayOfBirth(nsMoi);
+        //Tạo username
+        String userMoi = "";
+        for(int i = 0;i<tenTmp.length - 1;i++) userMoi+=Character.toLowerCase(tenTmp[i].charAt(0));
+        userMoi+=tenTmp[tenTmp.length - 1].toLowerCase();
+        customer.setUserName(userMoi);
+        // d. Gửi lại đối tượng đã được sửa đổi
+        System.out.println(customer);
+        out.writeObject(customer);
+        out.flush();
+    }
+
+    
+}
+package TCP;
+import java.io.Serializable;
+public class Customer implements Serializable {
+    private static final long serialVersionUID = 20170711L; // Theo yêu cầu của đề bài
+    private int id;
+    private String code, name, dayOfBirth, userName;
+    public Customer(int id, String code, String name, String dayOfBirth, String userName) {
+        this.id = id;
+        this.code = code;
+        this.name = name;
+        this.dayOfBirth = dayOfBirth;
+        this.userName = userName;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getDayOfBirth() {
+        return dayOfBirth;
+    }
+    public void setDayOfBirth(String dayOfBirth) {
+        this.dayOfBirth = dayOfBirth;
+    }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", dayOfBirth='" + dayOfBirth + '\'' +
+                ", userName='" + userName + '\'' +
+                '}';
+    }
+}
+package TCP;
+import java.io.*;
+import java.net.*;
+import TCP.Product;
+public class SanPham {
+    public static void main(String[] args) throws IOException, ClassNotFoundException{
+        Socket socket = new Socket("203.162.10.109", 2209);
+        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+        //a.
+        String code = "B21DCCN370;151GNZvT";
+        out.writeObject(code);
+        out.flush();
+        //b.
+        Product product = (Product) in.readObject();
+        System.out.println("San pham ban dau: " + product);
+        //c.
+        int x = (int) product.getPrice();
+        int tong = 0;
+        while(x > 0){
+            tong+=x%10;
+            x/=10;
+        }
+        product.setDiscount(tong);
+        //d.
+        System.out.println("San pham luc sau: " + product);
+        out.writeObject(product);
+        out.flush();
+        //Đóng kết nối, chú ý là phải có phần này nếu không sẽ bị máy chấm ngoại lệ
+        in.close();
+        out.close();
+        socket.close();
+    }
+}
+package TCP;
+import java.io.*;
+public class Product implements Serializable{
+    private static final long serialVersionUID = 20231107;
+    private int id, discount;
+    private double price;
+    private String name;
+    public Product(int id, double price, String name) {
+        this.id = id;
+        this.price = price;
+        this.name = name;
+    }
+    public double getPrice() {
+        return price;
+    }
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+    @Override
+    public String toString() {
+        return "Product{" + "id=" + id + ", discount=" + discount + ", price=" + price + ", name=" + name + '}';
+    }
+}
+package TCP;
+import java.io.*;
+import java.net.*;
+import TCP.Student;
+public class SinhVien {
+    public static void main(String[] args) throws IOException, ClassNotFoundException{
+        Socket socket = new Socket("203.162.10.109", 2209);
+        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+        //a.
+        String code = "B21DCCN222;j5ELZdmS";
+        out.writeObject(code);
+        out.flush();
+        //b.
+        Student student = (Student) in.readObject();
+        System.out.println("Sinh vien ban dau: " + student);
+        //c.
+        float x = student.getGpa();
+        if (x >= 3.7) student.setGpaLetter("A");
+        else if (x >= 3.0) student.setGpaLetter("B");
+        else if (x >= 2.0) student.setGpaLetter("C");
+        else if (x >= 1.0) student.setGpaLetter("D");
+        else student.setGpaLetter("F");
+        //d.
+        System.out.println("Sinh vien luc sau: " + student);
+        out.writeObject(student);
+        out.flush();
+    }
+}
+package TCP;
+import java.io.*;
+public class Student implements Serializable {
+    private static final long serialVersionUID = 20151107;
+    private int id;
+    private String code, gpaLetter;
+    private float gpa;
+    public Student(int id, String code, float gpa) {
+        this.id = id;
+        this.code = code;
+        this.gpa = gpa;
+    }
+    public float getGpa() {
+        return gpa;
+    }
+    public void setGpaLetter(String gpaLetter) {
+        this.gpaLetter = gpaLetter;
+    }
+    @Override
+    public String toString() {
+        return this.id + " " + this.code + " " + this.gpa + " " + this.gpaLetter;
+    }
+}
