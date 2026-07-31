@@ -1,4 +1,13 @@
-
+/**
+Một chương trình server cho phép giao tiếp qua giao thức UDP tại cổng 2207. 
+* Yêu cầu là xây dựng một chương trình client trao đổi thông tin với server theo kịch bản:  
+* a. Gửi thông điệp là một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng “;studentCode;qCode”.
+* Ví dụ: “;B15DCCN001;73457A17”  b. Nhận thông điệp là một chuỗi từ server theo định dạng “requestId;n;A1,A2,...An” , 
+* với  - requestId là chuỗi ngẫu nhiên duy nhất  - n là một số ngẫu nhiên nhỏ hơn 100.   
+** A1, A2 ... Am (m  < = n) là các giá trị ngẫu nhiên nhỏ hơn hoặc bằng n và có thể trùng nhau.  Ex: requestId;10;2,3,5,6,5  
+* c. Tìm kiếm các giá trị còn thiếu và gửi lên server theo định dạng “requestId;B1,B2,...,Bm”  Ex: requestId;1,4,7,8,9,10 
+* d. Đóng socket và kết thúc chương trình.
+ */
 import java.net.*;
 import java.util.Arrays;
 
@@ -97,7 +106,16 @@ public class timsoconthieu {
     }
 }
 
-
+/**
+Một chương trình server cho phép kết nối qua giao thức UDP tại cổng 2208.
+* Yêu cầu là xây dựng một chương trình client tương tác với server kịch bản dưới đây: 
+* a. Gửi thông điệp là một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng “;studentCode;qCode”. Ví dụ: “;B15DCCN001;EE29C059”  
+* b. Nhận thông điệp từ server theo định dạng “requestId; data”   
+* - requestId là một chuỗi ngẫu nhiên duy nhất  - data là chuỗi dữ liệu đầu vào cần xử lý  Ex: “requestId;Qnc8d5x78aldSGWWmaAAjyg3”  
+* c. Tìm kiếm ký tự xuất hiện nhiều nhất trong chuỗi và gửi lên server theo định 
+* dạng “requestId;ký tự xuất hiện nhiều nhất: các vị trí xuất hiện ký tự đó”   ví dụ: “requestId;8:4,9,”  
+* d. Đóng socket và kết thúc chương trình
+ */
 public class kytuxuathiennhieunhat {
     public static void main(String[] args) throws Exception {
 
@@ -195,6 +213,18 @@ public class kytuxuathiennhieunhat {
         socket.close();
     }
 }
+
+/**
+ Một chương trình server cho phép giao tiếp qua giao thức UDP tại cổng 2207. 
+ * Yêu cầu là xây dựng một chương trình client trao đổi thông tin với server theo kịch bản: 
+ * a. Gửi thông điệp là một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng “;studentCode;qCode”. 
+ * Ví dụ: “;B15DCCN001;DC73CA2E” b. Nhận thông điệp là một chuỗi từ server theo 
+ * định dạng “requestId;a1,a2,...,a50” - requestId là chuỗi ngẫu nhiên duy nhất - a1 -> a50 là 50 số nguyên ngẫu nhiên 
+ * c. Thực hiện tìm giá trị lớn nhất và giá trị nhỏ nhất thông điệp trong a1 -> a50 và gửi thông 
+ * điệp lên lên server theo định dạng “requestId;max,min” 
+ * d. Đóng socket và kết thúc chương trình
+ */
+import java.net.*;
 public class timgiatriminmax {
     public static void main(String[] args) throws Exception {
 
@@ -288,6 +318,23 @@ public class timgiatriminmax {
     }
 }
 
+
+/**
+BÀI 3. CHUẨN HOÁ XÂU KÝ TỰ [String]
+[Mã câu hỏi (qCode): tmczgSLy]. Một chương trình server cho phép kết nối qua giao thức UDP
+tại cổng 2208. Yêu cầu là xây dựng một chương trình client trao đổi thông tin với server theo kịch
+bản dưới đây:
+a. Gửi thông điệp là một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng
+“;studentCode;qCode”. Ví dụ: “;B15DCCN001;5B35BCC1”
+b. Nhận thông điệp từ server theo định dạng “requestId;data”
+- requestId là một chuỗi ngẫu nhiên duy nhất
+- data là chuỗi dữ liệu cần xử lý
+c. Xử lý chuẩn hóa chuỗi đã nhận thành theo nguyên tắc
+i. Ký tự đầu tiên của từng từ trong chuỗi là in hoa
+ii. Các ký tự còn lại của chuỗi là in thường
+Gửi thông điệp chứa chuỗi đã được chuẩn hóa lên server theo định dạng “requestId;data”
+d. Đóng socket và kết thúc chương trình
+ */
 import java.net.*;
 public class chuanhoaxaukytu {
     public static void main(String[] args) throws Exception {
@@ -385,6 +432,21 @@ public class chuanhoaxaukytu {
     }
 }
 
+
+/**
+ BÀI 4. NHỎ THỨ HAI VÀ LỚN THỨ 2 [DataType]
+[Mã câu hỏi (qCode): oQifsr90].
+Một chương trình server cho phép giao tiếp qua giao thức UDP tại cổng 2207. Yêu cầu là xây dựng
+một chương trình client trao đổi thông tin với server theo kịch bản:
+a. Gửi thông điệp là một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng
+“;studentCode;qCode”. Ví dụ: “;B15DCCN004;99D9F604”
+b. Nhận thông điệp là một chuỗi từ server theo định dạng “requestId;z1,z2,...,z50” requestId là
+chuỗi ngẫu nhiên duy nhấtTrang 3
+z1 -> z50 là 50 số nguyên ngẫu nhiên
+c. Thực hiện tính số lớn thứ hai và số nhỏ thứ hai của thông điệp trong z1 -> z50 và gửi thông
+điệp lên server theo định dạng “requestId;secondMax,secondMin”
+d. Đóng socket và kết thúc chương trình
+ */
 import java.net.*;
 import java.util.Arrays;
 public class timsolont2vanhot2 {
@@ -491,6 +553,21 @@ public class timsolont2vanhot2 {
     }
 }
 
+/**
+ BÀI 2. ĐẾM SỐ LẦN XUẤT HIỆN[002]
+[Mã câu hỏi (qCode): vSgxl3HQ]. Một chương trình server cho phép giao tiếp qua giao thức UDP
+tại cổng 2208. Yêu cầu xây dựng chương trình client trao đổi thông tin với server theo kịch bản:
+a. Gửi một thông điệp chứa mã sinh viên và mã câu hỏi theo định dạng ";studentCode;qCode". Ví
+dụ: ";B15DCCN001;9F8C2D3A".
+b. Nhận một thông điệp từ server theo định dạng "requestId;data", với:
+requestId là chuỗi ngẫu nhiên duy nhất.
+data là một chuỗi ký tự liên tiếp cần xử lý. Ví dụ: "requestId;aaabbbccdaa"
+c. Xử lý chuỗi bằng cách đếm số lượng ký tự và gom chúng lại theo định dạng "số_lần_ký_tự".
+Gửi kết quả về server theo định dạng:
+"requestId;processedData"
+Ví dụ: Với chuỗi "aaabbbccdaa", kết quả sẽ là: "requestId;5a3b2c1d"
+d. Đóng socket và kết thúc chương trình.
+ */
 import java.net.*;
 public class demsolanxuathien {
     public static void main(String[] args) throws Exception {
@@ -589,6 +666,23 @@ public class demsolanxuathien {
 }
 
 
+/**
+ BÀI 3. LỌC KÝ TỰ [010]
+[Mã câu hỏi (qCode): GfeNSBMT]. [Loại bỏ ký tự đặc biệt, số, trùng và giữ nguyên thứ tự xuất
+hiện]
+Một chương trình server cho phép kết nối qua giao thức UDP tại cổng 2208 . Yêu cầu là xây dựng
+một chương trình client trao đổi thông tin với server theo kịch bản dưới đây:
+a. Gửi thông điệp là một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng
+";studentCode;qCode". Ví dụ: ";B15DCCN001;06D6800D"
+b. Nhận thông điệp là một chuỗi từ server theo định dạng "requestId;strInput"
+• requestId là chuỗi ngẫu nhiên duy nhất
+• strInput là chuỗi thông điệp cần xử lý
+c. Thực hiện loại bỏ ký tự đặc biệt, số, ký tự trùng và giữ nguyên thứ tự xuất hiện của chúng.
+Gửi thông điệp lên server theo định dạng "requestId;strOutput", trong đó strOutput là chuỗi đã được
+xử lý ở trên
+d. Đóng socket và kết thúc chương trình.
+
+import java.net.*;
 public class lockytuUDP {
     public static void main(String[] args) throws Exception {
 
@@ -676,6 +770,22 @@ public class lockytuUDP {
     }
 }
 
+/**
+ BÀI 4. MÃ HOÁ CAESAR [014]
+[Mã câu hỏi (qCode): J5SE2YXc]. Mật mã caesar, còn gọi là mật mã dịch chuyển, để giải mã thì
+mỗi ký tự nhận được sẽ được thay thế bằng một ký tự cách nó một đoạn s. Ví dụ: với s = 3 thì ký
+tự “A” sẽ được thay thế bằng ký tự “D”.
+Một chương trình server cho phép giao tiếp qua giao thức UDP tại cổng 2207. Yêu cầu xây dựng
+chương trình client trao đổi thông tin với server theo kịch bản mô tả dưới đây:
+a. Gửi thông điệp là một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng
+";studentCode;qCode". Ví dụ: ";B15DCCN001;825EE3A7"
+b. Nhận thông điệp là một chuỗi từ server theo định dạng "requestId;strEncode;s".
+• requestId là chuỗi ngẫu nhiên duy nhất
+• strEncode là chuỗi thông điệp bị mã hóa
+• s là số nguyên chứa giá trị độ dịch của mã
+c. Giải mã tìm thông điệp ban đầu và gửi lên server theo định dạng “requestId;strDecode”
+d. Đóng socket và kết thúc chương trình.
+ */
 public class mahoaceasar {
     public static void main(String[] args) throws Exception {
 
@@ -784,6 +894,23 @@ public class mahoaceasar {
         socket.close();
     }
 }
+
+/**
+ BÀI 9. HIỆU CỦA HAI TẬP KÝ TỰ[020]
+[Mã câu hỏi (qCode): JQCO3izC]. [Loại bỏ ký tự đặc biệt và ký tự trùng giữ nguyên thứ tự xuất
+hiện]
+Một chương trình server cho phép kết nối qua giao thức UDP tại cổng 2208 . Yêu cầu là xây dựng
+một chương trình client trao đổi thông tin với server theo kịch bản dưới đây:
+a. Gửi thông điệp là một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng
+";studentCode;qCode”. Ví dụ: ";B15DCCN001;B34D51E0"
+b. Nhận thông điệp là một chuỗi từ server theo định dạng "requestId;str1;str2".
+• requestId là chuỗi ngẫu nhiên duy nhất
+• str1,str2 lần lượt là chuỗi thứ nhất và chuỗi thứ hai
+c. Loại bỏ các ký tự trong chuỗi thứ nhất mà xuất hiện trong chuỗi thứ hai, giữ nguyên thứ tự
+xuất hiện. Gửi thông điệp là một chuỗi lên server theo định dạng "requestId;strOutput", trong đó
+chuỗi strOutput là chuỗi đã được xử lý ở trên.
+d. Đóng socket và kết thúc chương trình.
+ */
 import java.net.*;
 
 public class hieu2tapkytu {
@@ -892,6 +1019,20 @@ public class hieu2tapkytu {
         socket.close();
     }
 }
+
+/**
+ BÀI 10. TỔNG CÁC CHỮ SỐ [001]
+[Mã câu hỏi (qCode): 0Iend7Pp]. Một chương trình server cho phép giao tiếp qua giao thức UDP
+tại cổng 2207. Yêu cầu là xây dựng chương trình client trao đổi thông tin với server theo kịch bản:
+a. Gửi thông điệp là một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng
+";studentCode;qCode". Ví dụ: ";B15DCCN011;A1F3D5”
+b. Nhận thông điệp là một chuỗi từ server theo định dạng "requestId;num", với:
+- requestId là chuỗi ngẫu nhiên duy nhất.
+- num là một số nguyên lớn.
+c. Tính tổng các chữ số trong num và gửi lại tổng này về server theo định dạng
+"requestId;sumDigits".
+d. Đóng socket và kết thúc chương trình.
+ */
 import java.net.*;
 
 public class tongcacchuso {
@@ -975,6 +1116,23 @@ public class tongcacchuso {
         socket.close();
     }
 }
+
+/**
+BÀI 11. LIỆT KÊ SỐ NGUYÊN TỐ [B17DCAT176]
+[Mã câu hỏi (qCode): 78CCQ6xD]. Một chương trình server cho phép giao tiếp qua giao thức UDP
+tại cổng 2207. Yêu cầu là xây dựng một chương trình client trao đổi thông tin với server theo kịch
+bản:
+a. Gửi thông điệp là một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng
+";studentCode;qCode". Ví dụ: ";B15DCCN009;F3E8B2D4".
+b. Nhận thông điệp là một chuỗi từ server theo định dạng "requestId;n, n", với:
+--- requestId là chuỗi ngẫu nhiên duy nhất.
+--- n là một số nguyên ngẫu nhiên ≤ 100.Luyện thi UDP
+_____________________________________________________________________________________________
+Trang 6
+c. Tính và gửi về server danh sách n số nguyên tố đầu tiên theo định dạng "requestId;p1,p2,...,pk",
+trong đó p1,p2,...,pk là các số nguyên tố.
+d. Đóng socket và kết thúc chương trình
+ */
 import java.net.*;
 
 public class lietkesonguyento {
@@ -1092,6 +1250,21 @@ public class lietkesonguyento {
         socket.close();
     }
 }
+
+/**
+BÀI 1. TỔNG HAI SỐ NGUYÊN LỚN
+[Mã câu hỏi (qCode): 2sIjAYaU].  Một chương trình server cho phép giao tiếp qua giao thức UDP tại cổng 2207. Yêu cầu là xây dựng một chương trình client trao đổi thông tin với server theo kịch bản:
+a. Gửi thông điệp là một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng ";studentCode;qCode".
+Ví dụ: ";B15DCCN010;D3F9A7B8"
+b. Nhận thông điệp là một chuỗi từ server theo định dạng "requestId;a;b", với:
+•	requestId là chuỗi ngẫu nhiên duy nhất.
+•	a và b là chuỗi thể hiện hai số nguyên lớn (hơn hoặc bằng 100 chữ số).
+Ví dụ: "X1Y2Z3;9876543210;123456789"
+c. Tính tổng và hiệu của hai số a và b, gửi thông điệp lên server theo định dạng "requestId;sum;difference".Ví dụ: 
+Nếu nhận được "X1Y2Z3;9876543210,123456789", tổng là 9999999999 và hiệu là 9753086421. Kết quả gửi lại sẽ là "X1Y2Z3;9999999999,9753086421".
+d. Đóng socket và kết thúc chương trình
+
+ */
 import java.net.*;
 import java.math.BigInteger;
 
@@ -1192,6 +1365,21 @@ public class tong2songuyenlon {
         socket.close();
     }
 }
+
+/**
+BÀI 2. SẮP XẾP THEO TỪ ĐIỂN NGƯỢC
+[Mã câu hỏi (qCode): 9UfU4Vky].  Một chương trình server cho phép giao tiếp qua giao thức UDP tại cổng 2208. Yêu cầu là xây dựng một chương trình client trao đổi thông tin với server theo kịch bản:
+a. Gửi thông điệp là một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode". Ví dụ: ";B15DCCN009;EF56GH78"
+b. Nhận thông điệp là một chuỗi từ server theo định dạng "requestId;data", với:
+•	requestId là chuỗi ngẫu nhiên duy nhất.
+•	data là một chuỗi ký tự chứa nhiều từ, được phân cách bởi dấu cách.
+Ví dụ: "EF56GH78;The quick brown fox"
+c. Sắp xếp các từ trong chuỗi theo thứ tự từ điển ngược (z đến a) và gửi thông điệp lên server theo định dạng "requestId;word1,word2,...,wordN".
+Ví dụ: Với data = "The quick brown fox", kết quả là: "EF56GH78;quick,fox,brown,The"
+d. Đóng socket và kết thúc chương trình
+
+
+ */
 import java.net.*;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1286,6 +1474,25 @@ public class sapxeptudiennguoc {
         socket.close();
     }
 }
+
+/**
+BÀI 1. PHẦN TỬ LỚN NHẤT CỦA DÃY CON
+[Mã câu hỏi (qCode): iv00Hrq6].  Một chương trình server cho phép giao tiếp qua giao thức UDP tại cổng 2207. 
+* Yêu cầu là xây dựng một chương trình client trao đổi thông tin với server theo kịch bản:
+a. Gửi thông điệp là một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng ";studentCode;qCode". Ví dụ: ";B21DCCN795;ylrhZ6UM".
+b. Nhận thông điệp là một chuỗi từ server theo định dạng "requestId;n;k;z1,z2,...,zn", trong đó:
+    requestId là chuỗi ngẫu nhiên duy nhất.
+    n là số phần tử của mảng.
+    k là kích thước cửa sổ trượt (k < n).
+    z1 đến zn là n phần tử là số nguyên của mảng.
+c. Thực hiện tìm giá trị lớn nhất trong mỗi cửa sổ trượt với kích thước k trên mảng số nguyên nhận được, 
+* và gửi thông điệp lên server theo định dạng "requestId;max1,max2,...,maxm", 
+* trong đó max1 đến maxm là các giá trị lớn nhất tương ứng trong mỗi cửa sổ.
+Ví dụ: "requestId;5;3;1,5,2,3,4"
+Kết quả: "requestId;5,5,4"
+d. Đóng socket và kết thúc chương trình.
+
+ */
 import java.net.*;
 
 public class phantulonnhatcuadaycon {
@@ -1406,6 +1613,18 @@ public class phantulonnhatcuadaycon {
         socket.close();
     }
 }
+
+/**
+ BÀI 1. SẮP XẾP THEO VỊ TRÍ BAN ĐẦU
+[Mã câu hỏi (qCode): aKZwZxWk].  Một chương trình server cho phép giao tiếp qua giao thức UDP tại cổng 2207. Yêu cầu là xây dựng một chương trình client trao đổi thông tin với server theo kịch bản:
+a. Gửi thông điệp là một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng ";studentCode;qCode". Ví dụ: ";B15DCCN009;F3E8B2D4".
+b. Nhận thông điệp là một chuỗi từ server theo định dạng "requestId;string", với:
+--- requestId là chuỗi ngẫu nhiên duy nhất.
+---string là một chuỗi chứa các chuỗi con bị thay đổi vị trí. Ví dụ: "veM3xgA1g:4,IPFfgEanY:5,aWXlSzDwe:2,PHupvPc:3,PR3gH8ahN:6,UEEKHLIt:7,M6dpWTE:1"
+c. Xử lý chuỗi xáo trộn và gửi về chuỗi sau khi sắp xếp: "requestId;string". Ví dụ chuỗi đã được xử lý: "M6dpWTE,aWXlSzDwe,PHupvPc,veM3xgA1g,IPFfgEanY,PR3gH8ahN,UEEKHLIt"
+d. Đóng socket và kết thúc chương trình.
+
+ */
 import java.net.*;
 
 public class sapxeptheovitribandau {
@@ -1519,6 +1738,21 @@ public class sapxeptheovitribandau {
         socket.close();
     }
 }
+
+/**
+BÀI 1. TỔNG HAI SỐ NHỊ PHÂN
+[Mã câu hỏi (qCode): lIQVug9S].  Một chương trình server cho phép giao tiếp qua giao thức UDP tại cổng 2208. Yêu cầu là xây dựng một chương trình client trao đổi thông tin với server theo kịch bản:
+a. Gửi thông điệp là một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng “;studentCode;qCode”. Ví dụ: “;B15DCCN000;XbYdNZ3”.
+b. Nhận thông điệp là một chuỗi từ server theo định dạng “requestId;b1,b2”, trong đó:
+    requestId là chuỗi ngẫu nhiên duy nhất.
+    b1 là số nhị phân thứ nhất
+    b2 là số nhị phân thứ hai.
+Ví dụ: requestId;0100011111001101,1101000111110101
+c. Thực hiện tính tổng hai số nhị phân nhận được, chuyển về dạng thập phân và gửi lên server theo định dạng “requestId;sum”
+Kết quả: requestId;72130 
+d. Đóng socket và kết thúc chương trình.
+
+ */
 import java.net.*;
 import java.math.BigInteger;
 
@@ -1620,6 +1854,7 @@ public class tong2sonhiphan {
         socket.close();
     }
 }
+
 
 import java.io.*;
 import java.net.*;

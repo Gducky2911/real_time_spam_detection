@@ -1,0 +1,2971 @@
+/**
+BÀI 3 [Byte]. PHẦN TỬ XUẤT HIỆN ÍT LẦN NHẤT
+Mã câu hỏi (qCode): L7A2NPQU]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu nhị phân.
+Giao diện từ xa:
+public interface ByteService extends Remote {
+public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, byte[] data) throws
+RemoteException;
+}
+Trong đó:
+• Interface ByteService được viết trong package RMI.
+Đối tượng cài đặt giao diện từ xa ByteService được đăng ký với RegistryServer với tên là:
+RMIByteService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhị phân nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một mảng dữ liệu nhị phân (byte[]) từ server.
+b. Tìm phần tử có số lần xuất hiện ít nhất trong mảng, nếu có nhiều phần tử có cùng số lần xuất
+hiện ít nhất, chỉ cần trả về phần tử đầu tiên xuất hiện trong các phần tử đó
+Ví dụ: Nếu mảng dữ liệu nhận được là [1, 2, 3, 2, 1], chương trình sẽ tìm ra phần tử xuất hiện ít
+nhất là 3.
+c. Triệu gọi phương thức submitData để gửi mảng byte kết quả chứa phần tử có số lần xuất hiện ít
+nhất và số lần xuất hiện trở lại server.
+d. Kết thúc chương trình client.
+ */
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.util.*;
+import RMI.ByteService;
+public class XHMin {
+    public static void main(String[] args) throws Exception {
+        // a. Nhận dữ liệu từ server
+        Registry rg = LocateRegistry.getRegistry("36.50.135.242", 1099);
+        ByteService sv = (ByteService) rg.lookup("RMIByteService");
+        byte[] a = sv.requestData("B21DCCN900", "Ta11vtlf");
+        for(byte x: a) System.out.print(x + " ");
+        System.out.println("");
+        //b. Đếm
+        int[] cnt = new int[10005]; 
+        for (byte x : a) cnt[x]++;
+        byte ptuMin = a[0];
+        int slMin = cnt[a[0]];
+        for (byte x : a) {
+            if (cnt[x] < slMin) {
+                ptuMin = x;
+                slMin = cnt[x];
+            }
+        }
+        System.out.println(ptuMin + " " + slMin);
+        // c. Gửi
+        byte[] res = {ptuMin, (byte)slMin};
+        sv.submitData("B21DCCN900", "Ta11vtlf", res);
+    }
+}
+import java.rmi.*;
+public interface ByteService extends Remote {
+    public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+/**
+BÀI 3. [Byte] PHẦN TỬ XUẤT HIỆN NHIỀU LẦN NHẤT
+[Mã câu hỏi (qCode): 1mPMIkGJ]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu nhị phân.
+Giao diện từ xa:
+public interface ByteService extends Remote {
+public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, byte[] data) throws
+RemoteException;
+}
+Trong đó:
+• Interface ByteService được viết trong package RMI.
+Đối tượng cài đặt giao diện từ xa ByteService được đăng ký với RegistryServer với tên là:
+RMIByteService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhị phân nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một mảng dữ liệu nhị phân (byte[]) từ server.
+b. Tìm phần tử xuất hiện nhiều nhất trong mảng byte[]. Nếu có nhiều phần tử có cùng số lần xuất
+hiện cao nhất, chỉ cần trả về phần tử đầu tiên xuất hiện trong các phần tử đó.
+Ví dụ: Nếu mảng dữ liệu nhận được là [1, 2, 3, 2, 1, 2], phần tử xuất hiện nhiều nhất là 2, với tần
+suất xuất hiện 3 lần.
+c. Triệu gọi phương thức submitData để gửi mảng byte chứa phần tử phổ biến nhất, cùng với tần
+suất xuất hiện của nó trở lại server.
+d. Kết thúc chương trình client
+ */
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.util.*;
+import RMI.ByteService;
+public class XHMax {
+    public static void main(String[] args) throws Exception {
+        // a. Nhận dữ liệu từ server
+        Registry rg = LocateRegistry.getRegistry("36.50.135.242", 1099);
+        ByteService sv = (ByteService) rg.lookup("RMIByteService");
+        byte[] a = sv.requestData("B21DCCN900", "F5cL4OJ7");
+        for(byte x: a) System.out.print(x + " ");
+        System.out.println("");
+        //b. Đếm
+        int[] cnt = new int[128]; 
+        for (byte x : a) cnt[x]++;
+        byte ptuMax = a[0];
+        int slMax = cnt[ptuMax];
+        for (byte x : a) {
+            if (cnt[x] > slMax) {
+                ptuMax = x;
+                slMax = cnt[x];
+            }
+        }
+        System.out.println(ptuMax + " " + slMax);
+        // c. Gửi
+        byte[] res = {ptuMax, (byte) slMax};
+        sv.submitData("B21DCCN900", "F5cL4OJ7", res);
+    }
+}
+import java.rmi.*;
+public interface ByteService extends Remote {
+    public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+/**
+BÀI 2. [Character] MÃ HOÁ URL
+[Mã câu hỏi (qCode): KkihaRAB]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý chuỗi.
+Giao diện từ xa:
+public interface CharacterService extends Remote {
+public String requestCharacter(String studentCode, String qCode) throws RemoteException;
+public void submitCharacter(String studentCode, String qCode, String strSubmit) throws
+RemoteException;
+}
+Trong đó:
+• Interface CharacterService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa CharacterService được đăng ký với RegistryServer với tên là:
+RMICharacterService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với chuỗi
+được nhận từ RMI Server:
+a. Triệu gọi phương thức requestCharacter để nhận chuỗi ngẫu nhiên từ server với định dạng:
+"Chuỗi đầu vào".
+b. Thực hiện thao tác mã hóa URL (URL Encoding) cho chuỗi đầu vào nhận được từ server. Mã
+hóa URL chuyển đổi các ký tự đặc biệt thành định dạng URL an toàn bằng cách thay thế các ký tự
+đó bằng ký hiệu phần trăm (%) và mã ASCII của chúng.
+Ví dụ: Chuỗi ban đầu "Hello World!" → Chuỗi mã hóa URL là: "Hello%20World%21"
+c. Triệu gọi phương thức submitCharacter để gửi chuỗi đã được mã hóa trở lại server.
+d. Kết thúc chương trình client.
+ */
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.net.URI;
+public class MaHoaURL {
+    public static void main(String[] args) throws Exception{
+        Registry rg = LocateRegistry.getRegistry("36.50.135.242", 1099);
+        CharacterService sv = (CharacterService) rg.lookup("RMICharacterService");
+        String s = sv.requestCharacter("B21DCCN900", "nlEPJpLw");
+        System.out.println(s);
+        //b.
+        String ans = new URI(null, null, s, null).toASCIIString();
+        System.out.println(ans);
+        //c.
+        sv.submitCharacter("B21DCCN900", "nlEPJpLw", ans);
+    }
+}
+import java.rmi.*;
+public interface CharacterService extends Remote {
+    public String requestCharacter(String studentCode, String qCode) throws RemoteException;
+    public void submitCharacter(String studentCode, String qCode, String strSubmit) throws RemoteException;
+}
+
+/**
+BÀI 2. [Character] CHUYỂN ĐỔI THẬP PHÂN – LA MÃ
+[Mã câu hỏi (qCode): ADu6zRYE]. Một chương trình (tạm gọi là RMI Server) cung cấp giao
+diện cho phép triệu gọi từ xa để xử lý chuỗi.
+Giao diện từ xa:
+public interface CharacterService extends Remote {
+public String requestCharacter(String studentCode, String qCode) throws RemoteException;
+public void submitCharacter(String studentCode, String qCode, String strSubmit) throws
+RemoteException;
+}
+Trong đó:
+• Interface CharacterService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa CharacterService được đăng ký với RegistryServer với tên là:
+RMICharacterService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với chuỗi
+được nhận từ RMI Server:
+a. Triệu gọi phương thức requestCharacter để nhận chuỗi ngẫu nhiên từ server với định dạng: "Số
+thập phân đầu vào".
+b. Thực hiện chuyển đổi số thập phân nhận được thành chuỗi số La Mã (Roman).Luyện tập RMI
+
+Quy tắc chuyển đổi:
+Các ký tự La Mã chính bao gồm: I=1, V=5, X=10, L=50, C=100, D=500, M=1000.
+Ví dụ: 58 → "LVIII".
+c. Triệu gọi phương thức submitCharacter để gửi chuỗi số La Mã đã chuyển đổi trở lại server.
+d. Kết thúc chương trình client.
+ */
+import RMI.CharacterService;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+public class ChuyenDoiThapPhanLaMa {
+    public static void main(String[] args)throws Exception{
+        Registry rg = LocateRegistry.getRegistry("36.50.135.242", 1099);
+        CharacterService sv = (CharacterService) rg.lookup("RMICharacterService");
+        String s = sv.requestCharacter("B21DCCN900", "hC0A7ixo");
+        System.out.println(s);
+        //b.
+        String rm = "";
+        int dec = Integer.parseInt(s);
+        int[] tp = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};//thập phân
+        String[] lm = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};// la mã
+        for(int i = 0;i<tp.length;i++){
+            while(dec >=tp[i]){
+                rm+=lm[i];
+                dec-=tp[i];
+            }
+        }
+        System.out.println(rm);     
+        //c.
+        sv.submitCharacter("B21DCCN900", "hC0A7ixo", rm);
+    }
+}
+import java.rmi.*;
+public interface CharacterService extends Remote {
+    public String requestCharacter(String studentCode, String qCode) throws RemoteException;
+    public void submitCharacter(String studentCode, String qCode, String strSubmit) throws RemoteException;
+}
+
+/**
+ * ĐỈNH CỤC BỘ
+Một chương trình RMI Server cung cấp giao diện DataService trong package RMI, được đăng ký với RegistryServer bằng tên RMIDataService.
+
+Yêu cầu
+a. Sử dụng mã sinh viên và mã câu hỏi làm tham số khi gọi RMI. Ví dụ: studentCode="B21DCCN001", qCode="A1B2C3D4".
+
+b. Triệu gọi requestData(studentCode, qCode) để nhận một mảng số nguyên từ server. Ví dụ: [3,8,5,10,7].
+
+c. Một phần tử là đỉnh cục bộ nếu lớn hơn phần tử liền kề bên trái và bên phải; phần tử đầu/cuối chỉ cần lớn hơn phần tử kề duy nhất. Trả về vị trí theo chỉ số bắt đầu từ 1.
+
+d. Triệu gọi submitData(studentCode, qCode, data) để gửi List<Integer> các vị trí đỉnh cục bộ. Ví dụ: [2,4].
+
+e. Kết thúc chương trình client.
+ */
+
+
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class DinhCucBo {
+
+    public static void main(String[] args) throws Exception {
+
+        String studentCode = "B21DCCN900";
+        String qCode = "xJwA0y3m";
+
+        // a. Kết nối đến RMI Registry
+        Registry rg = LocateRegistry.getRegistry(
+                "36.50.135.242",
+                1099
+        );
+
+        // Tìm dịch vụ có tên RMIDataService
+        DataService sv =
+                (DataService) rg.lookup("RMIDataService");
+
+        // b. Nhận dữ liệu
+        // requestData trả về Object nên phải ép kiểu sang int[]
+        int[] a = (int[]) sv.requestData(studentCode, qCode);
+
+        System.out.println("Mang nhan duoc: "
+                + Arrays.toString(a));
+
+        // Danh sách chứa vị trí các đỉnh cục bộ
+        List<Integer> res = new ArrayList<>();
+
+        int n = a.length;
+
+        // Trường hợp mảng chỉ có một phần tử
+        if (n == 1) {
+            res.add(1);
+        } else {
+
+            // Kiểm tra phần tử đầu tiên
+            if (a[0] > a[1]) {
+                res.add(1);
+            }
+
+            // Kiểm tra các phần tử ở giữa
+            for (int i = 1; i < n - 1; i++) {
+                if (a[i] > a[i - 1]
+                        && a[i] > a[i + 1]) {
+
+                    // Đề yêu cầu vị trí bắt đầu từ 1
+                    res.add(i + 1);
+                }
+            }
+
+            // Kiểm tra phần tử cuối cùng
+            if (a[n - 1] > a[n - 2]) {
+                res.add(n);
+            }
+        }
+
+        System.out.println("Vi tri dinh cuc bo: " + res);
+
+        // d. Gửi kết quả về Server
+        sv.submitData(studentCode, qCode, res);
+
+        System.out.println("Da gui ket qua ve Server.");
+    }
+}
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface DataService extends Remote {
+
+    public Object requestData(String studentCode, String qCode)
+            throws RemoteException;
+
+    public void submitData(String studentCode,
+                           String qCode,
+                           Object data)
+            throws RemoteException;
+}
+
+/**
+ * Số thực nâng cao
+ Một chương trình RMI Server cung cấp giao diện DataService trong package RMI, được đăng ký với RegistryServer bằng tên RMIDataService.
+
+Yêu cầu
+a. Sử dụng mã sinh viên và mã câu hỏi làm tham số khi gọi RMI. Ví dụ: studentCode="B21DCCN001", qCode="A1B2C3D4".
+
+b. Triệu gọi requestData(studentCode, qCode) để nhận chuỗi CSV các số thực. Ví dụ: 10.00,20.00,30.00,40.00.
+
+c. Tính giá trị trung bình, độ lệch chuẩn trên toàn bộ dãy và phân vị 95 tại vị trí ceil(n * 0.95) - 1 sau khi sắp xếp tăng dần.
+
+d. Triệu gọi submitData(studentCode, qCode, data) để gửi chuỗi average=<avg>;stddev=<stddev>;p95=<p95>, các số thực làm tròn 02 chữ số thập phân. Ví dụ: average=25.00;stddev=11.18;p95=40.00.
+
+e. Kết thúc chương trình client.
+ */
+
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.Arrays;
+import java.util.Locale;
+
+public class SoThucNangCao {
+
+    public static void main(String[] args) throws Exception {
+
+        String studentCode = "B21DCCN900";
+        String qCode = "M6gWmdYO";
+
+        // a. Kết nối tới RMI Registry
+        Registry rg = LocateRegistry.getRegistry(
+                "36.50.135.242",
+                1099
+        );
+
+        DataService sv =
+                (DataService) rg.lookup("RMIDataService");
+
+        // b. Nhận chuỗi CSV từ Server
+        String duLieu = (String) sv.requestData(
+                studentCode,
+                qCode
+        );
+
+        System.out.println("Chuoi nhan duoc: " + duLieu);
+
+        // Tách chuỗi theo dấu phẩy
+        String[] cacPhanTu = duLieu.split(",");
+
+        // Tạo mảng số thực
+        double[] a = new double[cacPhanTu.length];
+
+        for (int i = 0; i < cacPhanTu.length; i++) {
+            a[i] = Double.parseDouble(cacPhanTu[i].trim());
+        }
+
+        int n = a.length;
+
+        // c1. Tính trung bình
+        double tong = 0;
+
+        for (int i = 0; i < n; i++) {
+            tong += a[i];
+        }
+
+        double trungBinh = tong / n;
+
+        // c2. Tính độ lệch chuẩn của toàn bộ dãy
+        double tongBinhPhuongDoLech = 0;
+
+        for (int i = 0; i < n; i++) {
+            double doLech = a[i] - trungBinh;
+
+            tongBinhPhuongDoLech += doLech * doLech;
+        }
+
+        double doLechChuan =
+                Math.sqrt(tongBinhPhuongDoLech / n);
+
+        // c3. Sắp xếp tăng dần để tìm phân vị 95
+        Arrays.sort(a);
+
+        int viTriP95 = (int) Math.ceil(n * 0.95) - 1;
+
+        double p95 = a[viTriP95];
+
+        System.out.println("Trung binh: " + trungBinh);
+        System.out.println("Do lech chuan: " + doLechChuan);
+        System.out.println("P95: " + p95);
+
+        // d. Tạo chuỗi kết quả, làm tròn 2 chữ số thập phân
+        String ketQua = String.format(
+                Locale.US,
+                "average=%.2f;stddev=%.2f;p95=%.2f",
+                trungBinh,
+                doLechChuan,
+                p95
+        );
+
+        System.out.println("Ket qua gui ve: " + ketQua);
+
+        // Gửi kết quả về Server
+        sv.submitData(
+                studentCode,
+                qCode,
+                ketQua
+        );
+    }
+}
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface DataService extends Remote {
+
+    public Object requestData(String studentCode, String qCode)
+            throws RemoteException;
+
+    public void submitData(String studentCode,
+                           String qCode,
+                           Object data)
+            throws RemoteException;
+}
+
+/**
+BÀI 1. [Data] BỘ BA SỐ PYTAGO
+[Mã câu hỏi (qCode): NMATI6Zw]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu.
+Giao diện từ xa:
+public interface DataService extends Remote {
+public Object requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, Object data) throws RemoteException;
+}
+Trong đó:
+• Interface DataService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa DataService được đăng ký với RegistryServer với tên là:
+RMIDataService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một số nguyên dương N từ server, đại diện cho giới
+hạn trên của khoảng cần kiểm tra.
+b. Xác định tất cả các bộ ba số nguyên (a, b, c) sao cho a² + b² = c² và a < b < c ≤ N. Kết quả trả về
+là danh sách các bộ ba số Pythagore thỏa mãn yêu cầu.
+Ví dụ: Với N = 20, kết quả là [(3, 4, 5), (5, 12, 13), (8, 15, 17)].
+c. Triệu gọi phương thức submitData để gửi đối tượng List<List<Integer>> danh sách các bộ ba số
+Pytago đã tìm được trở lại server.
+d. Kết thúc chương trình client.
+ */
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.util.*;
+import RMI.DataService;
+public class BoBaPytago {
+    public static void main(String[] args) throws Exception {
+        // a. Nhận dữ liệu
+        Registry rg = LocateRegistry.getRegistry("36.50.135.242", 1099);
+        DataService sv = (DataService) rg.lookup("RMIDataService");
+        int N = (int) sv.requestData("B21DCCN900", "xJwA0y3m");
+        System.out.println(N);
+        // b. Xử lý: Tìm danh sách các bộ ba số Pythagore
+        List<List<Integer>> res = new ArrayList<>();
+        for (int a = 1; a <= N; a++) {
+            for (int b = a + 1; b <= N; b++) {
+                for (int c = b + 1; c <= N; c++) {
+                    if (a * a + b * b == c * c) {
+                        List<Integer> triple = new ArrayList<>();
+                        triple.add(a); triple.add(b); triple.add(c);
+                        res.add(triple);
+                    }
+                }
+            }
+        }
+        System.out.println(res);
+        // c. Gửi kết quả
+        sv.submitData("B21DCCN900", "xJwA0y3m", res);
+    }
+}
+import java.rmi.*;
+public interface DataService extends Remote {
+    public Object requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, Object data) throws RemoteException;
+}
+
+/**
+BÀI 2. [Character] XỬ LÝ XÂU KÝ TỰ
+[Mã câu hỏi (qCode): NFldNPp6]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý chuỗi.
+Giao diện từ xa:
+public interface CharacterService extends Remote {
+public String requestCharacter(String studentCode, String qCode) throws
+RemoteException;
+public void submitCharacter(String studentCode, String qCode, String strSubmit) throws
+RemoteException;
+}
+Trong đó:
+• Interface CharacterService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa CharacterService được đăng ký với RegistryServer với tên
+là: RMICharacterService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với chuỗi
+được nhận từ RMI Server:Luyện tập RMI
+a. Triệu gọi phương thức requestCharacter để nhận chuỗi JSON ngẫu nhiên từ server với định dạng:
+"Chuỗi JSON đầu vào".
+b. Phân tích cú pháp chuỗi JSON nhận được và trích xuất các cặp key: value dựa trên vị trí của
+chúng:
+• Các cặp key: value ở vị trí chẵn sẽ được đưa vào chuỗi đầu tiên.
+• Các cặp key: value ở vị trí lẻ sẽ được đưa vào chuỗi thứ hai.
+• Hai chuỗi kết quả sẽ được nối với nhau và phân tách bởi dấu ;
+Ví dụ: Chuỗi JSON ban đầu {"name": "Alice", "age": 25, "city": "Wonderland", "country":
+"Fictionland"} → Kết quả trích xuất: "name: Alice, city: Wonderland; age: 25, country:
+Fictionland".
+c. Triệu gọi phương thức submitCharacter để gửi chuỗi kết quả trích xuất đã được định dạng trở lại
+server.
+d. Kết thúc chương trình client.
+ */
+
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.util.*;
+import RMI.CharacterService;
+public class XuLyVanBan {
+    public static void main(String[] args) throws Exception {
+        // a. Nhận chuỗi từ server
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        CharacterService sv = (CharacterService) rg.lookup("RMICharacterService");
+        String s = sv.requestCharacter("B21DCCN319", "NFldNPp6");
+        System.out.println(s);
+        // b. Xử lý xâu
+        s = s.replace("\"", "");  s = s.replace("{", "");  s = s.replace("}", "");   
+        String[] tmp = s.trim().split(",");// Tách chuỗi thành các cặp key-value
+        String chan = "", le = "";
+        for (int i = 0; i < tmp.length; i++) {
+            tmp[i] = tmp[i].trim(); 
+            if (i % 2 == 0) {
+                if (chan.length() > 0) chan+=", ";
+                chan+=tmp[i];
+            } else {
+                if (le.length() > 0) le+=", ";
+                le+=tmp[i];
+            }
+        }
+        String res = chan + "; " + le;
+        System.out.println(res);
+        // c. Gửi kết quả lại server
+        sv.submitCharacter("B21DCCN319", "NFldNPp6", res);
+    }
+}
+import java.rmi.*;
+public interface CharacterService extends Remote {
+    public String requestCharacter(String studentCode, String qCode) throws RemoteException;
+    public void submitCharacter(String studentCode, String qCode, String strSubmit) throws RemoteException;
+}
+
+BÀI 4. [Object] SẢN PHẨM – 1
+[Mã câu hỏi (qCode): dx3nt4Ij]. Một chương trình (tạm gọi là RMI server) cung cấp giao diện cho
+phép triệu gọi từ xa với thông tin như sau:
+Giao diện từ xa
+public interface ObjectService extends Remote {
+public Serializable requestObject(String studentCode, String qAlias) throws
+RemoteException;
+public void submitObject(String studentCode, String qAlias, Serializable object) throws
+RemoteException;
+}
+Lớp Product gồm các thông tin: id String, code String, importPrice double, exportPrice double.
+Trường dữ liệu: private static final long serialVersionUID = 20151107L;
+02 hàm khởi dựng
+public Product()
+public Product(String id, String code, String ImportPrice, String ExportPrice)
+Trong đó:
+- interface ObjectService và lớp Product được viết trong package RMI
+- Đối tượng cài đặt giao diện từ xa ObjectService được đăng ký với RegistryServer:
+RMIObjectService
+Yêu cầu: viết chương trình tại máy trạm (RMI client) thực hiện chuẩn hóa sản phẩm theo thứ tự:
+a. Triệu gọi phương thức requestObject để lấy về đối tượng sản phẩm cần chuẩn hóa.
+b. Thực hiện chuẩn hóa đối tượng nhận được theo nguyên tắc:
+- Chuyển mã sản phẩm thành in hoa.
+- Cập nhật giá xuất (exportPrice) bằng giá nhập (importPrice) + 20%
+c. Triệu gọi phương thức submitObject để gửi dữ liệu đã chuẩn hóa
+d. Kết thúc chương trình client
+import java.rmi.*;
+import java.rmi.registry.*;
+import RMI.ObjectService;
+import RMI.Product;
+public class XuLySanPham1 {
+    public static void main(String[] args) throws Exception {
+        //a. Nhận sản phẩm từ server
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ObjectService sv = (ObjectService) rg.lookup("RMIObjectService");
+        Product product = (Product) sv.requestObject("B21DCCN319", "dx3nt4Ij");
+        System.out.println(product);
+        // b. Thực hiện chuẩn hóa sản phẩm:
+        product.setCode(product.getCode().toUpperCase());// Chuyển mã sản phẩm thành in hoa
+        product.setExportPrice(product.getImportPrice() * 1.2f);
+        System.out.println("Normalized product: " + product);
+        // c. Triệu gọi phương thức submitObject để gửi đối tượng đã chuẩn hóa trở lại server
+        sv.submitObject("B21DCCN319", "dx3nt4Ij", product);
+    }
+}
+package RMI;
+import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+public interface ObjectService extends Remote {
+    public Serializable requestObject(String studentCode, String qAlias) throws RemoteException;
+    public void submitObject(String studentCode, String qAlias, Serializable object) throws RemoteException;
+}
+package RMI;
+import java.io.Serializable;
+public class Product implements Serializable {
+    private static final long serialVersionUID = 20151107L;
+    private String id;
+    private String code;
+    private double importPrice;
+    private double exportPrice; 
+    public Product() {}
+    public Product(String id, String code, double importPrice, double exportPrice) {
+        this.id = id;
+        this.code = code;
+        this.importPrice = importPrice;
+        this.exportPrice = exportPrice;
+    }
+    public String getCode() {
+        return code;
+    }
+    public void setCode(String code) {
+        this.code = code;
+    }
+    public double getImportPrice() {
+        return importPrice;
+    }
+    public void setExportPrice(double exportPrice) {
+        this.exportPrice = exportPrice;
+    }
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", importPrice=" + importPrice +
+                ", exportPrice=" + exportPrice +
+                '}';
+    }
+}
+BÀI 1. [Data] HOÁN VỊ KẾ TIẾP
+[Mã câu hỏi (qCode): 3Qe0Qb5w]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu.
+Giao diện từ xa:
+public interface DataService extends Remote {
+public Object requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, Object data) throws
+RemoteException;
+}
+Trong đó:
+• Interface DataService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa DataService được đăng ký với RegistryServer với tên là:
+RMIDataService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một chuỗi các số nguyên.
+b. Sử dụng thuật toán sinh hoán vị kế tiếp để tìm hoán vị kế tiếp của chuỗi số này theo thứ tự từ
+điển. Nếu chuỗi đã là hoán vị lớn nhất, trả về hoán vị nhỏ nhất (sắp xếp lại từ đầu theo thứ tự từ
+điển).
+Ví dụ: Với chuỗi 1, 2, 3 tổ hợp kế tiếp là 1, 3, 2. Nếu chuỗi là 3, 2, 1 (hoán vị lớn nhất), kết quả sẽ
+là 1, 2, 3 (hoán vị nhỏ nhất).
+c. Triệu gọi phương thức submitData để gửi chuỗi chứa hoán vị kế tiếp đã tìm được trở lại server.
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN564;
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.util.*;
+import RMI.DataService;
+public class HoanViTiepTheo {
+    public static void main(String[] args) throws Exception {
+        // a. Nhận dữ liệu
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        DataService sv = (DataService) rg.lookup("RMIDataService");
+        String s = (String) sv.requestData("B21DCCN564", "3Qe0Qb5w");
+        System.out.println(s);
+        //Đẩy hết vào mảng để xử lý
+        s = s.replace(",", " ");
+        String[] tmp = s.trim().split("\\s+");
+        ArrayList<Integer> a = new ArrayList<>();
+        for (String x : tmp) a.add(Integer.parseInt(x));
+        int n = a.size();
+        //b. Sinh hoán vị kế tiếp
+        // Bước 1: Tìm vị trí đầu tiên từ cuối mà tại đó nó nhỏ hơn số đằng sau nó
+        int i = n - 2;
+        while (i >= 0 && a.get(i) >= a.get(i + 1)) i--;
+        // Bước 2: Kiểm tra nếu không còn hoán vị nào lớn hơn
+        if (i < 0) Collections.sort(a); // Đưa về hoán vị đầu tiên
+        else {
+            // Bước 3: Tìm vị trí đầu tiên từ cuối lớn hơn a[i]
+            int j = n - 1;
+            while (a.get(j) <= a.get(i)) j--;
+            Collections.swap(a, i, j);// Hoán đổi a[i] và a[j]
+            // Bước 4: Lật ngược đoạn từ i + 1 đến cuối mảng
+            int l = i + 1, r = n - 1;
+            while (l < r) {
+                Collections.swap(a, l, r);
+                l++;
+                r--;
+            }
+        }
+        String res = "";
+        for(int x: a) res+=String.format("%d,", x);
+        res = res.substring(0, res.length() - 1);
+        System.out.println(res);
+        // c. Gửi kết quả
+        sv.submitData("B21DCCN564", "3Qe0Qb5w", res);
+    }
+}
+
+import java.rmi.*;
+public interface DataService extends Remote {
+    public Object requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, Object data) throws RemoteException;
+}
+
+
+BÀI 2. [Character]ĐẾM SỐ LẦN XUẤT HIỆN – 1
+[Mã câu hỏi (qCode): U5BEBBOW]. Một chương trình (tạm gọi là RMI Server) cung cấp giao
+diện cho phép triệu gọi từ xa để xử lý chuỗi.
+Giao diện từ xa:
+public interface CharacterService extends Remote {
+public String requestCharacter(String studentCode, String qCode) throws
+RemoteException;
+public void submitCharacter(String studentCode, String qCode, String strSubmit) throws
+RemoteException;
+}
+Trong đó:Luyện tập RMI
+• Interface CharacterService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa CharacterService được đăng ký với RegistryServer với tên
+là: RMICharacterService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với chuỗi
+được nhận từ RMI Server:
+a. Triệu gọi phương thức requestCharacter để nhận chuỗi ngẫu nhiên từ server với định dạng:
+"Chuỗi đầu vào".
+b. Thực hiện đếm tần số xuất hiện của mỗi ký tự trong chuỗi đầu vào và tạo ra chuỗi kết quả theo
+định dạng <Ký tự><Số lần xuất hiện>, sắp xếp theo thứ tự xuất hiện của các ký tự trong chuỗi.
+Ví dụ: Chuỗi đầu vào "AAABBC" → Kết quả: "A3B2C1".
+c. Triệu gọi phương thức submitCharacter để gửi chuỗi kết quả trở lại server.
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN564;
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.util.*;
+import RMI.CharacterService;
+public class DemSoLanXH1 {
+    public static void main(String[] args) throws Exception {
+        // a. Nhận chuỗi từ server
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        CharacterService sv = (CharacterService) rg.lookup("RMICharacterService");
+        String s = sv.requestCharacter("B21DCCN564", "U5BEBBOW");
+        System.out.println(s);
+        // b. Xử lý xâu
+        String res = "";
+        int[] cnt = new int[256]; 
+        for (char x : s.toCharArray()) cnt[x]++;
+        for(char x: s.toCharArray()){
+            if(cnt[x] > 0){
+                res+=String.format("%c%d", x, cnt[x]);
+                cnt[x] = 0;
+            }
+        }
+        System.out.println(res);
+        // c. Gửi kết quả lại server
+        sv.submitCharacter("B21DCCN564", "U5BEBBOW", res);
+    }
+}
+
+package RMI;
+import java.rmi.*;
+public interface CharacterService extends Remote {
+    public String requestCharacter(String studentCode, String qCode) throws RemoteException;
+    public void submitCharacter(String studentCode, String qCode, String strSubmit) throws RemoteException;
+}
+
+BÀI 4. [Object] SẢN PHẨM – 2
+[Mã câu hỏi (qCode): PY43T66m]. Một chương trình (tạm gọi là RMI Server) cung cấp các mã
+khuyến mãi sản phẩm ngẫu nhiên cho sinh viên, được mô tả như sau:
+Giao diện từ xa
+public interface ObjectService extends Remote {
+public Serializable requestObject(String studentCode, String qAlias) throws
+RemoteException;
+public void submitObject(String studentCode, String qAlias, Serializable object) throws
+RemoteException;
+} L
+ớp ProductX gồm các thuộc tính id String, code String, discountCode String, discount int.
+- Một hàm khởi dựng với đầy đủ các thuộc tính liệt kê ở trên
+- Trường dữ liệu: private static final long serialVersionUID = 20171107;
+* Đối tượng triệu gọi từ xa được đăng ký RegistryServer với tên: RMIObjectService
+* Tất cả các lớp được viết trong package RMI
+Yêu cầu là xây dựng một chương trình client thực hiện các tương tác với hệ thống phần mềm ở
+trên theo kịch bản dưới đây:
+1. Triệu gọi phương thức từ xa requestObject từ RMI Server với tham số đầu vào là mã sinh viên,
+mã câu để nhận về đối tượng ProductX
+2. Nhận về đối tượng ProductX từ RMI Server với giá trị ban đầu đã được thiết lập. Tính tổng các
+chữ số nằm trong chuỗi mã giảm giá (discountCode) để ra giá trị được khuyến mãi của sản phẩm
+và cập nhật giá trị của khuyến mãi (discount)
+3. Triệu gọi phương thức từ xa submitObject với tham số đầu vào là đối tượng Product đã được cập
+nhật đầy đủ thông tin giá trị khuyến mãi
+4. Kết thúc chương trình
+
+package RMI.B21DCCN564;
+import java.rmi.*;
+import java.rmi.registry.*;
+import RMI.ObjectService;
+import RMI.ProductX;
+public class XuLySanPham2 {
+    public static void main(String[] args) throws Exception {
+        //a. Nhận sản phẩm từ server
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ObjectService sv = (ObjectService) rg.lookup("RMIObjectService");
+        ProductX product = (ProductX) sv.requestObject("B21DCCN564", "PY43T66m");
+        System.out.println(product);
+        // b. Thực hiện chuẩn hóa sản phẩm:
+        int tong = 0;
+        for(char x: product.getDiscountCode().toCharArray()){
+            if(Character.isDigit(x)) tong+=Character.getNumericValue(x);
+        }
+        product.setDiscount(tong);
+        // c. Triệu gọi phương thức submitObject để gửi đối tượng đã chuẩn hóa trở lại server
+        System.out.println(product);
+        sv.submitObject("B21DCCN564", "PY43T66m", product);
+    }
+}
+package RMI;
+import java.io.Serializable;
+public class ProductX implements Serializable {
+    private static final long serialVersionUID = 20171107;
+    private String id, code, discountCode;
+    private int discount;
+    public ProductX(String id, String code, String discountCode, int discount) {
+        this.id = id;
+        this.code = code;
+        this.discountCode = discountCode;
+        this.discount = discount;
+    }
+    public String getDiscountCode() {
+        return discountCode;
+    }
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+    @Override
+    public String toString() {
+        return "ProductX [id=" + id + ", code=" + code + ", discountCode=" + discountCode + ", discount=" + discount + "]";
+    }
+}
+package RMI;
+import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+public interface ObjectService extends Remote {
+    public Serializable requestObject(String studentCode, String qAlias) throws RemoteException;
+    public void submitObject(String studentCode, String qAlias, Serializable object) throws RemoteException;
+}
+
+BÀI 1. [Data] PHẦN TỬ LỚN THỨ K
+[Mã câu hỏi (qCode): wzG6G9ji]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu.
+Giao diện từ xa:
+public interface DataService extends Remote {
+public Object requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, Object data) throws
+RemoteException;
+}
+Trong đó:
+• Interface DataService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa DataService được đăng ký với RegistryServer với tên là:
+RMIDataService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một chuỗi chứa mảng số nguyên và một số nguyên
+K từ server với định dạng: “mảng; số nguyên K”.
+b. Sử dụng thuật toán phù hợp để tìm phần tử lớn thứ K trong mảng số nguyên đã cho.
+Ví dụ: Với Chuỗi “3, 1, 5, 12, 2, 11; 3” nghĩa là mảng [3, 1, 5, 12, 2, 11] và K = 3 → cần tìm phần
+tử lớn thứ 3 là 5.
+c. Triệu gọi phương thức submitData để gửi kết quả phần tử lớn thứ K đã tìm được trở lại server.
+d. Kết thúc chương trình client.
+package RMI.B21DCCN008;
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.util.*;
+import RMI.DataService;
+public class SoLonThuK {
+    public static void main(String[] args) throws Exception {
+        //a. Nhận dữ liệu
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        DataService sv = (DataService)rg.lookup("RMIDataService");
+        String s = (String) sv.requestData("B21DCCN008", "wzG6G9ji");
+        System.out.println(s);
+        //b. Xử lý dữ liệu
+        int x = s.indexOf(";");
+        String list = s.substring(0, x), k = s.substring(x + 1);
+        ArrayList<Integer>a = new ArrayList<>();
+        int k1 = Integer.parseInt(k.trim());
+        String []tmp = list.trim().split(",");
+        for(String x1: tmp) a.add(Integer.parseInt(x1.trim()));
+        Collections.sort(a);
+        int ans = a.get(a.size() - k1);
+        //c. Gửi dữ liệu
+        sv.submitData("B21DCCN008", "wzG6G9ji", ans);
+        System.out.println(ans);
+    }
+}
+
+import java.rmi.*;
+public interface DataService extends Remote {
+    public Object requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, Object data) throws RemoteException;
+}
+
+BÀI 2 [Character] PHÉP XOR - 1
+[Mã câu hỏi (qCode): Xidb0Thk]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý chuỗi.
+Giao diện từ xa:
+public interface CharacterService extends Remote {
+public String requestCharacter(String studentCode, tring qCode) throws RemoteException;
+public void submitCharacter(String studentCode, String qCode, String strSubmit) throws
+RemoteException;
+}
+Trong đó:
+• Interface CharacterService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa CharacterService được đăng ký với RegistryServer với tên là:
+RMICharacterService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với chuỗi
+được nhận từ RMI Server:
+a. Triệu gọi phương thức requestCharacter để nhận chuỗi ngẫu nhiên từ server với định dạng: "Khóa
+XOR;Chuỗi đầu vào".Luyện tập RMI
+b. Thực hiện thao tác mã hóa XOR cho chuỗi đầu vào với khóa XOR nhận được từ server. Mã hóa
+XOR thực hiện bằng cách áp dụng phép XOR trên từng ký tự trong chuỗi đầu vào và ký tự tương
+ứng trong khóa (khóa được lặp lại để khớp độ dài chuỗi đầu vào).
+Ví dụ: Chuỗi ban đầu "A;HELLO" -> Khóa "A" → chuỗi mã hóa là: "IFMMN"
+c. Triệu gọi phương thức submitCharacter để gửi chuỗi đã được mã hóa trở lại server.
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN008;
+import RMI.CharacterService;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+public class PhepXOR1 {
+    public static void main(String[] args) throws Exception{
+        // a. 
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        CharacterService sv = (CharacterService) rg.lookup("RMICharacterService");
+        String s = sv.requestCharacter("B21DCCN008", "Xidb0Thk");
+        System.out.println(s);
+        // b. Xử lý xâu
+        String []tmp = s.split(";");
+        String xorKey =tmp[0], inp = tmp[1], res = "";
+        for(int i = 0;i<inp.length();i++) res+=(char)(inp.charAt(i) ^ xorKey.charAt(i % xorKey.length()));
+        System.out.println(res);
+        // c. Gửi kết quả lại server
+        sv.submitCharacter("B21DCCN008", "Xidb0Thk", res);
+    }
+}
+
+package RMI;
+import java.rmi.*;
+public interface CharacterService extends Remote {
+    public String requestCharacter(String studentCode, String qCode) throws RemoteException;
+    public void submitCharacter(String studentCode, String qCode, String strSubmit) throws RemoteException;
+}
+
+BÀI 3. [Byte] CHUYỂN ĐỔI HỆ BÁT PHÂN
+[Mã câu hỏi (qCode): HhPAxeDw]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu nhị phân.
+Giao diện từ xa:
+public interface ByteService extends Remote {
+public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, byte[] data) throws
+RemoteException;
+}
+Trong đó:
+• Interface ByteService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa ByteService được đăng ký với RegistryServer với tên là:
+RMIByteService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhị phân nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một mảng dữ liệu nhị phân (byte[]) từ server.
+b. Chuyển đổi mỗi byte trong mảng dữ liệu nhận được thành chuỗi biểu diễn số bát phân (octal).
+Mỗi byte sẽ được chuyển thành một chuỗi số bát phân gồm ba chữ số (nếu cần, thêm các chữ số 0
+ở đầu để đảm bảo đúng định dạng).
+Ví dụ: Nếu mảng dữ liệu nhận được là [72, 101, 108], chương trình sẽ thực hiện chuyển đổi từng
+byte thành dạng bát phân:
+• 72 → "110"
+• 101 → "145"
+• 108 → "154"
+Kết quả là chuỗi octal "110145154". Chuyển chuỗi bát phân này trở lại thành mảng byte[] (mỗi ký
+tự trong chuỗi octal được mã hóa dưới dạng ASCII byte) để gửi về server.
+c. Triệu gọi phương thức submitData để gửi mảng byte[] chứa chuỗi bát phân trở lại server.
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN008;
+import java.rmi.*;
+import java.rmi.registry.*;
+import RMI.ByteService;
+public class ChuyenDoiBatPhan {
+    public static void main(String[] args) throws Exception {
+        // a. Nhận dữ liệu từ server
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ByteService sv = (ByteService) rg.lookup("RMIByteService");
+        byte[] a = sv.requestData("B21DCCN008", "HhPAxeDw");
+        for (byte x : a) System.out.print(x + " ");
+        System.out.println();
+        // b. Chuyển đổi mảng byte thành chuỗi bát phân
+        String res = "";
+        for (byte x : a) res+=String.format("%03o", x & 0xFF);
+        System.out.println(res);
+        byte[] ans = res.toString().getBytes();
+        sv.submitData("B21DCCN008", "HhPAxeDw", ans);
+    }
+}
+
+package RMI;
+import java.rmi.*;
+public interface ByteService extends Remote {
+    public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+
+BÀI 4. [Object] BÀI TOÁN QUẢN LÝ THU VIỆN – 1
+[Mã câu hỏi (qCode): nCOdwcKJ]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để gán mã code cho sách trong một hệ thống quản lý thư viện. Chương
+trình sẽ ngẫu nhiên tạo ra đối tượng Book với các giá trị ban đầu và cung cấp cho RMI client như
+sau:Luyện tập RMI
+Giao diện từ xa:
+public interface ObjectService extends Remote {
+public Serializable requestObject(String studentCode, String qCode) throws
+RemoteException;
+public void submitObject(String studentCode, String qCode, Serializable object) throws
+RemoteException;
+} L
+ớp Book gồm các thuộc tính: id String, title String, author String, yearPublished int, pageCount
+int, code String.
+Trường dữ liệu: private static final long serialVersionUID = 20241123L;
+02 hàm khởi dựng:
+public Book()
+public Book(String id, String title, String author, int yearPublished, int pageCount)
+Trong đó:
+Interface ObjectService và lớp Book được viết trong package RMI.
+Đối tượng cài đặt giao diện từ xa ObjectService được đăng ký với RegistryServer:
+RMIObjectService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với đối tượng
+sách được nhận từ RMI Server:
+a. Triệu gọi phương thức requestObject để nhận đối tượng Book ngẫu nhiên từ server.
+b. Tạo mã code cho sách dựa trên các thành phần sau:
+• Lấy chữ cái đầu của họ và tên đầu của tác giả. Ví dụ, với tác giả "John Doe", hai chữ cái đầu
+sẽ là "JD".
+• Lấy hai chữ số cuối cùng của năm xuất bản (yearPublished). Ví dụ, nếu yearPublished là
+1985, sẽ lấy "85".
+• Lấy tổng số chữ cái trong title của sách.
+• Lấy số chữ số của pageCount (số trang) và nếu số chữ số < 3, thêm các số 0 ở đầu để đạt đủ
+ba chữ số.
+Kết hợp tất cả các thành phần trên để tạo ra mã code theo định dạng: "[Chữ cái đầu tên tác giả][Hai
+chữ số cuối của năm xuất bản][Tổng số chữ cái trong title][Số chữ số của pageCount]". Ví dụ, nếu
+tác giả là "Jane Austen", yearPublished là 1813, title là "Pride and Prejudice" với 18 ký tự, và
+pageCount là 345, thì mã code sẽ là: "JA1318345".
+c. Cập nhật giá trị code trong đối tượng Book.
+d. Triệu gọi phương thức submitObject để gửi đối tượng Book đã được xử lý trở lại server.
+e. Kết thúc chương trình client.
+
+
+package RMI.B21DCCN008;
+import java.rmi.*;
+import java.rmi.registry.*;
+import RMI.ObjectService;
+import RMI.Book;
+public class QuanLyThuVien1 {
+    public static void main(String[] args) throws Exception {
+        //a. Nhận sản phẩm từ server
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ObjectService sv = (ObjectService) rg.lookup("RMIObjectService");
+        Book book = (Book) sv.requestObject("B21DCCN008", "nCOdwcKJ");
+        System.out.println(book);
+        //Tạo mã
+        String code = "";
+        String[] tmp = book.getAuthor().split(" ");
+        code+=String.format("%c%c", Character.toUpperCase(tmp[0].charAt(0)), Character.toUpperCase(tmp[tmp.length - 1].charAt(0)));
+        code+=String.format("%02d%d%03d", book.getYearPublished()%100, 
+                book.getTitle().trim().length(), book.getPageCount());
+        book.setCode(code);
+        System.out.println(book);
+        // c. 
+        sv.submitObject("B21DCCN008", "nCOdwcKJ", book);
+    }
+}
+package RMI;
+import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+public interface ObjectService extends Remote {
+    public Serializable requestObject(String studentCode, String qAlias) throws RemoteException;
+    public void submitObject(String studentCode, String qAlias, Serializable object) throws RemoteException;
+}
+package RMI;
+import java.io.Serializable;
+public class Book implements Serializable {
+    private static final long serialVersionUID = 20241123L;
+    private String id, title, author;
+    private int yearPublished, pageCount;
+    private String code;
+    public Book() {}
+    public Book(String id, String title, String author, int yearPublished, int pageCount) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.yearPublished = yearPublished;
+        this.pageCount = pageCount;
+    }
+    // Getters and Setters
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    public String getTitle() {
+        return title;
+    }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    public String getAuthor() {
+        return author;
+    }
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+    public int getYearPublished() {
+        return yearPublished;
+    }
+    public void setYearPublished(int yearPublished) {
+        this.yearPublished = yearPublished;
+    }
+    public int getPageCount() {
+        return pageCount;
+    }
+
+    public void setPageCount(int pageCount) {
+        this.pageCount = pageCount;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", yearPublished=" + yearPublished +
+                ", pageCount=" + pageCount +
+                ", code='" + code + '\'' +
+                '}';
+    }
+}
+BÀI 1. [Data] ĐỔI TIỀN
+[Mã câu hỏi (qCode): Iz06p8Zw]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu.
+Giao diện từ xa:
+public interface DataService extends Remote {
+public Object requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, Object data) throws
+RemoteException;
+}
+Trong đó:
+• Interface DataService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa DataService được đăng ký với RegistryServer với tên là:
+RMIDataService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một số nguyên dương amount từ server, đại diện cho
+số tiền cần đạt được.
+b. Sử dụng thuật toán xếp đồng xu với các mệnh giá cố định [1, 2, 5, 10] để xác định số lượng đồng
+xu tối thiểu cần thiết để đạt được số tiền amount. Nếu không thể đạt được số tiền đó với các mệnh
+giá hiện có, trả về -1.
+Ví dụ: Với amount = 18 và mệnh giá đồng xu cố định [1, 2, 5, 10], kết quả là 4 (18 = 10 + 5 + 2 +
+1). Chuỗi cần gửi lên server là: 4; 10,5,2,1
+c. Triệu gọi phương thức submitData để gửi chuỗi chứa kết quả số lượng đồng xu tối thiểu và giá
+trị các đồng xu tương ứng trở lại server.
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN012;
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.util.*;
+import RMI.DataService;
+public class DoiTien {
+    public static void main(String[] args) throws Exception {
+        // a. Nhận dữ liệu
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        DataService sv = (DataService) rg.lookup("RMIDataService");
+        int n = (int) sv.requestData("B21DCCN012", "Iz06p8Zw"), res = 0;
+        System.out.println(n);
+        // b. Xử lý: Tìm số đồng tiền
+        String ans = "";
+        int[] a = {1, 2, 5, 10}; 
+        for (int i = 3; i >= 0; i--) {
+            int p = n / a[i]; 
+            if (p > 0) {
+                res += p; 
+                n -= p * a[i]; 
+                for (int j = 0; j < p; j++) ans+=a[i] + ",";
+            }
+        }
+        if (n > 0) ans = "-1";
+        else {
+            ans = ans.substring(0, ans.length() - 1);
+            ans= String.format("%d; ", res) + ans;
+        }
+        System.out.println(ans);
+        // c. Gửi kết quả
+        sv.submitData("B21DCCN012", "Iz06p8Zw", ans);
+    }
+}
+
+import java.rmi.*;
+public interface DataService extends Remote {
+    public Object requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, Object data) throws RemoteException;
+}
+
+BÀI 2. [Character] ĐẾM SỐ LẦN XUẤT HIỆN - 2
+[Mã câu hỏi (qCode): ctRfIejL]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện cho
+phép triệu gọi từ xa để xử lý chuỗi.
+Giao diện từ xa:
+public interface CharacterService extends Remote {
+public String requestCharacter(String studentCode, String qCode) throws
+RemoteException;
+public void submitCharacter(String studentCode, String qCode, String strSubmit) throws
+RemoteException;
+}
+Trong đó:
+• Interface CharacterService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa CharacterService được đăng ký với RegistryServer với tên là:
+RMICharacterService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với chuỗi
+được nhận từ RMI Server:
+a. Triệu gọi phương thức requestCharacter để nhận chuỗi ngẫu nhiên từ server với định dạng:
+"Chuỗi văn bản đầu vào".
+b. Thực hiện thao tác đếm tần số xuất hiện của từng ký tự trong chuỗi đầu vào. Kết quả trả về là
+danh sách các ký tự kèm theo số lần xuất hiện của mỗi ký tự.
+Ví dụ: Chuỗi ban đầu "Hello world" -> Kết quả đếm tần số ký tự: {"H": 1, "e": 1, "l": 3, "o": 2, "
+": 1, "w": 1, "r": 1, "d": 1}.
+c. Triệu gọi phương thức submitCharacter để gửi kết quả đếm tần số ký tự trở lại server dưới dạng
+chuỗi kết quả đã được định dạng.
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN012;
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.util.*;
+import RMI.CharacterService;
+public class DemSoLanXH2 {
+    public static void main(String[] args) throws Exception {
+        // a. Nhận chuỗi từ server
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        CharacterService sv = (CharacterService) rg.lookup("RMICharacterService");
+        String s = sv.requestCharacter("B21DCCN012", "ctRfIejL");
+        System.out.println(s);
+        int[] cnt = new int[256]; 
+        for (char x : s.toCharArray()) cnt[x]++;
+        String res = "";
+        boolean first = true;
+        for (char x : s.toCharArray()) {
+            if (cnt[x] > 0) {
+                if (!first) res+=", ";
+                res+=String.format("\"%c\": %d", x, cnt[x]); 
+                cnt[x] = 0; 
+                first = false;
+            }
+        }
+        res = "{" + res + "}";
+        System.out.println(res);
+        // c. Gửi kết quả lại server
+        sv.submitCharacter("B21DCCN012", "ctRfIejL", res);
+    }
+}
+package RMI;
+import java.rmi.*;
+public interface CharacterService extends Remote {
+    public String requestCharacter(String studentCode, String qCode) throws RemoteException;
+    public void submitCharacter(String studentCode, String qCode, String strSubmit) throws RemoteException;
+}
+
+BÀI 3 [Byte]. PHÉP XOR – 2
+[Mã câu hỏi (qCode): 4BraNTI5]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu nhị phân.
+Giao diện từ xa:
+public interface ByteService extends Remote {
+public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, byte[] data) throws
+RemoteException;
+}
+Trong đó:
+• Interface ByteService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa ByteService được đăng ký với RegistryServer với tên là:
+RMIByteService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhị phân nhận được từ RMI Server:Luyện tập RMI
+a. Triệu gọi phương thức requestData để nhận một mảng dữ liệu nhị phân (byte[]) từ server, đại
+diện cho một chuỗi văn bản ASCII.
+b. Thực hiện mã hóa XOR cho mảng dữ liệu nhị phân bằng cách sử dụng một khóa là chuỗi "PTIT".
+Thực hiện phép XOR trên từng byte trong mảng dữ liệu với byte tương ứng trong khóa (khóa sẽ
+được lặp lại để khớp với độ dài của mảng dữ liệu).
+Ví dụ: Nếu dữ liệu nhị phân nhận được là [72, 101, 108, 108, 111] (tương ứng với chuỗi "Hello"),
+và khóa là "PTIT", chương trình sẽ thực hiện mã hóa như sau:
+• Chuyển khóa "PTIT" thành mảng byte [80, 84, 73, 84].
+• Lặp lại khóa để khớp độ dài dữ liệu: [80, 84, 73, 84, 80].
+• Thực hiện phép XOR trên từng byte của dữ liệu với khóa:
+• Kết quả mã hóa là mảng [24, 49, 37, 56, 63].
+c. Triệu gọi phương thức submitData để gửi mảng dữ liệu đã được mã hóa bằng XOR trở lại server.
+d. Kết thúc chương trình client.
+
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.util.*;
+import RMI.ByteService;
+public class PhepXOR2 {
+    public static void main(String[] args) throws Exception {
+        // a. Nhận dữ liệu từ server
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ByteService sv = (ByteService) rg.lookup("RMIByteService");
+        byte[] a = sv.requestData("B21DCCN012", "4BraNTI5");
+        for(byte x: a) System.out.print(x + " ");
+        System.out.println();
+        //b. Mã hoá
+        String tmp = "PTIT";
+        byte[] tmpB = tmp.getBytes(); // Chuyển khóa thành mảng byte
+        byte[] maHoa = new byte[a.length];
+        for(int i = 0;i<a.length;i++) maHoa[i] = (byte) (a[i] ^ tmpB[i % tmpB.length]);
+        for(byte x: maHoa) System.out.print(x + " ");
+        //c. Gửi
+        sv.submitData("B21DCCN012", "4BraNTI5", maHoa);
+    }
+}
+
+package RMI;
+import java.rmi.*;
+public interface ByteService extends Remote {
+    public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+
+BÀI 4. [Object] BÀI TOÁN QUẢN LÝ THƯ VIỆN - 2
+[Mã câu hỏi (qCode): CoWosBho]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý mã hóa dữ liệu tác phẩm trong hệ thống quản lý thư viện. Chương
+trình sẽ ngẫu nhiên tạo ra đối tượng BookX với các giá trị ban đầu và cung cấp cho RMI client như
+sau:
+Giao diện từ xa:
+public interface ObjectService extends Remote {
+public Serializable requestObject(String studentCode, String qCode) throws RemoteException;
+public void submitObject(String studentCode, String qCode, Serializable object) throws
+RemoteException;
+} L
+ớp BookX gồm các thuộc tính: id String, title String, author String, yearPublished int, genre
+String, code String.
+Trường dữ liệu: private static final long serialVersionUID = 20241124L;
+02 hàm khởi dựng:
+public BookX()
+public BookX(String id, String title, String author, int yearPublished, String genre)
+Trong đó:
+Interface ObjectService và lớp BookX được viết trong package RMI.
+Đối tượng cài đặt giao diện từ xa ObjectService được đăng ký với RegistryServer:
+RMIObjectService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với đối tượng
+sách được nhận từ RMI Server:
+a. Triệu gọi phương thức requestObject để nhận đối tượng BookX ngẫu nhiên từ server.
+b. Tạo mã code cho sách dựa trên các quy tắc mã hóa sau:
+• Lấy chữ cái đầu tiên và cuối cùng trong tên tác giả (author).
+• Lấy hai chữ số cuối cùng của yearPublished.Luyện tập RMI
+• Số lượng chữ cái trong genre của sách.
+• Độ dài của title chia lấy dư cho 10 (ví dụ: với tiêu đề dài 32 ký tự, giá trị này sẽ là 2).
+Kết hợp tất cả các thành phần trên để tạo ra mã code theo định dạng: [Chữ cái đầu và cuối tên
+tác giả][Hai chữ số cuối của năm xuất bản][Số chữ cái của genre][Độ dài title modulo 10].
+Ví dụ, nếu tác giả là "Mark Twain", năm xuất bản là 1884, thể loại là "Fiction" với 7 ký tự,
+và tiêu đề có 24 ký tự, mã code sẽ là: "Mn8474".
+c. Cập nhật giá trị code trong đối tượng BookX.
+d. Triệu gọi phương thức submitObject để gửi đối tượng BookX đã được xử lý trở lại server.
+e. Kết thúc chương trình client. 
+
+package RMI.B21DCCN012;
+import java.rmi.*;
+import java.rmi.registry.*;
+import RMI.ObjectService;
+import RMI.BookX;
+public class QuanLyThuVien2 {
+    public static void main(String[] args) throws Exception {
+        //a. Nhận sản phẩm từ server
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ObjectService sv = (ObjectService) rg.lookup("RMIObjectService");
+        BookX book = (BookX) sv.requestObject("B21DCCN012", "CoWosBho");
+        System.out.println(book);
+        //Tạo mã
+        String code = "";
+        String[] tmp = book.getAuthor().split(" ");
+        code+=tmp[0].charAt(0);code+=tmp[tmp.length - 1].charAt(tmp[tmp.length - 1].length() - 1);
+        code+=String.format("%02d%d%d", book.getYearPublished()%100, 
+                book.getGenre().trim().length(), book.getTitle().length()%10);
+        book.setCode(code);
+        // c. 
+        sv.submitObject("B21DCCN012", "CoWosBho", book);
+    }
+}
+package RMI;
+import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+public interface ObjectService extends Remote {
+    public Serializable requestObject(String studentCode, String qAlias) throws RemoteException;
+    public void submitObject(String studentCode, String qAlias, Serializable object) throws RemoteException;
+}
+package RMI;
+import java.io.Serializable;
+public class BookX implements Serializable {
+    private static final long serialVersionUID = 20241124L;
+    private String id, title, author;
+    private int yearPublished;
+    private String genre, code;
+    public BookX() {}
+    public BookX(String id, String title, String author, int yearPublished, String genre) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.yearPublished = yearPublished;
+        this.genre = genre;
+        this.code = "";
+    }
+    //get set cứ insert tung hết ra
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public int getYearPublished() {
+        return yearPublished;
+    }
+
+    public void setYearPublished(int yearPublished) {
+        this.yearPublished = yearPublished;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    @Override
+    public String toString() {
+        return "BookX{" + "id=" + id + ", title=" + title + ", author=" + author + ", yearPublished=" + yearPublished + ", genre=" + genre + ", code=" + code + '}';
+    }
+    
+    
+}
+
+BÀI 1. [Data] LIỆT KÊ SỐ NGUYÊN TỐ
+[Mã câu hỏi (qCode): nD8MdtME]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu.
+Giao diện từ xa:
+public interface DataService extends Remote {
+public Object requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, Object data) throws
+RemoteException;
+}
+Trong đó:
+• Interface DataService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa DataService được đăng ký với RegistryServer với tên là:
+RMIDataService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một số nguyên dương N từ server, đại diện cho giới
+hạn trên của khoảng cần kiểm tra.
+b. Thực hiện tìm tất cả các số nguyên tố trong khoảng từ 1 đến N. Ví dụ: Với N = 10, kết quả là
+danh sách các số nguyên tố “2, 3, 5, 7”.
+c. Triệu gọi phương thức submitData để gửi List< Integer> danh sách các số nguyên tố đã tìm được
+trở lại server.
+d. Kết thúc chương trình client
+
+package RMI.B21DCCN015;
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.util.*;
+import RMI.DataService;
+public class LietKeSoNguyenTo {
+    public static void main(String[] args) throws Exception {
+        // a. Nhận dữ liệu
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        DataService sv = (DataService) rg.lookup("RMIDataService");
+        int N = (int) sv.requestData("B21DCCN015", "nD8MdtME");
+        System.out.println(N);
+        // b. Xử lý: Tìm list các SNT
+        List<Integer> res = new ArrayList<>();
+        for(int i = 2;i<=N;i++){
+            if(check(i)==1) res.add(i);
+        }
+        System.out.println(res);
+        // c. Gửi kết quả
+        sv.submitData("B21DCCN015", "NMATI6Zw", res);
+    }
+    public static int check(int n){//ktra snt
+        for(int i = 2;i*i<=n;i++){
+            if(n%i==0) return 0;
+        }
+        return 1;
+    }
+}
+package RMI;
+import java.rmi.*;
+public interface DataService extends Remote {
+    public Object requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, Object data) throws RemoteException;
+}
+
+BÀI 2 [Character] CHUYỂN ĐỔI LA MÃ – THẬP PHÂN
+[Mã câu hỏi (qCode): 0JaasIw6]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý chuỗi.
+Giao diện từ xa:
+public interface CharacterService extends Remote {
+public String requestCharacter(String studentCode, String qCode) throws
+RemoteException;
+public void submitCharacter(String studentCode, String qCode, String strSubmit) throws
+RemoteException;
+}
+Trong đó:
+• Interface CharacterService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa CharacterService được đăng ký với RegistryServer với tên là:
+RMICharacterService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với chuỗi
+được nhận từ RMI Server:
+a. Triệu gọi phương thức requestCharacter để nhận chuỗi ngẫu nhiên từ server với định dạng:
+"Chuỗi số La Mã đầu vào".
+b. Thực hiện chuyển đổi chuỗi số La Mã nhận được thành số thập phân (Decimal).
+c. Triệu gọi phương thức submitCharacter để gửi số thập phân đã chuyển đổi trở lại server.
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN015;
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.util.*;
+import RMI.CharacterService;
+public class ChuyenDoiLaMaThapPhan {
+    public static long trans(char c){
+        if (c=='I') return 1;
+        else if (c=='V') return 5;
+        else if (c=='X') return 10;
+        else if (c=='L') return 50;
+        else if (c=='C') return 100;
+        else if (c=='D') return 500;
+        else return 1000;
+    }
+    public static long change(String s){
+        long tong = 0;
+        tong+= trans(s .charAt(s.length()-1));
+        for(int i = s.length() - 2;i>=0;i--){
+            if(trans(s.charAt(i+ 1))>trans(s.charAt(i))) tong-=trans(s.charAt(i));
+            else tong+=trans(s.charAt(i));
+        }
+        return tong;
+    }
+    public static void main(String[] args) throws Exception{
+        //a.
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        CharacterService sv = (CharacterService) rg.lookup("RMICharacterService");
+        String s = sv.requestCharacter("B21DCCN015", "0JaasIw6");
+        System.out.println(s);
+        //c. Gửi
+        System.out.println(change(s));
+        sv.submitCharacter("B21DCCN015", "0JaasIw6", String.valueOf(change(s)));
+    }
+}
+
+package RMI;
+import java.rmi.*;
+public interface CharacterService extends Remote {
+    public String requestCharacter(String studentCode, String qCode) throws RemoteException;
+    public void submitCharacter(String studentCode, String qCode, String strSubmit) throws RemoteException;
+}
+
+BÀI 3. [Byte] GIẢI MÃ
+[Mã câu hỏi (qCode): oeJljCIf]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện cho
+phép triệu gọi từ xa để xử lý dữ liệu nhị phân.
+Giao diện từ xa:
+public interface ByteService extends Remote {
+public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+Trong đó:
+• Interface ByteService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa ByteService được đăng ký với RegistryServer với tên là:
+RMIByteService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhị phân đã mã hóa dưới dạng Base64 nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một mảng dữ liệu nhị phân (byte[]) từ server, trong
+đó mảng này chứa một chuỗi Base64 được mã hóa.
+b. Thực hiện giải mã dữ liệu nhận được từ định dạng Base64 về dữ liệu gốc. Sử dụng giải mã
+Base64 để chuyển mảng byte Base64 thành mảng byte nguyên bản ban đầu.Luyện tập RMI
+Ví dụ: Nếu dữ liệu Base64 nhận được là chuỗi mã hóa SGVsbG8gV29ybGQ= (tương ứng với chuỗi
+"Hello World" trong ASCII), chương trình sẽ thực hiện giải mã để nhận được mảng dữ liệu nhị
+phân [72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100].
+c. Triệu gọi phương thức submitData để gửi mảng dữ liệu gốc đã giải mã trở lại server.
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN015;
+import RMI.ByteService;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.Base64;
+public class GiaiMaBase64 {
+    public static void main(String[] args) throws Exception{
+        // a. Nhận dữ liệu từ server
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ByteService sv = (ByteService) rg.lookup("RMIByteService");
+        byte[] a = sv.requestData("B21DCCN015", "oeJljCIf");
+        // b. Giải mã 
+        String s = new String(a);  //Byte -->String
+        System.out.println(s);
+        byte[] ans = Base64.getDecoder().decode(s);  // Giải mã Base64
+        for (byte x: ans) System.out.print(x + " ");
+        System.out.println();
+        // c. 
+        sv.submitData("B21DCCN015", "oeJljCIf", ans);
+    }
+}
+
+
+package RMI;
+import java.rmi.*;
+public interface ByteService extends Remote {
+    public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+
+BÀI 1. [Data] PHƯƠNG SAI – ĐỘ LỆCH CHUẨN
+[Mã câu hỏi (qCode): uZMEY3Zg]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu.
+Giao diện từ xa:
+public interface DataService extends Remote {
+public Object requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, Object data) throws RemoteException;
+}
+Trong đó:
+• Interface DataService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa DataService được đăng ký với RegistryServer với tên là:
+RMIDataService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một chuỗi các tập hợp các số thực từ server.
+b. Tính toán phương sai (variance) và độ lệch chuẩn (standard deviation) của tập hợp dữ liệu này
+(làm tròn tới 02 chữ số thập phân)
+Ví dụ: Với tập dữ liệu nhận được “2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0”, phương sai là 4.00 và độ
+lệch chuẩn là 2.00
+c. Triệu gọi phương thức submitData để gửi chuỗi chứa kết quả phương sai và độ lệch chuẩn trở lại
+server dưới dạng một cặp giá trị “variance : standard deviation”
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN016;
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.util.*;
+import RMI.DataService;
+public class PhuongSai {
+    public static void main(String[] args) throws Exception {
+        // a. Nhận dữ liệu
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        DataService sv = (DataService) rg.lookup("RMIDataService");
+        String s = (String) sv.requestData("B21DCCN016", "uZMEY3Zg");
+        System.out.println(s);
+        // b. Xử lý: Tìm danh sách các bộ ba số Pythagore
+        ArrayList<Double> a = new ArrayList<>();
+        s = s.replace(",", " ");
+        String[] tmp = s.trim().split("\\s+");
+        for (String x : tmp) a.add(Double.parseDouble(x));
+        int n = a.size(); 
+        double tong = 0, tongTmp = 0;
+        for (double x : a) tong += x;
+        double tbc = tong / (double) n;
+        for (double x : a) tongTmp += (x - tbc) * (x - tbc);
+        double pSai = tongTmp / n;  
+        double doLechChuan = Math.sqrt(pSai);
+        System.out.println(pSai);
+        System.out.println(doLechChuan);
+        // c. Gửi kết quả
+        String res = String.format("%.2f : %.2f", pSai, doLechChuan);
+        System.out.println(res);
+        sv.submitData("B21DCCN016", "uZMEY3Zg", res);
+    }
+}
+
+package RMI;
+import java.rmi.*;
+public interface DataService extends Remote {
+    public Object requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, Object data) throws RemoteException;
+}
+
+BÀI 1. [Data] LIỆT KÊ SỐ ĐỐI XỨNG
+[Mã câu hỏi (qCode): t3cBY2uk]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu.
+Giao diện từ xa:
+public interface DataService extends Remote {
+public Object requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, Object data) throws RemoteException;}
+Trong đó:
+• Interface DataService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa DataService được đăng ký với RegistryServer với tên là:
+RMIDataService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận hai số nguyên dương N và K từ server, đại diện cho
+khoảng cần kiểm tra (N ≤ số < K).
+b. Xác định tất cả các số nguyên đối xứng (Palindrome Number) trong khoảng từ N đến K. Kết quả
+trả về là danh sách các số đối xứng thỏa mãn yêu cầu.
+Ví dụ: Với N = 50 và K = 150, kết quả là [55, 66, 77, 88, 99, 101, 111, 121, 131, 141].
+c. Triệu gọi phương thức submitData để gửi đối tượng List<Integer> danh sách các số nguyên đối
+xứng đã tìm được trở lại server.
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN021;
+import RMI.DataService;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.*;
+public class LietKeSoDoiXung {
+    public static boolean check(int x){
+        String s = x+"";
+        for(int i = 0;i<=s.length()/2;i++){
+            if(s.charAt(i)!=s.charAt(s.length() - i - 1)) return false;
+        }
+        return true;
+    }
+    public static void main(String[] args) throws Exception{
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        DataService sv = (DataService) rg.lookup("RMIDataService");
+        String s = (String) sv.requestData("B21DCCN021", "t3cBY2uk");
+        System.out.println(s);
+        s = s.replace(";", "");
+        String []tmp = s.trim().split("\\s+");
+        int n = Integer.parseInt(tmp[0].trim()), k = Integer.parseInt(tmp[1].trim());
+        List<Integer>a = new ArrayList<>();
+        for(int i = n;i<k;i++){
+            if(check(i)) a.add(i);
+        }
+        System.out.println(a);
+        sv.submitData("B21DCCN021", "t3cBY2uk", a);
+    }
+}
+package RMI;
+import java.rmi.*;
+public interface DataService extends Remote {
+    public Object requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, Object data) throws RemoteException;
+}
+
+BÀI 2. [Character] MÃ HOÁ VIGENERE
+[Mã câu hỏi (qCode): Y7YMXHs4]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý chuỗi.
+Giao diện từ xa:
+public interface CharacterService extends Remote {
+public String requestCharacter(String studentCode, String qCode) throws RemoteException;
+public void submitCharacter(String studentCode, String qCode, String strSubmit) throws
+RemoteException;
+}
+Trong đó:
+• Interface CharacterService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa CharacterService được đăng ký với RegistryServer với tên
+là: RMICharacterService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với chuỗi
+được nhận từ RMI Server:
+a. Triệu gọi phương thức requestCharacter để nhận chuỗi ngẫu nhiên từ server với định dạng: "Từ
+khóa;Chuỗi đầu vào"
+b. Thực hiện thao tác mã hóa Vigenère cho chuỗi nhận được. Biết rằng, mã hóa Vigenère thực hiện
+mã hóa mỗi ký tự trong chuỗi đầu vào được dịch đi một khoảng bằng với vị trí tương ứng của ký
+tự trong từ khóa. (Từ khóa được lặp lại để khớp với độ dài của chuỗi)
+Ví dụ: chuỗi ban đầu "PTIT;HELLO" → từ khóa "PTIT" và chuỗi mã hóa là: "WXTED"
+c. Triệu gọi phương thức submitCharacter để gửi chuỗi đã được mã hóa trở lại server.
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN021;
+import java.util.*;
+import java.rmi.*;
+import java.rmi.registry.*;
+import RMI.CharacterService;
+public class MaHoaVigen {
+    public static void main(String[] args) throws Exception{
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        CharacterService sv = (CharacterService) rg.lookup("RMICharacterService");
+        String s = sv.requestCharacter("B21DCCN021", "Y7YMXHs4");
+        System.out.println(s);
+        int idx = s.indexOf(";");
+        String keyW = s.substring(0, idx), text = s.substring(idx + 1), ans = "";
+        for(int i = 0;i<text.length();i++){
+            char x = text.charAt(i), y = keyW.charAt(i % keyW.length());
+            char z;
+            if (Character.isUpperCase(x)) z = (char) ((x - 'A' + y - 'A') % 26 + 'A');
+            else z = (char) ((x - 'a' + y - 'a') % 26 + 'a');
+            ans+=z;
+        }
+        System.out.println(ans);
+        sv.submitCharacter("B21DCCN021", "Y7YMXHs4", ans);
+    } 
+}
+package RMI;
+import java.rmi.*;
+public interface CharacterService extends Remote {
+    public String requestCharacter(String studentCode, String qCode) throws RemoteException;
+    public void submitCharacter(String studentCode, String qCode, String strSubmit) throws RemoteException;
+}
+
+BÀI 4. [Object] BÀI TOÁN QUẢN LÝ HỆ THỐNG THƯƠNG MẠI ĐIỆN TỬ
+Mã câu hỏi (qCode): vLJWvWpf]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để quản lý thông tin đơn hàng trong hệ thống thương mại điện tử. Chương
+trình sẽ ngẫu nhiên tạo ra đối tượng Order với các giá trị ban đầu và cung cấp cho RMI client như
+sau:
+Giao diện từ xa:
+public interface ObjectService extends Remote {
+public Serializable requestObject(String studentCode, String qCode) throws RemoteException;
+public void submitObject(String studentCode, String qCode, Serializable object) throws
+RemoteException;
+} L
+ớp Order gồm các thuộc tính: id String, customerCode String, orderDate String, shippingType
+String, orderCode String.
+• Trường dữ liệu: private static final long serialVersionUID = 20241132L;
+• 02 hàm khởi dựng:
+public Order()
+public Order(int id, String customerCode, String orderDate, String shippingType)
+Trong đó:
+• Interface ObjectService và lớp Order được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa ObjectService được đăng ký với RegistryServer:
+RMIObjectService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với đối tượng
+đơn hàng được nhận từ RMI Server:
+a. Triệu gọi phương thức requestObject để nhận đối tượng Order ngẫu nhiên từ server.
+b. Tạo mã orderCode cho đơn hàng dựa trên các quy tắc sau:
+• Bắt đầu bằng hai ký tự đầu của shippingType, viết in hoa.
+• Kế đến là ba ký tự cuối của customerCode.
+• Cuối cùng là ngày và tháng từ orderDate (theo định dạng "ddMM").
+Ví dụ: Nếu đơn hàng có mã khách hàng là "C123456", ngày đặt hàng là "2023-10-05", và loại giao
+hàng là "Express", thì mã orderCode sẽ là "EX4560510".
+c. Cập nhật giá trị orderCode trong đối tượng Order.
+d. Triệu gọi phương thức submitObject để gửi đối tượng Order đã được xử lý trở lại server.
+e. Kết thúc chương trình client.
+
+package RMI.B21DCCN021;
+import RMI.Order;
+import java.rmi.*;
+import java.rmi.registry.*;
+import RMI.ObjectService;
+public class TDMT {
+    public static void main(String[] args) throws Exception{
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ObjectService sv = (ObjectService) rg.lookup("RMIObjectService");
+        Order order = (Order) sv.requestObject("B21DCCN021", "vLJWvWpf");
+        System.out.println(order);
+        //b.
+        String x = order.getShippingType().substring(0, 2).toUpperCase(); // Hai ký tự đầu của shippingType
+        String y = order.getCustomerCode().substring(order.getCustomerCode().length() - 3); // Ba ký tự cuối của customerCode
+        String z = order.getOrderDate().substring(8, 10) + order.getOrderDate().substring(5, 7); // ddMM từ orderDate
+        String orderCode = x + y + z;
+        order.setOrderCode(orderCode);
+        //c
+        System.out.println(order);
+        sv.submitObject("B21DCCN021", "vLJWvWpf", order);
+    }
+}
+
+package RMI;
+import java.io.Serializable;
+public class Order implements Serializable {
+    private static final long serialVersionUID = 20241132L;
+    private String id, customerCode, orderDate, shippingType, orderCode;
+    public Order() {}
+    public Order(String id, String customerCode, String orderDate, String shippingType) {
+        this.id = id;
+        this.customerCode = customerCode;
+        this.orderDate = orderDate;
+        this.shippingType = shippingType;
+    }
+    public String getCustomerCode() {
+        return customerCode;
+    }
+    public String getShippingType() {
+        return shippingType;
+    }
+    public String getOrderDate() {
+        return orderDate;
+    }
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
+    }
+    @Override
+    public String toString() {
+        return "Order{" + "id=" + id + ", customerCode=" + customerCode + ", orderDate=" + orderDate + ", shippingType=" + shippingType + ", orderCode=" + orderCode + '}';
+    }
+}
+package RMI;
+import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+public interface ObjectService extends Remote {
+    public Serializable requestObject(String studentCode, String qAlias) throws RemoteException;
+    public void submitObject(String studentCode, String qAlias, Serializable object) throws RemoteException;
+}
+
+BÀI 1. [Data] PHÂN TÍCH RA THỪA SỐ NGUYÊN TỐ
+[Mã câu hỏi (qCode): zzmmquoc]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu.
+Giao diện từ xa:
+public interface DataService extends Remote {
+public Object requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, Object data) throws
+RemoteException;
+}
+Trong đó:
+• Interface DataService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa DataService được đăng ký với RegistryServer với tên là:
+RMIDataService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một số nguyên dương lớn từ server, gọi là N.
+b. Thực hiện phân rã số N thành các thừa số nguyên tố. Kết quả trả về là danh sách các thừa số
+nguyên tố của N.
+Ví dụ: Với N = 84, kết quả là danh sách “2, 2, 3, 7”.
+c. Triệu gọi phương thức submitData để gửi danh sách các thừa số nguyên tố đã tìm được trở lại
+server.
+d. Kết thúc chương trình client.
+package RMI.B21DCCN022;
+import java.util.*;
+import RMI.DataService;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+public class PhanTichTSNT {
+    public static void main(String[] args) throws Exception{
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        DataService sv = (DataService) rg.lookup("RMIDataService");
+        int n = (int) sv.requestData("B21DCCN022", "zzmmquoc");
+        System.out.println(n);
+        List<Integer>a = new ArrayList<>();
+        for(int i = 2;i*i<=n;i++){
+            while(n%i==0){
+                a.add(i);
+                n/=i;
+            }
+        }
+        if(n>1) a.add(n);
+        System.out.println(a);
+        sv.submitData("B21DCCN022", "zzmmquoc", a);
+    }
+}
+package RMI;
+import java.rmi.*;
+public interface DataService extends Remote {
+    public Object requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, Object data) throws RemoteException;
+}
+
+BÀI 2. [Character] MÃ HOÁ CAESAR - 1
+[Mã câu hỏi (qCode): j4rStb2a]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện cho
+phép triệu gọi từ xa để xử lý chuỗi. Cụ thể:
+Giao diện từ xa:
+public interface CharacterService extends Remote {
+public String requestCharacter(String studentCode, String qCode) throws RemoteException;
+public void submitCharacter(String studentCode, String qCode, String strSubmit) throws
+RemoteException;
+}
+Trong đó:
+• Interface CharacterService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa CharacterService được đăng ký với RegistryServer với tên
+là: RMICharacterService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với chuỗi
+được nhận từ RMI Server:
+a. Triệu gọi phương thức requestCharacter để nhận chuỗi ngẫu nhiên từ server.
+b. Thực hiện thao tác giải mã Caesar (mã hóa chuỗi bằng cách dịch từng ký tự đi một số lượng vị
+trí nhất định). Biết rằng giá trị dịch đúng bằng kích thước của chuỗi chia lấy dư cho 7.
+c. Triệu gọi phương thức submitCharacter để gửi chuỗi đã được giải mã trở lại server.
+d. Kết thúc chương trình client.
+package RMI.B21DCCN022;
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.util.*;
+import RMI.CharacterService;
+public class MaHoaCaesar1 {
+    public static void main(String[] args) throws Exception{
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        CharacterService sv = (CharacterService) rg.lookup("RMICharacterService");
+        String s = sv.requestCharacter("B21DCCN022", "j4rStb2a");
+        System.out.println(s);
+        //b.
+        String ans = "";
+        int dich = s.length()%7;
+        for(char x: s.toCharArray()){
+            char base = Character.isUpperCase(x) ? 'A' : 'a';
+            x = (char) ((x - base - dich + 26) % 26 + base);
+            ans+=x;
+        }
+        System.out.println(ans);
+        //c.
+        sv.submitCharacter("B21DCCN022", "j4rStb2a", ans);
+    }
+}
+package RMI;
+import java.rmi.*;
+public interface CharacterService extends Remote {
+    public String requestCharacter(String studentCode, String qCode) throws RemoteException;
+    public void submitCharacter(String studentCode, String qCode, String strSubmit) throws RemoteException;
+}
+
+BÀI 4. [Object] BÀI TOÁN QUẢN LÝ SINH VIÊN
+[Mã câu hỏi (qCode): lNV6xzmk]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý thông tin sinh viên trong hệ thống quản lý giáo dục. Chương trình
+sẽ ngẫu nhiên tạo ra đối tượng Student với các giá trị ban đầu và cung cấp cho RMI client như sau:
+Giao diện từ xa:
+public interface ObjectService extends Remote {
+public Serializable requestObject(String studentCode, String qCode) throws RemoteException;
+public void submitObject(String studentCode, String qCode, Serializable object) throws
+RemoteException;
+} L
+ớp Student gồm các thuộc tính: id String, name String, enrollmentYear int, code String.
+Trường dữ liệu: private static final long serialVersionUID = 20241130L;
+02 hàm khởi dựng:
+public Student()
+public Student(String id, String name, int enrollmentYear)
+Trong đó:
+Interface ObjectService và lớp Student được viết trong package RMI.
+Đối tượng cài đặt giao diện từ xa ObjectService được đăng ký với RegistryServer:
+RMIObjectService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với đối tượng
+sinh viên được nhận từ RMI Server:
+a. Triệu gọi phương thức requestObject để nhận đối tượng Student ngẫu nhiên từ server.
+b. Thực hiện
+Tạo mã code cho sinh viên dựa trên các quy tắc sau:
+• Bắt đầu bằng ký tự "B".
+• Kế đến là hai chữ số cuối của enrollmentYear.
+• Sau đó là TÊN của sinh viên, tất cả các ký tự của tên viết in hoa.
+• Kết thúc với các chữ cái đầu tiên của Họ và Họ lót, đều viết in hoa.
+Ví dụ: Nếu sinh viên có tên là "Nguyen Van Tuan", năm nhập học là 2022, mã code sẽ là
+"B22TUAN_NV".
+Chuẩn hóa tên (name) theo quy tắc:
+• Chữ cái đầu tiên của Tên, Họ, và Tên lót phải viết hoa, các chữ cái khác viết thường.
+• Ví dụ: Nếu name ban đầu là "nguYEn van tAi tUAN", sau khi chuẩn hóa sẽ trở thành
+"Nguyen Van Tai TUAN".
+c. Cập nhật giá trị mã (code) và tên (name) trong đối tượng Student và
+d. Triệu gọi phương thức submitObject để gửi đối tượng Student đã được xử lý trở lại server.
+e. Kết thúc chương trình client.
+package RMI.B21DCCN023;
+import java.util.*;
+import java.rmi.*;
+import java.rmi.registry.*;
+import RMI.ObjectService;
+import RMI.Student;
+public class QuanLySinhVien {
+    public static String chuanhoa(String s) {
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase();
+    }
+    public static String chuanhoa2(String s){
+        String []tmp = s.trim().split("\\s+");
+        String res = "";
+        for(int i = 0;i<tmp.length - 1;i++) res+=chuanhoa(tmp[i]) + " ";
+        res+=tmp[tmp.length - 1].toUpperCase();
+        return res;
+    }
+    public static void main(String[] args) throws Exception{
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ObjectService sv = (ObjectService) rg.lookup("RMIObjectService");
+        Student student = (Student) sv.requestObject("B21DCCN023", "lNV6xzmk");
+        System.out.println(student);
+        student.setName(chuanhoa2(student.getName()));
+        String code = String.format("B%d", student.getEnrollmentYear()%100);
+        String []tmp = student.getName().split("\\s+");
+        code+=tmp[tmp.length - 1].toUpperCase() + "_";
+        for(int i = 0;i<tmp.length - 1;i++) code+=Character.toUpperCase(tmp[i].charAt(0));
+        student.setCode(code);
+        System.out.println(student);
+        //c.
+        sv.submitObject("B21DCCN023", "lNV6xzmk", student);
+    }
+}
+package RMI;
+import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+public interface ObjectService extends Remote {
+    public Serializable requestObject(String studentCode, String qAlias) throws RemoteException;
+    public void submitObject(String studentCode, String qAlias, Serializable object) throws RemoteException;
+}
+package RMI;
+import java.io.Serializable;
+public class Student implements Serializable {
+    private static final long serialVersionUID = 20241130L;
+    private String id;
+    private String name;
+    private int enrollmentYear;
+    private String code;
+    public Student() {}
+    public Student(String id, String name, int enrollmentYear) {
+        this.id = id;
+        this.name = name;
+        this.enrollmentYear = enrollmentYear;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public int getEnrollmentYear() {
+        return enrollmentYear;
+    }
+    public void setCode(String code) {
+        this.code = code;
+    }
+    @Override
+    public String toString() {
+        return "Student{id=" + id + ", name='" + name + '\'' +
+                ", enrollmentYear=" + enrollmentYear +
+                ", code='" + code + '\'' + '}';
+    }
+}
+
+BÀI 1. [Data] LIỆT KÊ SỐ CHÍNH PHƯƠNG
+[Mã câu hỏi (qCode): eTHcAYZh]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu.
+Giao diện từ xa:
+public interface DataService extends Remote {
+public Object requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, Object data) throws RemoteException;
+}
+Trong đó:
+• Interface DataService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa DataService được đăng ký với RegistryServer với tên là:
+RMIDataService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một số nguyên dương N từ server.
+b. Xác định tất cả các số chính phương nhỏ hơn N. Kết quả trả về là danh sách các số chính phương
+thỏa mãn yêu cầu.
+Ví dụ: Với N = 20, kết quả là [1, 4, 9, 16].
+c. Triệu gọi phương thức submitData để gửi đối tượng List<Integer> danh sách các số chính phương
+đã tìm được trở lại server.
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN028;
+import RMI.DataService;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.*;
+public class LietKeSoCP {
+    public static boolean check(int x){
+        double y = Math.sqrt(x);
+        int y1 = (int)y;
+        return y == y1;
+    }
+    public static void main(String[] args) throws Exception{
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        DataService sv = (DataService) rg.lookup("RMIDataService");
+        int n = (int) sv.requestData("B21DCCN028", "eTHcAYZh");
+        System.out.println(n);
+        List<Integer>a = new ArrayList<>();
+        for(int i = 1;i<n;i++){
+            if(check(i)) a.add(i);
+        }
+        System.out.println(a);
+        sv.submitData("B21DCCN028", "eTHcAYZh", a);
+    }
+}
+package RMI;
+import java.rmi.*;
+public interface DataService extends Remote {
+    public Object requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, Object data) throws RemoteException;
+}
+BÀI 3. [Byte] MÃ HOÁ CAESAR – 2
+[Mã câu hỏi (qCode): i0EVI2TB]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu nhị phân.
+Giao diện từ xa:
+public interface ByteService extends Remote {
+public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+Trong đó:
+• Interface ByteService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa ByteService được đăng ký với RegistryServer với tên là:
+RMIByteService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhị phân nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một mảng dữ liệu nhị phân (byte[]) từ server, đại
+diện cho một chuỗi văn bản ASCII.
+b. Thực hiện mã hóa Caesar cho mảng dữ liệu nhị phân bằng cách dịch chuyển mỗi byte trong
+mảng đi một số bước cố định trong bảng mã ASCII. Số bước dịch chuyển là số ký tự ASCII trong
+mảng dữ liệu.
+Ví dụ: Nếu dữ liệu nhị phân nhận được là [72, 101, 108, 108, 111] (tương ứng với chuỗi "Hello"),
+chương trình sẽ thực hiện mã hóa Caesar với độ dịch là 5. Kết quả mã hóa là mảng [77, 105, 113,
+113, 116], tương ứng với chuỗi "Mlqqt".
+c. Triệu gọi phương thức submitData để gửi mảng dữ liệu đã được mã hóa bằng Caesar trở lại
+server.
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN028;
+import RMI.ByteService;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+public class MaHoaCaesar2 {
+    public static void main(String[] args) throws Exception{
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ByteService sv = (ByteService) rg.lookup("RMIByteService");
+        byte[] a = sv.requestData("B21DCCN028", "i0EVI2TB");
+        for(byte x: a) System.out.print(x + " ");
+        System.out.println("");
+        int doDich = a.length;
+        for (int i = 0; i < a.length; i++) a[i]+=doDich;
+        for(byte x: a) System.out.print(x + " ");
+        //c.
+        sv.submitData("B21DCCN028", "i0EVI2TB", a);
+    }
+}
+package RMI;
+import java.rmi.*;
+public interface ByteService extends Remote {
+    public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+
+BÀI 1. [Byte] SẮP XẾP CHẴN LẺ
+[Mã câu hỏi (qCode): A7hytb1V]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu nhị phân.
+Giao diện từ xa:
+public interface ByteService extends Remote {
+public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+Trong đó:
+• Interface ByteService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa ByteService được đăng ký với RegistryServer với tên là:
+RMIByteService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhị phân nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một mảng dữ liệu nhị phân (byte[]) từ server.
+b. Thực hiện phân chia mảng byte[] nhận được thành hai phần: phần đầu chứa các byte có giá trị
+chẵn và phần sau chứa các byte có giá trị lẻ, duy trì thứ tự xuất hiện của các phần tử trong từng
+nhóm.
+Ví dụ: Nếu mảng dữ liệu nhận được là [1, 2, 3, 4, 5], sau khi phân chia chẵn-lẻ, mảng kết quả sẽ là
+[2, 4, 1, 3, 5] (tất cả phần tử chẵn được đặt trước, theo sau là tất cả phần tử lẻ).
+c. Triệu gọi phương thức submitData để gửi mảng byte[] đã được phân chia chẵn-lẻ trở lại server.
+
+package RMI.B21DCCN029;
+import RMI.ByteService;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+public class SapXepChanLe {
+    public static void main(String[] args) throws Exception{
+        //a.
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ByteService sv = (ByteService) rg.lookup("RMIByteService");
+        byte[] a = sv.requestData("B21DCCN029", "A7hytb1V");
+        for(byte x: a) System.out.print(x + " ");
+        System.out.println("");
+        //b. sx
+        byte []res = new byte[a.length];
+        int idx = 0;
+        for(byte x: a){
+            if(x % 2==0)  res[idx++] = x;
+        }
+        for(byte x: a){
+            if(x % 2==1)  res[idx++] = x;
+        }
+        for(byte x: res) System.out.print(x + " ");
+        //c.
+        sv.submitData("B21DCCN028", "A7hytb1V", res);
+    }
+}
+package RMI;
+import java.rmi.*;
+public interface ByteService extends Remote {
+    public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+
+BÀI 2. [Character] MÃ HOÁ Base64
+[Mã câu hỏi (qCode): psd4Jmnt]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý chuỗi.
+Giao diện từ xa:
+public interface CharacterService extends Remote {
+public String requestCharacter(String studentCode, String qCode) throws RemoteException;
+public void submitCharacter(String studentCode, String qCode, String strSubmit) throws
+RemoteException;
+}
+Trong đó:
+• Interface CharacterService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa CharacterService được đăng ký với RegistryServer với tên là:
+RMICharacterService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với chuỗi
+được nhận từ RMI Server:
+a. Triệu gọi phương thức requestCharacter để nhận chuỗi ngẫu nhiên từ server với định dạng:
+"Chuỗi đầu vào".
+b. Thực hiện thao tác mã hóa Base64 cho chuỗi đầu vào nhận được từ server. Mã hóa Base64
+chuyển đổi chuỗi nhị phân thành định dạng văn bản ASCII bằng cách mã hóa mỗi nhóm 6 bit của
+chuỗi thành một ký tự.
+Ví dụ: Chuỗi ban đầu "HELLO" → Chuỗi mã hóa Base64 là: "SEVMTE8="
+c. Triệu gọi phương thức submitCharacter để gửi chuỗi đã được mã hóa trở lại server.
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN029;
+import RMI.CharacterService;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.Base64;
+public class MaHoaBase64 {
+    public static void main(String[] args) throws Exception{
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        CharacterService sv = (CharacterService) rg.lookup("RMICharacterService");
+        String s = sv.requestCharacter("B21DCCN029", "psd4Jmnt");
+        System.out.println(s);
+        //
+        byte []tmp = Base64.getEncoder().encode(s.getBytes());
+        String ans = new String(tmp);
+        System.out.println(ans);
+        //
+        sv.submitCharacter("B21DCCN029", "psd4Jmnt", ans);
+    }
+}
+package RMI;
+import java.rmi.*;
+public interface CharacterService extends Remote {
+    public String requestCharacter(String studentCode, String qCode) throws RemoteException;
+    public void submitCharacter(String studentCode, String qCode, String strSubmit) throws RemoteException;
+}
+
+BÀI 4. [Object] TỔ CHỨC SỰ KIỆN
+[Mã câu hỏi (qCode): FKrGvwLM]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để quản lý thông tin các sự kiện trong hệ thống tổ chức sự kiện. Chương
+trình sẽ ngẫu nhiên tạo ra đối tượng Event với các giá trị ban đầu và cung cấp cho RMI client như
+sau:
+Giao diện từ xa:
+public interface ObjectService extends Remote {
+public Serializable requestObject(String studentCode, String qCode) throws RemoteException;
+public void submitObject(String studentCode, String qCode, Serializable object) throws
+RemoteException;
+} L
+ớp Event gồm các thuộc tính: id String, eventName String, eventDate String, expectedAttendance
+int, eventCode String.
+• Trường dữ liệu: private static final long serialVersionUID = 20241131L;
+• 02 hàm khởi dựng:
+public Event()
+public Event(int id, String eventName, String eventDate, int expectedAttendance)
+Trong đó:
+• Interface ObjectService và lớp Event được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa ObjectService được đăng ký với RegistryServer:
+RMIObjectService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với đối tượng
+sự kiện được nhận từ RMI Server:
+a. Triệu gọi phương thức requestObject để nhận đối tượng Event ngẫu nhiên từ server.
+b. Tạo mã eventCode cho sự kiện dựa trên các quy tắc sau:
+• Nếu expectedAttendance >= 1000, thêm "L" vào eventCode;
+Nếu expectedAttendance từ 500 đến 999, thêm "M" vào eventCode;
+Nếu expectedAttendance dưới 500, thêm "S" vào eventCode.
+• Thêm chữ cái đầu và cuối của eventName, tất cả viết hoa.
+• Thêm ngày và tháng từ eventDate (theo định dạng "ddMM").
+Ví dụ: Nếu sự kiện có tên là "Charity Run", ngày diễn ra là "2024-05-12" và số lượng người tham
+gia dự kiến là 1200, mã eventCode sẽ là "LCR1205".
+c. Cập nhật giá trị eventCode trong đối tượng Event.
+d. Triệu gọi phương thức submitObject để gửi đối tượng Event đã được xử lý trở lại server.
+e. Kết thúc chương trình client.
+
+package RMI.B21DCCN029;
+import java.rmi.*;
+import java.rmi.registry.*;
+import RMI.ObjectService;
+import RMI.Event;
+public class ToChucSuKien {
+    public static void main(String[] args) throws Exception{
+        //a.
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ObjectService sv = (ObjectService) rg.lookup("RMIObjectService");
+        Event event = (Event) sv.requestObject("B21DCCN029", "FKrGvwLM");
+        System.out.println(event);
+        //b.
+        String ans = "";
+        int x = event.getExpectedAttendance();
+        //
+        if(x>=1000) ans = "L";
+        else if (x>=500 && x<=999) ans = "M";
+        else ans = "S";
+        //
+        String []tmp = event.getEventName().trim().split("\\s+");
+        ans+=Character.toUpperCase(tmp[0].charAt(0));
+        ans+=Character.toUpperCase(tmp[tmp.length - 1].charAt(tmp[tmp.length - 1].length() - 1));
+        //
+        String tmp1 = event.getEventDate();
+        tmp1 = tmp1.replace("-", " ");
+        String []tmp2 = tmp1.trim().split("\\s+");
+        ans+=tmp2[2] + tmp2[1];
+        event.setEventCode(ans);
+        //c.
+        System.out.println(event);
+        sv.submitObject("B21DCCN029", "FKrGvwLM", event);
+    } 
+}
+package RMI;
+import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+public interface ObjectService extends Remote {
+    public Serializable requestObject(String studentCode, String qAlias) throws RemoteException;
+    public void submitObject(String studentCode, String qAlias, Serializable object) throws RemoteException;
+}
+package RMI;
+import java.io.Serializable;
+public class Event implements Serializable{
+    private static final long serialVersionUID = 20241131L;
+    private String id, eventName, eventDate, eventCode;
+    private int expectedAttendance;
+    public Event(){};
+    public Event(String id, String eventName, String eventDate, int expectedAttendance){
+        this.id = id;
+        this.eventName = eventName;
+        this.eventDate = eventDate;
+        this.expectedAttendance = expectedAttendance;
+    }
+    public String getEventName() {
+        return eventName;
+    }
+    public String getEventDate() {
+        return eventDate;
+    }
+    public int getExpectedAttendance() {
+        return expectedAttendance;
+    }
+    public void setEventCode(String eventCode) {
+        this.eventCode = eventCode;
+    }
+    @Override
+    public String toString() {
+        return "Event{" + "id=" + id + ", eventName=" + eventName + ", eventDate=" + eventDate + ", eventCode=" + eventCode + ", expectedAttendance=" + expectedAttendance + '}';
+    }
+}
+BÀI 3. [Byte] MÃ HOÁ HEXA
+[Mã câu hỏi (qCode): pK0IZNnt]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu nhị phân.
+Giao diện từ xa:
+public interface ByteService extends Remote {
+public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+Trong đó:
+• Interface ByteService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa ByteService được đăng ký với RegistryServer với tên là:
+RMIByteService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhị phân nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một mảng dữ liệu nhị phân (byte[]) từ server.
+b. Chuyển đổi mảng dữ liệu nhị phân nhận được thành một chuỗi biểu diễn hex. Mỗi byte trong
+mảng sẽ được chuyển đổi thành hai ký tự hex tương ứng.
+Ví dụ: Nếu dữ liệu nhị phân nhận được là [72, 101, 108, 108, 111], chương trình sẽ chuyển đổi
+mảng này thành chuỗi hex "48656c6c6f", tương ứng với chuỗi "Hello" trong ASCII.
+c. Triệu gọi phương thức submitData để gửi chuỗi biểu diễn hex đã chuyển đổi thành mảng byte
+trở lại server.
+d. Kết thúc chương trình client.
+import java.rmi.*;
+import java.rmi.registry.*;
+import RMI.ByteService;
+public class MaHoaHexa {
+    public static void main(String[] args) throws Exception {
+        // a. Nhận dữ liệu từ server
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ByteService sv = (ByteService) rg.lookup("RMIByteService");
+        byte[] a = sv.requestData("B21DCCN032", "pK0IZNnt");
+        for (byte x : a) System.out.print(x + " ");
+        System.out.println();
+        // b. Chuyển đổi mảng byte thành chuỗi hexa
+        String res = "";
+        for (byte x : a) res+=String.format("%02x", x & 0xFF);
+        System.out.println(res);
+        byte[] ans = res.toString().getBytes();
+        sv.submitData("B21DCCN032", "pK0IZNnt", ans);
+    }
+}
+
+package RMI;
+import java.rmi.*;
+public interface ByteService extends Remote {
+    public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+
+
+BÀI 3. [Byte] NÉN RLE
+[Mã câu hỏi (qCode): 2uG0lQGi]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu nhị phân.
+Giao diện từ xa:
+public interface ByteService extends Remote {
+public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+Trong đó:
+• Interface ByteService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa ByteService được đăng ký với RegistryServer với tên là:
+RMIByteService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+byte nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một mảng dữ liệu byte từ server, đại diện cho một
+chuỗi dữ liệu byte tổng quát.
+b. Thực hiện nén dữ liệu sử dụng thuật toán Run-Length Encoding (RLE) bằng cách ghi nhận mỗi
+byte và số lần lặp liên tiếp của nó. Kết quả nén là một mảng mới biểu diễn các cặp (byte, số lần
+lặp).
+Ví dụ: Nếu dữ liệu byte nhận được là [10, 10, 10, 20, 20, 30, 30, 30, 30], chương trình sẽ thực
+hiện nén RLE như sau:
+Kết quả nén RLE là mảng [10, 3, 20, 2, 30, 4].
+c. Triệu gọi phương thức submitData để gửi mảng dữ liệu đã được nén RLE trở lại server.
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN036;
+import java.util.*;
+import java.rmi.*;
+import java.rmi.registry.*;
+import RMI.ByteService;
+public class NenRLE {
+    public static void main(String[] args) throws Exception{
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ByteService sv = (ByteService) rg.lookup("RMIByteService");
+        byte[] a = sv.requestData("B21DCCN036", "2uG0lQGi");
+        for (byte x : a) System.out.print(x + " ");
+        System.out.println();
+        // b. 
+        int cnt = 1;
+        ArrayList<Byte>res = new ArrayList<>();
+        for(int i = 1;i<a.length;i++){
+            if(a[i] == a[i - 1]) cnt++;
+            else{
+                res.add(a[i - 1]); res.add((byte)cnt);
+                cnt = 1;
+            }
+        }
+        res.add(a[a.length - 1]); res.add((byte)cnt);
+        //Cóp sang mảng
+        byte []ans = new byte[res.size()];
+        int idx = 0;
+        for(byte x: res) ans[idx++] = x;
+        for(byte x: ans) System.out.print(x + " ");
+        sv.submitData("B21DCCN036", "2uG0lQGi", ans);        
+    }
+}
+package RMI;
+import java.rmi.*;
+public interface ByteService extends Remote {
+    public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+
+BÀI 4. [Object] BÀI TOÁN QUẢN LÝ NHÂN VIÊN
+[Mã câu hỏi (qCode): 7fSWnlHB]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý thông tin nhân viên. Chương trình sẽ ngẫu nhiên tạo ra đối tượng
+Employee với các giá trị ban đầu và cung cấp cho RMI client như sau:
+Giao diện từ xa:
+public interface ObjectService extends Remote {
+public Serializable requestObject(String studentCode, String qCode) throws RemoteException;
+public void submitObject(String studentCode, String qCode, Serializable object) throws
+RemoteException;
+} L
+ớp Employee gồm các thuộc tính: id String, name String, baseSalary double, experienceYears int,
+finalSalary double.
+Trường dữ liệu: private static final long serialVersionUID = 20241119L;
+02 hàm khởi dựng:
+public Employee()
+public Employee(String id, String name, double baseSalary, int experienceYears) //Điều chỉnh
+Trong đó:
+• Interface ObjectService và lớp Employee được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa ObjectService được đăng ký với RegistryServer với tên là:
+RMIObjectService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với đối tượng
+nhân viên được nhận từ RMI Server:
+a. Triệu gọi phương thức requestObject với tham số đầu vào là mã sinh viên và mã câu hỏi để nhận
+đối tượng Employee ngẫu nhiên từ server.
+b. Tính toán finalSalary dựa trên baseSalary, experienceYears, và áp dụng thuật toán xử lý số phức
+tạp để tạo hệ số điều chỉnh, yêu cầu sinh viên phải thao tác và xử lý experienceYears như sau:
+• Tách experienceYears thành tổng các chữ số (ví dụ, 14 sẽ thành 1 + 4 = 5).
+• Tính số lượng ước số nguyên của experienceYears (ví dụ, nếu experienceYears là 12, các
+ước số là 1, 2, 3, 4, 6, 12, nên có 6 ước số).
+• Xác định hệ số điều chỉnh factor dựa trên công thức sau: factor = (Số năm làm việc + tổng
+các chữ số + số lượng ước số) / 100.0
+• Tính finalSalary theo công thức: finalSalary = baseSalary * (1 + factor)
+c. Cập nhật giá trị finalSalary trong đối tượng Employee.
+d. Triệu gọi phương thức submitObject để gửi đối tượng Employee đã được xử lý trở lại server.
+e. Kết thúc chương trình client.
+
+package RMI.B21DCCN038;
+import java.rmi.*;
+import java.rmi.registry.*;
+import RMI.ObjectService;
+import RMI.Employee;
+public class QuanLyNhanVien {
+    public static void main(String[] args) throws Exception{
+        //a.
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ObjectService sv = (ObjectService) rg.lookup("RMIObjectService");
+        Employee employee = (Employee) sv.requestObject("B21DCCN038", "7fSWnlHB");
+        System.out.println(employee);
+        //b.tổng cs
+        int tongCS = 0, x = employee.getExperienceYears(), y = employee.getExperienceYears();
+        while(x>0){
+            tongCS+=x%10;
+            x/=10;
+        }
+        //tổng ước
+        int soUoc = 0;
+        for(int i = 1;i<=y;i++){
+            if(y%i==0) soUoc++;
+        }
+        //factor
+        double factor = (double)(employee.getExperienceYears() + tongCS + soUoc)/100.0;
+        double Final = (employee.getBaseSalary()) * (1 + factor);
+        //
+        employee.setFinalSalary(Final);
+        System.out.println(employee);
+        //c.
+        sv.submitObject("B21DCCN038", "7fSWnlHB", employee);
+    }
+}
+package RMI;
+import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+public interface ObjectService extends Remote {
+    public Serializable requestObject(String studentCode, String qAlias) throws RemoteException;
+    public void submitObject(String studentCode, String qAlias, Serializable object) throws RemoteException;
+}
+package RMI;
+import java.io.Serializable;
+public class Employee implements Serializable{
+    private static final long serialVersionUID = 20241119L;
+    private String id; 
+    private String name; 
+    private double baseSalary, finalSalary; 
+    private int experienceYears;
+    public Employee(){}
+    public Employee(String id, String name, double baseSalary, int experienceYears) {
+        this.id = id;
+        this.name = name;
+        this.baseSalary = baseSalary;
+        this.experienceYears = experienceYears;
+    }
+    public double getBaseSalary() {
+        return baseSalary;
+    }
+    public int getExperienceYears() {
+        return experienceYears;
+    }
+    public void setFinalSalary(double finalSalary) {
+        this.finalSalary = finalSalary;
+    }
+    @Override
+    public String toString() {
+        return "Employee{" + "id=" + id + ", name=" + name + ", baseSalary=" + baseSalary + ", finalSalary=" + finalSalary + ", experienceYears=" + experienceYears + '}';
+    }
+}
+
+BÀI 4. [Object] QUẢN LÝ VÉ SỰ KIỆN
+[Mã câu hỏi (qCode): Uct8bABt]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để quản lý thông tin vé trong hệ thống bán vé sự kiện. Chương trình sẽ
+ngẫu nhiên tạo ra đối tượng Ticket với các giá trị ban đầu và cung cấp cho RMI client như sau:
+Giao diện từ xa:
+public interface ObjectService extends Remote {
+public Serializable requestObject(String studentCode, String qCode) throws RemoteException;
+public void submitObject(String studentCode, String qCode, Serializable object) throws
+RemoteException;
+} L
+ớp Ticket gồm các thuộc tính: id String, eventName String, saleDate String, ticketCode String.
+//Điều chỉnh
+• Trường dữ liệu: private static final long serialVersionUID = 20241133L;
+• 02 hàm khởi dựng:
+public Ticket()
+public Ticket(id String, String eventName, String saleDate)
+Trong đó:
+• Interface ObjectService và lớp Ticket được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa ObjectService được đăng ký với RegistryServer:
+RMIObjectService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với đối tượng
+vé được nhận từ RMI Server:
+a. Triệu gọi phương thức requestObject để nhận đối tượng Ticket ngẫu nhiên từ server.
+b. Tạo mã ticketCode cho vé dựa trên các quy tắc sau:
+• Bắt đầu với hai chữ cái là: Chữ cái đầu tiên và cuối cùng của eventName, viết hoa.
+• Thêm ngày và tháng từ saleDate (theo định dạng "MMdd")
+• Kết thúc bằng hai chữ số là: Chữ số lớn nhất và nhỏ nhất không xuất hiện trong saleDate.
+Ví dụ: tên sự kiện là "Charity Concert", và ngày bán là "15/06/2024", mã ticketCode sẽ là
+"CT061593".
+c. Cập nhật giá trị ticketCode trong đối tượng Ticket.
+d. Triệu gọi phương thức submitObject để gửi đối tượng Ticket đã được xử lý trở lại server.
+e. Kết thúc chương trình client.
+
+package RMI.B21DCCN048;
+import java.rmi.*;
+import java.rmi.registry.*;
+import RMI.ObjectService;
+import RMI.Ticket;
+import java.util.*;
+public class QuanLySuKien {
+    public static void main(String[] args) throws Exception{
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ObjectService sv = (ObjectService) rg.lookup("RMIObjectService");
+        Ticket ticket = (Ticket) sv.requestObject("B21DCCN048", "Uct8bABt");
+        //Ticket ticket = new Ticket(1, "Charity Concert", "15/06/2024");
+        System.out.println(ticket);
+        //Lấy tên
+        String s = ticket.getEventName().toUpperCase();
+        String res = "";
+        res+=String.format("%c%c", Character.toUpperCase(s.charAt(0)), (char)Character.toUpperCase(s.charAt(s.length() - 1)));
+        //Lấy ngày sinh
+        String s1 = ticket.getSaleDate();
+        s1 = s1.replace("/", " ");
+        String []tmp = s1.trim().split("\\s+");
+        res+=tmp[1] + tmp[0];
+        //Lấy 2 chữ số
+        Set<Integer>si = new HashSet<>();
+        for(char x: s1.toCharArray()){
+            if(Character.isDigit(x)) si.add(x - '0');
+        }
+        for(int i = 9;i >= 0;i--){
+            if(!si.contains(i)){
+                res+=i;
+                break;
+            }
+        }
+        for(int i = 0;i<=9;i++){
+            if(!si.contains(i)){
+                res+=i;
+                break;
+            }
+        }
+        ticket.setTicketCode(res);
+        System.out.println(ticket);
+        //c.
+        sv.submitObject("B21DCCN048", "Uct8bABt", ticket);
+    }
+}
+
+package RMI;
+import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+public interface ObjectService extends Remote {
+    public Serializable requestObject(String studentCode, String qAlias) throws RemoteException;
+    public void submitObject(String studentCode, String qAlias, Serializable object) throws RemoteException;
+}
+
+package RMI;
+import java.io.Serializable;
+public class Ticket implements Serializable{
+    private static final long serialVersionUID = 20241133L;
+    private String id;
+    private String eventName, saleDate, ticketCode;
+    public Ticket(){}
+    public Ticket(String id, String eventName, String saleDate) {
+        this.id = id;
+        this.eventName = eventName;
+        this.saleDate = saleDate;
+    }
+    public String getEventName() {
+        return eventName;
+    }
+    public String getSaleDate() {
+        return saleDate;
+    }
+    public void setTicketCode(String ticketCode) {
+        this.ticketCode = ticketCode;
+    }
+    @Override
+    public String toString() {
+        return "Ticket{" + "id=" + id + ", eventName=" + eventName + ", saleDate=" + saleDate + ", ticketCode=" + ticketCode + '}';
+    }
+}
+
+BÀI 1. [Data] SINH TỔ HỢP
+[Mã câu hỏi (qCode): juC3u7C6]. Một chương trình (tạm gọi là RMI Server) cung cấp giao diện
+cho phép triệu gọi từ xa để xử lý dữ liệu.
+Giao diện từ xa:
+public interface DataService extends Remote {
+public Object requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, Object data) throws RemoteException;
+}
+Trong đó:
+• Interface DataService được viết trong package RMI.
+• Đối tượng cài đặt giao diện từ xa DataService được đăng ký với RegistryServer với tên là:
+RMIDataService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một chuỗi gồm tập hợp số nguyên và một số nguyên
+K từ server với định dạng: “mảng; số nguyên K”.
+b. Sử dụng thuật toán sinh tổ hợp để tạo ra tất cả các tổ hợp kích thước K của tập hợp đã cho. Kết
+quả trả về là danh sách các tổ hợp con có K phần tử.
+Ví dụ: Với tập hợp [1, 2, 3, 4] và K = 2, kết quả là danh sách các tổ hợp [[1, 2], [1, 3], [1, 4], [2, 3],
+[2, 4], [3, 4]].
+c. Triệu gọi phương thức submitData để gửi chuỗi chứa danh sách các tổ hợp đã sinh được trở lại
+server.
+d. Kết thúc chương trình client.
+
+package RMI.B21DCCN053;
+import RMI.DataService;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.*;
+public class SinhToHop {
+    static int ok; 
+    public static void kt(int a[], int k) {
+        for (int i = 1; i <= k; i++) a[i] = i;
+    }
+    public static void sinh(int a[], int n, int k) {
+        int i = k;
+        while (i >= 1 && a[i] == n - k + i) i--;
+        if (i == 0) {
+            ok = 0;
+        } else {
+            a[i]++;
+            for (int j = i + 1; j <= k; j++) a[j] = a[j - 1] + 1;
+        }
+    }
+    public static void main(String[] args) throws Exception{
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        DataService sv = (DataService) rg.lookup("RMIDataService");
+        String s = (String)sv.requestData("B21DCCN053", "juC3u7C6");
+        //String s = "2, 0, 5, 8, 1 ;3"; 
+        System.out.println(s);
+        int idx = s.indexOf(";");
+        String s1 = s.substring(0, idx), s2 = s.substring(idx + 1);
+        int k = Integer.parseInt(s2.trim());// Lấy số k
+        // Lấy ra mảng và sắp xếp
+        ArrayList<Integer> a = new ArrayList<>();
+        s1 = s1.replace(",", " ");
+        String[] tmp = s1.trim().split("\\s+");
+        for (String x : tmp) a.add(Integer.parseInt(x));
+        // Bắt đầu sinh tổ hợp. Khởi tạo
+        int n = a.size();
+        int[] genIdx = new int[k + 1];
+        kt(genIdx, k);
+        ok = 1;
+        // Duyệt qua từng tổ hợp chỉ số
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        while (ok == 1) {
+            ArrayList<Integer> tmp1 = new ArrayList<>();
+            for (int i = 1; i <= k; i++) tmp1.add(a.get(genIdx[i] - 1));
+            ans.add(tmp1);
+            sinh(genIdx, n, k);
+        }
+        //c.
+        System.out.println(ans);
+        sv.submitData("B21DCCN053", "juC3u7C6", ans);
+    }
+}
+package RMI;
+import java.rmi.*;
+public interface DataService extends Remote {
+    public Object requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, Object data) throws RemoteException;
+}
+
+BÀI 3. [Byte] PHẦN TỬ LỚN THỨ K
+[Mã câu hỏi (qCode): uIKHCTWG]. Một chương trình (tạm gọi là RMI Server) cung cấp giao
+diện cho phép triệu gọi từ xa để xử lý dữ liệu nhị phân.
+Giao diện từ xa:
+public interface ByteService extends Remote {
+public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+Trong đó:
+• Interface ByteService được viết trong package RMI.
+Đối tượng cài đặt giao diện từ xa ByteService được đăng ký với RegistryServer với tên là:
+RMIByteService.
+Yêu cầu: Viết chương trình tại máy trạm (RMI client) để thực hiện các công việc sau với dữ liệu
+nhị phân nhận được từ RMI Server:
+a. Triệu gọi phương thức requestData để nhận một mảng dữ liệu nhị phân (byte[]) từ server, cùng
+với một số nguyên K, đại diện cho thứ tự phần tử cần tìm.
+b. Tìm phần tử lớn thứ K trong mảng byte[] với K là phần tử cuối cùng của mảng.
+Ví dụ: Nếu mảng dữ liệu nhận được là [3, 1, 5, 12, 2, 11, 3], giá trị K = 3, chương trình sẽ tìm phần
+tử lớn thứ ba → Kết quả là 5.
+c. Triệu gọi phương thức submitData để gửi mảng byte gồm phần tử lớn thứ K và vị trí của K trở
+lại server.
+d. Kết thúc chương trình client
+
+package RMI.B21DCCN066;
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.util.*;
+import RMI.ByteService;
+public class LonThuK {
+    public static void main(String[] args) throws Exception{
+        Registry rg = LocateRegistry.getRegistry("203.162.10.109", 1099);
+        ByteService sv = (ByteService) rg.lookup("RMIByteService");
+        byte[] a = sv.requestData("B21DCCN066", "uIKHCTWG");
+        for(byte x: a) System.out.print(x + " ");  
+        System.out.println();
+        //b.
+        byte []b = Arrays.copyOf(a, a.length);
+        int k = a[a.length - 1], pos = 0;
+        Arrays.sort(a);
+        for(int i = 0;i<b.length;i++){
+            if(b[i]==a[a.length - k]){
+                pos = i;
+                break;
+            }
+        }
+        byte []ans = {(byte)a[a.length - k], (byte)(pos + 1)};
+        for(byte x: ans) System.out.print(x + " ");
+        //c.
+        sv.submitData("B21DCCN066", "uIKHCTWG", ans);
+    }
+}
+package RMI;
+import java.rmi.*;
+public interface ByteService extends Remote {
+    public byte[] requestData(String studentCode, String qCode) throws RemoteException;
+    public void submitData(String studentCode, String qCode, byte[] data) throws RemoteException;
+}
+

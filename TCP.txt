@@ -1183,6 +1183,12 @@ public class PhuongSai{
         socket.close();
     }
 }
+BÀI 2. HIỆU CỦA HAI TẬP KÝ TỰ
+[Mã câu hỏi (qCode): wWTzyRuY]. [Loại bỏ các ký tự trong chuỗi thứ nhất mà xuất hiện trong chuỗi thứ hai] Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2208 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu là xây dựng một chương trình client tương tác với server sử dụng các luồng ký tự (BufferedReader/BufferedWriter) theo kịch bản sau:
+a.	Gửi một chuỗi gồm mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode". Ví dụ: "B15DCCN999;DE0C2BF0"
+b.	Nhận lần lượt hai chuỗi ngẫu nhiên từ server
+c.	Loại bỏ các ký tự trong chuỗi thứ nhất mà xuất hiện trong chuỗi thứ hai, yêu cầu giữ nguyên thứ tự xuất hiện của ký tự. Gửi chuỗi thứ nhất đã được xử lý lên server.
+d.	Đóng kết nối và kết thúc chương trình
 
 import java.io.*;
 import java.net.*;
@@ -1222,6 +1228,16 @@ public class HeCoSo2Va16 {
         in.close();out.close();socket.close();
     }
 }
+/*
+[Mã câu hỏi (qCode): uQWRjN4f].  Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2208 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu là xây dựng một chương trình client thực hiện kết nối tới server và sử dụng luồng ký tự (BufferedWriter/BufferedReader) để trao đổi thông tin theo kịch bản
+a.	Gửi một chuỗi gồm mã sinh viên và mã câu hỏi với định dạng "studentCode;qCode". Ví dụ: "B15DCCN999;5E263AE1"
+b.	Nhận một chuỗi ngẫu nhiên từ server
+c.	Tách chuỗi đã nhận thành 2 chuỗi và gửi lần lượt theo thứ tự lên server
+           i.	Chuỗi thứ nhất gồm các ký tự và số (loại bỏ các ký tự đặc biệt)
+          ii.	Chuỗi thứ hai gồm các ký tự đặc biệt
+d.	Đóng kết nối và kết thúc chương trình
+*/
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -1259,6 +1275,23 @@ public class TachChuoi {
         socket.close();
     }
 }
+BÀI 1. TÌM TỪ DÀI NHẤT [546]
+(Ghi chú: Sử dụng hàm s.indexOf, lấy nguyên chỉ số, không cộng thêm 1)
+[Mã câu hỏi (qCode): TdOpiEAP]. Một chương trình server cho phép kết nối qua giao thức TCP
+tại cổng 2208 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5 giây). Yêu cầu là xây dựng
+một chương trình client thực hiện kết nối tới server và sử dụng luồng ký tự
+(BufferedWriter/BufferedReader) để trao đổi thông tin theo kịch bản sau:
+a. Gửi một chuỗi gồm mã sinh viên và mã câu hỏi với định dạng "studentCode;qCode". Ví dụ:
+"B15DCCN999;A1B2C3D4".
+b. Nhận từ server một chuỗi ngẫu nhiên.
+c. Xử lý chuỗi đã nhận theo các bước sau:
+Bước 1: Tìm từ dài nhất trong trong chuỗi ngẫu nhiên (từ là chuỗi con phân tách bởi khoảng
+trắng).
+Bước 2: Xác định vị trí bắt đầu của từ dài nhất đó trong chuỗi ban đầu.
+d. Gửi lần lượt hai giá trị lên server:
+- Từ dài nhất xuất hiện trong chuỗi.
+- Vị trí bắt đầu của từ trong chuỗi ban đầu.
+e. Đóng kết nối và kết thúc chương trình.
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -1317,6 +1350,18 @@ public class PhepToanCoBan {
         socket.close();
     }
 }
+[Mã câu hỏi (qCode): BDF0CKv5].  Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2206 (thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s).
+Yêu cầu là xây dựng một chương trình client tương tác tới server ở trên sử dụng các luồng byte (InputStream/OutputStream) để trao đổi thông tin theo thứ tự: 
+a. Gửi mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode". Ví dụ: "B16DCCN999;2B3A6510"
+b. Nhận dữ liệu từ server là một số nguyên n nhỏ hơn 400. Ví dụ: 7
+c. Thực hiện các bước sau đây để sinh ra chuỗi từ số nguyên n ban đầu và gửi lên server.
+Gọi n là số hiện tại, n1 là số tiếp theo. Ta có:
+•	Nếu n là số chẵn  n1 = n / 2;
+•	Nếu n là số lẻ  n1 = 3n + 1
+Lặp lại quá trình trên cho đến khi n = 1, tại đó dừng thuật toán.
+Kết quả là một dãy số liên tiếp, bắt đầu từ n ban đầu, kết thúc tại 1 và độ dài của chuỗi theo format "chuỗi kết quả; độ dài"  Ví dụ: kết quả với n = 7 thì dãy: 7 22 11 34 17 52 26 13 40 20 10 5 16 8 4 2 1; 17
+d.	Đóng kết nối và kết thúc chương trình.
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -1445,6 +1490,14 @@ public class SapXepChanLe {
         socket.close();
     }
 }
+  Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2208 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5 giây). Yêu cầu là xây dựng một chương trình client thực hiện kết nối tới server và sử dụng luồng ký tự (BufferedWriter/BufferedReader) để trao đổi thông tin theo kịch bản sau:
+a. Gửi một chuỗi gồm mã sinh viên và mã câu hỏi với định dạng "studentCode;qCode". Ví dụ: "B15DCCN999;X1107ABC".
+b. Nhận từ server một chuỗi ngẫu nhiên chứa nhiều từ, các từ phân tách bởi khoảng trắng.
+c. Thực hiện các bước xử lý:
+    Bước 1: Tách chuỗi thành các từ dựa trên khoảng trắng.
+    Bước 2: Sắp xếp các từ theo thứ tự từ điển (có phân biệt chữ cái hoa thường).
+d. Gửi lại chuỗi đã sắp xếp theo thứ tự từ điển lên server.
+e. Đóng kết nối và kết thúc chương trình.
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -1475,6 +1528,12 @@ public class SapXepChuoi {
         socket.close();
     }
 }
+Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2206 (thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu là xây dựng một chương trình client thực hiện kết nối tới server sử dụng các luồng byte (InputStream/OutputStream) để trao đổi thông tin theo thứ tự:
+a.	Gửi mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode". Ví dụ: "B16DCCN999;10048F28".
+b.	Nhận chuỗi ký tự s từ server. Ví dụ: "abcabcbb"
+c.	Tìm và gửi lên server chuỗi con dài nhất từ chuỗi nhận được mà không có ký tự lặp lại theo format "longestsubstring;length". Ví dụ: "abc;3".
+d.	Đóng kết nối và kết thúc chương trình.
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
