@@ -1,0 +1,93 @@
+/**
+BÀI 1. TÌM SỐ LỚN NHẤT
+[Mã câu hỏi (qCode): RiRH8wfk].		Một dịch vụ web được định nghĩa và mô tả trong tệp DataService?wsdl,	được	triển	khai	trên	server	tại	URL http://<Exam_IP>:8080/JNPWS/DataService?wsdl để xử lý các bài toán với dữ liệu nguyên thủy. Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với DataService thực hiện các công việc sau:
+a.	Triệu gọi phương thức getData với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một mảng số nguyên (int[]) từ server.
+Ví dụ: 7602,9136,1090,34319,7830,6179,10584,20166,28199,30250,32179,22544,3222,10320,30590,19
+279
+b.	Thực hiện tìm số lớn nhất có thể tạo dược từ a,b,c,d...
+c.	Triệu gọi phương thức submitDataString(String studentCode, String qCode, String data) để gửi kết quả tổng đã tính được trở lại server.
+
+ */
+public class TimSoLonNhat {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+        System.out.println("Hello");
+        //data_webservice ds_web= new data_webservice();
+        String studentCode="B21DCCN900";
+        String qCode="JsaArerB";
+       
+        DataService ds= new DataService();
+        List<Integer> list_numbers= ds.getSoapDataServicePort().getData(studentCode,qCode);
+        for (Integer number:list_numbers){
+            System.out.println(number);
+        }
+       
+        List<String> strList = new ArrayList<>();
+            for (Integer num : list_numbers) {
+                strList.add(String.valueOf(num));
+            }
+
+        
+        Collections.sort(strList, (a, b) -> (b + a).compareTo(a + b));
+
+        StringBuilder sb = new StringBuilder();
+        for (String s : strList) {
+            sb.append(s);
+        }
+        String result = sb.toString();
+        System.out.println(result);
+       
+     
+        ds.getSoapDataServicePort().submitDataString(studentCode, qCode, result);
+       
+       
+    }
+   
+}
+
+/**
+BÀI 1. TỔNG CÁC SỐ TRONG MẢNG
+[Mã câu hỏi (qCode): hnVAHv3I].		Một dịch vụ web được định nghĩa và mô tả trong tệp DataService?wsdl,	được	triển	khai	trên	server	tại	URL http://<Exam_IP>:8080/JNPWS/DataService?wsdl để xử lý các bài toán với dữ liệu nguyên thủy. Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với DataService thực hiện các công việc sau:
+a.	Triệu gọi phương thức getData với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một mảng số nguyên (List<Integer>) từ server.
+b.	Thực hiện tính toán tổng của tất cả các phần tử trong mảng số nguyên nhận được.
+c.	Triệu gọi phương thức submitDataInt(String studentCode, String qCode, int data) để gửi kết quả tổng đã tính được trở lại server.
+Ví dụ: Nếu mảng số nguyên nhận được từ phương thức getData là [1, 2, 3, 4, 5], chương trình client sẽ tính tổng là 15 và gửi kết quả này trở lại server qua phương thức submitData
+d.	Kết thúc chương trình client.
+
+ */
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.DataService;
+
+public class TongCacSo {
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN900";
+        String qCode = "1EPeBVO4";
+
+        DataService ds = new DataService();
+
+        List<Integer> list =
+                ds.getSoapDataServicePort()
+                  .getData(studentCode, qCode);
+
+        int sum = 0;
+
+        for (Integer x : list) {
+            System.out.println(x);
+            sum += x;
+        }
+
+        System.out.println("Tong = " + sum);
+
+        ds.getSoapDataServicePort()
+          .submitDataInt(studentCode, qCode, sum);
+
+        System.out.println("Da gui ket qua.");
+    }
+}
+

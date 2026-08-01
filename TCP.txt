@@ -1,37 +1,65 @@
+Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2208 (hỗ trợ thời gian giao tiếp tối đa 
+cho mỗi yêu cầu là 5s). Yêu cầu là xây dựng một chương trình client tương tác với server sử dụng các luồng byte 
+(BufferedWriter/BufferedReader) theo kịch bản sau: a. Gửi một chuỗi gồm mã sinh viên và mã câu hỏi với định dạng 
+"studentCode;qCode". Ví dụ: "B15DCCN999;EC4F899B" b. Nhận một chuỗi ngẫu nhiên là danh sách các một số tên miền từ 
+server Ví dụ: giHgWHwkLf0Rd0.io, I7jpjuRw13D.io, wXf6GP3KP.vn, MdpIzhxDVtTFTF.edu, TUHuMfn25chmw.vn, HHjE9.com, 
+4hJld2m2yiweto.vn, y2L4SQwH.vn, s2aUrZGdzS.com, 4hXfJe9giAA.edu c. Tìm kiếm các tên miền .edu và gửi lên server 
+Ví dụ: MdpIzhxDVtTFTF.edu, 4hXfJe9giAA.edu d. Đóng kết nối và kết thúc chương trình.
+
 import java.io.*;
 import java.net.*;
 
 public class edu {
     public static void main(String[] args) throws Exception {
-        try (Socket socket = new Socket("36.50.135.242", 2208);
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
 
-            String code = "B21DCCN900;W1hpfBHi";
-            out.write(code);
-            out.newLine();
-            out.flush();
+        Socket socket = new Socket("36.50.135.242", 2208);
 
-            String s = in.readLine();
-            String[] domains = s.split(",");
-            String result = "";
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(socket.getInputStream()));
 
-            for (String domain : domains) {
-                if (domain.trim().endsWith(".edu")) {
-                    result += domain.trim() + ", ";
-                }
+        BufferedWriter out = new BufferedWriter(
+                new OutputStreamWriter(socket.getOutputStream()));
+
+        String code = "B21DCCN900;W1hpfBHi";
+
+        out.write(code);
+        out.newLine();
+        out.flush();
+
+        String s = in.readLine();
+
+        String[] domains = s.split(",");
+
+        String result = "";
+
+        for (String domain : domains) {
+            if (domain.trim().endsWith(".edu")) {
+                result += domain.trim() + ", ";
             }
-
-            if (result.length() > 0) {
-                result = result.substring(0, result.length() - 2);
-            }
-
-            out.write(result);
-            out.newLine();
-            out.flush();
         }
+
+        if (result.length() > 0) {
+            result = result.substring(0, result.length() - 2);
+        }
+
+        out.write(result);
+        out.newLine();
+        out.flush();
+
+        
+        socket.close();
     }
 }
+Một chương trình server hỗ trợ kết nối qua giao thức TCP tại cổng 2206 (hỗ trợ thời gian giao tiếp tối đa cho 
+mỗi yêu cầu là 5s). Yêu cầu xây dựng chương trình client thực hiện kết nối tới server trên sử dụng luồng byte
+ dữ liệu (InputStream/OutputStream) để trao đổi thông tin theo thứ tự:   
+a. Gửi mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode". Ví dụ: "B16DCCN999;FF49DC02"  
+b. Nhận dữ liệu từ server là một chuỗi các giá trị số nguyên được phân tách nhau bởi ký tự ","  Ex: 1,3,9,19,33,20  
+c. Thực hiện tìm giá trị khoảng cách nhỏ nhất của các phần tử nằm trong chuỗi và hai giá trị lớn nhất tạo nên 
+khoảng cách đó. Gửi lên server chuỗi gồm "khoảng cách nhỏ nhất, số thứ nhất, số thứ hai". Ex: 1,19,20  
+d. Đóng kết nối và kết thúc
+
+
 public class khoangcachnhonhat2so {
     public static void main(String[] args ) throws Exception {
         Socket socket = new Socket("36.50.135.242", 2206);
@@ -68,6 +96,19 @@ public class khoangcachnhonhat2so {
     }
 }
 
+/**
+BÀI 3. LOẠI BỎ NGUYÊN ÂM
+Mã bài tập x8c45mq
+Một chương trình server tại địa chỉ 172.188.19.218 cho phép kết nối qua giao thức TCP tại cổng
+1606 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu là xây dựng một chương
+trình client tương tác với server sử dụng các luồng byte (BufferedWriter/BufferedReader) theo kịch
+bản sau:
+a/ Gửi chuỗi là mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode".
+Ví dụ: "B20DCCN999;ABCDEF" với ABCDEF là mã bài tập đã đề cập ở trên.
+b. Nhận một chuỗi từ server (Chỉ chứa kí tự thường)
+c. Thực hiện loại bỏ các nguyên âm trong chuỗi và gửi kết quả lên server
+d. Đóng kết nối và kết thúc.
+ */
 import java.io.*;
 import java.net.*;
 public class loaibonguyenam{
@@ -99,6 +140,19 @@ public class loaibonguyenam{
         
     }
 }
+/**
+BÀI 4. TỔNG CÁC SỐ NGUYÊN TỐ
+[Mã câu hỏi (qCode): ZRFRsEcM].  Một chương trình server hỗ trợ kết nối qua giao thức TCP tại cổng 2206 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu xây dựng chương trình client thực hiện kết nối tới server sử dụng luồng byte dữ liệu (InputStream/OutputStream) để trao đổi thông tin theo thứ tự:
+a. Gửi mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode".
+Ví dụ: "B16DCCN999;C89DAB45"
+b. Nhận dữ liệu từ server là một chuỗi các số nguyên được phân tách bởi ký tự ",".
+Ví dụ: "8,4,2,10,5,6,1,3"
+c. Tính tổng của tất cả các số nguyên tố trong chuỗi và gửi kết quả lên server.
+Ví dụ: Với dãy "8,4,2,10,5,6,1,3", các số nguyên tố là 2, 5, 3, tổng là 10. Gửi lên server chuỗi "10".
+d. Đóng kết nối và kết thúc chương trình.
+
+ */
+
 public class tongcacsonguyento {
 
     // Hàm kiểm tra một số có phải số nguyên tố hay không
@@ -158,6 +212,17 @@ public class tongcacsonguyento {
         socket.close();
     }
 }
+
+**
+BÀI 6. SẮP XẾP THEO ĐỘ DÀI 
+[Mã câu hỏi (qCode): we3kcWxZ].  Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2208 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5 giây). Yêu cầu là xây dựng một chương trình client tương tác với server sử dụng các luồng ký tự (BufferedReader/BufferedWriter) theo kịch bản sau:
+a. Gửi một chuỗi chứa mã sinh viên và mã câu hỏi với định dạng "studentCode;qCode". Ví dụ: "B15DCCN999;C1234567"
+b. Nhận từ server một chuỗi chứa nhiều từ, các từ được phân tách bởi khoảng trắng. Ví dụ: "hello world this is a test example"
+c. Sắp xếp các từ trong chuỗi theo độ dài, thứ tự xuất hiện. Gửi danh sách các từ theo từng nhóm về server theo định dạng: "a, is, this, test, hello, world, example".
+d. Đóng kết nối và kết thúc chương trình.
+
+ */
+
 public class sapxeptheododai {
     public static void main(String[] args) throws Exception {
 
@@ -227,6 +292,20 @@ public class sapxeptheododai {
         socket.close();
     }
 }
+
+/**
+ BÀI 3. TỔNG GẤP ĐÔI TRUNG BÌNH [Mã câu hỏi (qCode): TL9Pol9D].
+ * Một chương trình server hỗ trợ kết nối qua giao thức TCP tại cổng 2206 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). 
+ * Yêu cầu xây dựng chương trình client thực hiện kết nối tới server sử dụng luồng byte dữ liệu 
+ * (InputStream/OutputStream) để trao đổi thông tin theo thứ tự: 
+ * a. Gửi mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode". Ví dụ: "B16DCCN999;D45EFA12" 
+ * b. Nhận dữ liệu từ server là một chuỗi các số nguyên được phân tách bởi ký tự ",". Ví dụ: "10,5,15,20,25,30,35" 
+ * c. Xác định hai số trong dãy có tổng gần nhất với gấp đôi giá trị trung bình của toàn bộ dãy. 
+ * Gửi thông điệp lên server theo định dạng "num1,num2". 
+ * Ví dụ: Với dãy "10,5,15,20,25,30,35", gấp đôi giá trị trung bình là 40, hai số có tổng gần nhất là 15 và 25. 
+ * Gửi lên server chuỗi "15,25". 
+ * d. Đóng kết nối và kết thúc chương trình.
+ */
 public class tonggapdoitrungbinh {
     public static void main(String[] args) throws Exception {
 
@@ -312,6 +391,18 @@ public class tonggapdoitrungbinh {
         socket.close();
     }
 }
+/*
+Mật mã caesar, còn gọi là mật mã dịch chuyển, để giải mã thì mỗi ký tự nhận được sẽ được thay 
+thế bằng một ký tự cách nó một đoạn s. Ví dụ: với s = 3 thì ký tự “A” sẽ được thay thế bằng ký tự “D”.
+Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2207 (hỗ trợ thời gian giao tiếp tối đa
+cho mỗi yêu cầu là 5s). Yêu cầu là xây dựng chương trình client tương tác với server trên, sử dụng các luồng byte 
+(DataInputStream/DataOutputStream) để trao đổi thông tin theo thứ tự:  
+a. Gửi một chuỗi gồm mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode". Ví dụ: "B15DCCN999;D68C93F7"  
+b. Nhận lần lượt chuỗi đã bị mã hóa caesar và giá trị dịch chuyển s nguyên  
+c. Thực hiện giải mã ra thông điệp ban đầu và gửi lên Server  
+d. Đóng kết nối và kết thúc chương trình.
+*/
+
 public class chuoimahoavadodich {
     public static void main(String[] args) throws Exception {
 
@@ -371,6 +462,19 @@ public class chuoimahoavadodich {
         socket.close();
     }
 }
+/**
+ BÀI 7. ĐẢO NGƯỢC CHUỖI
+Một chương trình server tại địa chỉ 172.188.19.218 cho phép kết nối qua giao thức TCP tại cổng
+1606 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu là xây dựng một chương
+trình client tương tác với server sử dụng các luồng byte (BufferedWriter/BufferedReader) theo kịch
+bản sau:
+a/ Gửi chuỗi là mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode".
+Ví dụ: "B20DCCN999;ABCDEF" với ABCDEF là mã bài tập đã đề cập ở trên.
+b. Nhận một chuỗi từ server
+c. Thực hiện đảo ngược lại chuỗi và gửi lên server
+d. Đóng kết nối và kết thúc
+ */
+
 public class daonguocchuoi {
     public static void main(String[] args) throws Exception {
 
@@ -398,6 +502,20 @@ public class daonguocchuoi {
         socket.close();
     }
 }
+/**
+ BÀI 2. ĐẢO NGƯỢC ĐOẠN DÀI K
+[Mã câu hỏi (qCode): dCNDHojG].  Một chương trình server cho phép kết nối qua TCP tại cổng 2207 (hỗ trợ thời gian liên lạc tối đa cho mỗi yêu cầu là 5 giây). Yêu cầu xây dựng chương trình client thực hiện giao tiếp với server sử dụng luồng data (DataInputStream/DataOutputStream) để trao đổi thông tin theo thứ tự:
+a. Gửi mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode".
+Ví dụ: "B10DCCN003;C6D7E8F9"
+b. Nhận lần lượt:
+•	Một số nguyên k là độ dài đoạn.
+•	Chuỗi chứa mảng số nguyên, các phần tử được phân tách bởi dấu phẩy ",".
+Ví dụ: Nhận k = 3 và "1,2,3,4,5,6,7,8".
+c. Thực hiện chia mảng thành các đoạn có độ dài k và đảo ngược mỗi đoạn, sau đó gửi mảng đã xử lý lên server. Ví dụ: Với k = 3 và mảng "1,2,3,4,5,6,7,8", kết quả là "3,2,1,6,5,4,8,7". Gửi chuỗi kết quả "3,2,1,6,5,4,8,7" lên server.
+d. Đóng kết nối và kết thúc chương trình
+
+ */
+
 public class daonguocdoandaiK {
     public static void main(String[] args) throws Exception {
 
@@ -479,6 +597,18 @@ public class daonguocdoandaiK {
         socket.close();
     }
 }
+
+/**
+ BÀI 1. DÃY CON LIÊN TIẾP TĂNG DÀI NHẤT
+[Mã câu hỏi (qCode): RnPqP3f7].
+Một chương trình server hỗ trợ kết nối qua giao thức TCP tại cổng 2206 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu xây dựng chương trình client thực hiện kết nối tới server sử dụng luồng byte dữ liệu (InputStream/OutputStream) để trao đổi thông tin theo thứ tự:
+a.	Gửi mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode". Ví dụ: "B16DCCN999;76B68B3B".
+b.	Nhận dữ liệu từ server là một chuỗi các giá trị số nguyên được phân tách bởi ký tự ",". Ví dụ: 5,10,20,25,50,40,30,35.
+c.	Tìm chuỗi con tăng dần dài nhất và gửi độ dài của chuỗi đó lên server. Ví dụ: 5,10,20,25 có độ dài 4.
+d.	Đóng kết nối và kết thúc chương trình.
+
+ */
+
 public class dayconlientieptangdainhat {
     public static void main(String[] args) throws Exception {
         Socket socket = new Socket("36.50.135.242", 2206);
@@ -540,6 +670,18 @@ public class dayconlientieptangdainhat {
     }
     
 }
+
+/*
+Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2208 (hỗ trợ thời gian giao tiếp tối đa cho
+mỗi yêu cầu là 5s). Yêu cầu là xây dựng một chương trình client tương tác với server sử dụng các luồng byte 
+(BufferedWriter/BufferedReader) theo kịch bản sau:   
+a. Gửi một chuỗi gồm mã sinh viên và mã câu hỏi với định dạng "studentCode;qCode". Ví dụ: "B15DCCN999;BAA62945"  
+b. Nhận một chuỗi ngẫu nhiên từ server  Ví dụ: dgUOo ch2k22ldsOo  
+c. Liệt kê các ký tự (là chữ hoặc số) xuất hiện nhiều hơn một lần trong chuỗi và số lần xuất hiện của chúng 
+và gửi lên server  Ví dụ: d:2,O:2,o:2,2:3,  
+d. Đóng kết nối và kết thúc chương trình.
+*/
+
 public class demkytu{
     public static void main(String[] args) throws Exception {
 
@@ -589,6 +731,17 @@ public class demkytu{
         socket.close();
     }
 }
+/**
+Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2206, 
+* sử dụng luồng byte dữ liệu (InputStream/OutputStream) để trao đổi thông tin. 
+* Yêu cầu a. Gửi một chuỗi chứa mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode" qua OutputStream. 
+* Ví dụ: "B15DCCN999;1D25ED92". 
+* b. Nhận từ server một chuỗi gồm nhiều đoạn nhị phân, các đoạn được phân tách bởi ký tự |. Ví dụ: 1010|111|0001. 
+* c. Đếm tổng số bit 1 và tổng số bit 0 trong toàn bộ chuỗi dữ liệu nhận được. 
+* d. Gửi kết quả theo định dạng ones=<số_lượng_bit_1>;zeros=<số_lượng_bit_0>. Ví dụ: ones=6;zeros=5. 
+* e. Đóng kết nối hoặc kết thúc client sau khi nộp kết quả.
+ */
+
 public class demso0va1 {
     public static void main(String[] args) throws Exception {
 
@@ -647,6 +800,17 @@ public class demso0va1 {
         socket.close();
     }
 }
+
+/**
+BÀI. LỌC KÝ TỰ
+[Mã câu hỏi (qCode): mhUhFT2v]. [Loại bỏ ký tự đặc biệt, trùng và giữ nguyên thứ tự xuất hiện] Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2208 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu là xây dựng một chương trình client tương tác tới server sử dụng các luồng ký tự (BufferedReader/BufferedWriter) theo kịch bản dưới đây:
+a.	Gửi một chuỗi gồm mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode". Ví dụ: "B15DCCN999;7D6265E3"
+b.	Nhận một chuỗi ngẫu nhiên từ server
+c.	Loại bỏ ký tự đặc biệt, số, ký tự trùng và giữ nguyên thứ tự xuất hiện của ký tự. Gửi chuỗi đã được xử lý lên server.
+d.	Đóng kết nối và kết thúc chương trình
+
+ */
+
 public class lockytu {
     public static void main(String[] args) throws Exception {
 
@@ -705,6 +869,21 @@ public class lockytu {
         socket.close();
     }
 }
+/**
+ BÀI 2. LUỸ THỪA
+Mã bài tập nxMRj8z
+Một chương trình server tại địa chỉ 172.188.19.218 hỗ trợ kết nối qua giao thức TCP tại cổng 1604
+(hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu xây dựng chương trình client thực
+hiện kết nối tới server trên sử dụng luồng byte dữ liệu (InputStream/OutputStream) để trao đổi
+thông tin theo thứ tự:
+a/ Gửi mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode".
+Ví dụ: "B20DCCN999;ABCDEF" với ABCDEF là mã bài tập đã đề cập ở trên.
+b. Nhận dữ liệu từ server là một chuỗi gồm hai giá trị nguyên a, b được phân tách với nhau bằng
+"|" Ex: 2|5
+c. Thực hiện tìm giá trị ab và gửi lên server. Ex: 32
+d. Đóng kết nối và kết thúc
+ */
+
 public class lũy_thừa {
     public static void main(String[] args) throws Exception {
 
@@ -754,6 +933,16 @@ public class lũy_thừa {
         socket.close();
     }
 }
+/**
+ Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2206 
+ * (thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu là xây dựng một chương trình client 
+ * tương tác tới server ở trên sử dụng các luồng byte (InputStream/OutputStream) để trao đổi thông tin theo thứ tự:   
+ * a. Gửi mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode". Ví dụ: "B16DCCN999;2B3A6510"  
+ * b. Nhận dữ liệu từ server là một chuỗi các giá trị số nguyên được phân tách nhau bởi ký tự ",". Ví dụ: 1,3,9,19,33,20  
+ * c. Tìm và gửi lên server giá trị lớn thứ hai cùng vị trí xuất hiện của nó trong chuỗi.Ví dụ: 20,5  
+ * d. Đóng kết nối và kết thúc chương trình.
+ */
+
 public class solonthu2 {
     public static void main(String[] args) throws Exception {
         Socket socket = new Socket("36.50.135.242", 2206);
@@ -803,6 +992,16 @@ public class solonthu2 {
     }
     
 }
+Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2206, sử dụng luồng byte dữ liệu 
+(InputStream/OutputStream) để trao đổi thông tin. Yêu cầu a. Gửi một chuỗi chứa mã sinh viên và mã câu hỏi theo 
+định dạng "studentCode;qCode" qua OutputStream. Ví dụ: "B15DCCN999;1D25ED92". 
+b. Nhận từ server một chuỗi các giá trị byte không dấu, mỗi giá trị nằm trong khoảng 0..255 và được phân tách bởi dấu phẩy.
+ Ví dụ: 12,45,255,8. c. Tính tổng tất cả các giá trị byte nhận được theo modulo 256. 
+d. Gửi kết quả checksum lên server dưới dạng một chuỗi số nguyên. 
+Ví dụ: 64. e. Đóng kết nối hoặc kết thúc client sau khi nộp kết quả. Ví dụ: nếu dữ liệu nhận được 
+là 75,68,12,158,115,63,175,113,189,91,158,56,29,215,122 thì dữ liệu nộp lại là 103.
+
+
 public class tinhchecksum {
     public static void main(String[] args) throws Exception {
 
@@ -855,6 +1054,20 @@ public class tinhchecksum {
         socket.close();
     }
 }
+BÀI 5. TỔNG CÁC SỐ
+Mã bài tập PUh9Ki1
+Một chương trình server tại địa chỉ 172.188.19.218 hỗ trợ kết nối qua giao thức TCP tại cổng 1604
+(hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu xây dựng chương trình client thực
+hiện kết nối tới server trên sử dụng luồng byte dữ liệu (InputStream/OutputStream) để trao đổi
+thông tin theo thứ tự:
+a. Gửi mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode".
+Ví dụ: "B20DCCN999;ABCDEF" với ABCDEF là mã bài tập đã đề cập ở trên.
+b. Nhận dữ liệu từ server là một chuỗi gồm hai giá trị nguyên được phân tách với nhau bằng
+"|"
+Ex: 2|5|9|11
+c. Thực hiện tìm giá trị tổng của các số nguyên trong chuỗi và gửi lên server Ex: 27
+d. Đóng kết nối và kết thúc
+
 public class tinhtongcuadayso {
     public static void main(String[] args) throws Exception {
 	    Socket socket = new Socket("36.50.135.242",2206);
@@ -923,6 +1136,19 @@ public class tinhtongvatich {
         socket.close();
     }
 }
+/**
+ BÀI 2. ĐẢO NGƯỢC ĐOẠN DÀI K
+[Mã câu hỏi (qCode): dCNDHojG].  Một chương trình server cho phép kết nối qua TCP tại cổng 2207 (hỗ trợ thời gian liên lạc tối đa cho mỗi yêu cầu là 5 giây). Yêu cầu xây dựng chương trình client thực hiện giao tiếp với server sử dụng luồng data (DataInputStream/DataOutputStream) để trao đổi thông tin theo thứ tự:
+a. Gửi mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode".
+Ví dụ: "B10DCCN003;C6D7E8F9"
+b. Nhận lần lượt:
+•	Một số nguyên k là độ dài đoạn.
+•	Chuỗi chứa mảng số nguyên, các phần tử được phân tách bởi dấu phẩy ",".
+Ví dụ: Nhận k = 3 và "1,2,3,4,5,6,7,8".
+c. Thực hiện chia mảng thành các đoạn có độ dài k và đảo ngược mỗi đoạn, sau đó gửi mảng đã xử lý lên server. Ví dụ: Với k = 3 và mảng "1,2,3,4,5,6,7,8", kết quả là "3,2,1,6,5,4,8,7". Gửi chuỗi kết quả "3,2,1,6,5,4,8,7" lên server.
+d. Đóng kết nối và kết thúc chương trình
+
+ */
 public class daonguocdoandaiK {
     public static void main(String[] args) throws Exception {
 
@@ -1004,6 +1230,18 @@ public class daonguocdoandaiK {
         socket.close();
     }
 }
+/**
+ BÀI 7. ĐẢO NGƯỢC CHUỖI
+Một chương trình server tại địa chỉ 172.188.19.218 cho phép kết nối qua giao thức TCP tại cổng
+1606 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu là xây dựng một chương
+trình client tương tác với server sử dụng các luồng byte (BufferedWriter/BufferedReader) theo kịch
+bản sau:
+a/ Gửi chuỗi là mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode".
+Ví dụ: "B20DCCN999;ABCDEF" với ABCDEF là mã bài tập đã đề cập ở trên.
+b. Nhận một chuỗi từ server
+c. Thực hiện đảo ngược lại chuỗi và gửi lên server
+d. Đóng kết nối và kết thúc
+ */
 public class daonguocchuoi {
     public static void main(String[] args) throws Exception {
 
@@ -1031,6 +1269,18 @@ public class daonguocchuoi {
         socket.close();
     }
 }
+
+BÀI 1. ĐỔI CHIỀU VÀ BIẾN THIÊN
+[Mã câu hỏi (qCode): oNGj55wV].  Một chương trình server cho phép kết nối qua TCP tại cổng 807 (hỗ trợ thời gian liên lạc tối đa cho mỗi yêu cầu là 5 giây). Yêu cầu xây dựng chương trình client thực hiện giao tiếp với server sử dụng luồng data (DataInputStream/DataOutputStream) để trao đổi thông tin theo thứ tự:
+a. Gửi mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode".
+Ví dụ: "B10DCCN002;B4C5D6E7"
+b. Nhận chuỗi chứa mảng số nguyên từ server, các phần tử được phân tách bởi dấu phẩy ",". Ví dụ: "1,3,2,5,4,7,6"
+c. Tính số lần đổi chiều và tổng độ biến thiên trong dãy số.
+- Đổi chiều: Khi dãy chuyển từ tăng sang giảm hoặc từ giảm sang tăng 
+- Độ biến thiên: Tổng giá trị tuyệt đối của các hiệu số liên tiếp
+Gửi lần lượt lên server: số nguyên đại diện cho số lần đổi chiều, sau đó là số nguyên đại diện cho tổng độ biến thiên. Ví dụ: Với mảng "1,3,2,5,4,7,6", số lần đổi chiều: 5 lần, Tổng độ biến thiên 11  Gửi lần lượt số nguyên 5 và 11 lên server.
+d. Đóng kết nối và kết thúc chương trình.
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -1060,6 +1310,16 @@ public class DoiChieuBienThien {
         in.close(); out.close(); socket.close();
     }
 }
+
+BÀI 7. NÉN RLE
+[Mã câu hỏi (qCode): ji3fQD3Q].  Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2208 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5 giây). Yêu cầu là xây dựng một chương trình client tương tác với server sử dụng các luồng ký tự (BufferedReader/BufferedWriter) theo kịch bản sau:
+a. Gửi một chuỗi chứa mã sinh viên và mã câu hỏi với định dạng "studentCode;qCode".
+Ví dụ: "B15DCCN999;1D08FX21"
+b. Nhận từ server một chuỗi chứa nhiều từ, các từ được phân tách bởi khoảng trắng.
+Ví dụ: "hello world programming is fun"
+c. Thực hiện đảo ngược từ và mã hóa RLE để nén chuỗi ("aabb" nén thành "a2b2"). Gửi chuỗi đã được xử lý lên server. Ví dụ: "ol2eh dlrow gnim2argorp si nuf".
+d. Đóng kết nối và kết thúc chương trình
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -1110,6 +1370,15 @@ public class NenRLE {
     }
 
 }
+
+BÀI 1. HỆ CƠ SỐ 8 VÀ 16
+[Mã câu hỏi (qCode): 0LTGyX4p].  Một chương trình server cho phép kết nối qua TCP tại cổng 2207 (hỗ trợ thời gian liên lạc tối đa cho mỗi yêu cầu là 5 giây). Yêu cầu xây dựng chương trình client thực hiện giao tiếp với server sử dụng luồng data (DataInputStream/DataOutputStream) để trao đổi thông tin theo thứ tự:
+a. Gửi mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode".
+Ví dụ: "B10DCCN001;A1B2C3D4"
+b. Nhận một số nguyên hệ thập phân từ server. Ví dụ: 255
+c. Chuyển đổi số nguyên nhận được sang hai hệ cơ số 8 và 16. Gửi lần lượt chuỗi kết quả lên server. Ví dụ: Với số 255 hệ thập phân, kết quả gửi lên sẽ là một chuỗi dạng “377;FF”
+d. Đóng kết nối và kết thúc chương trình.
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -1127,6 +1396,23 @@ public class HeCoSo8va16 {
         in.close();out.close();socket.close();
     }
 }
+
+BÀI 2. TUNG XÚC XẮC
+[Mã câu hỏi (qCode): PpWEQ6F0]. Một chương trình servercho phép kết nối qua TCP tại cổng
+2207 (hỗ trợ thời gian liên lạc tối đa cho mỗi yêu cầu là 5 giây). Yêu cầu là xây dựng chương trình
+client tương tác với server bằng các byte stream (DataInputStream/DataOutputStream) để trao đổi
+thông tin theo trình tự sau:
+a. Gửi một chuỗi chứa mã sinh viên và mã câu hỏi ở định dạng "studentCode;qCode". Ví dụ:
+"B10DCCN000;0D135D6A".
+b. Nhận từ server một số nguyên n, là số lần tung xúc xắc. Ví dụ: Nếu bạn nhận được n = 21 từ
+máy chủ, có nghĩa bạn sẽ nhận giá trị tung xúc xắc 21 lần.
+b. Nhận từ server các giá trị sau mỗi lần tung xúc xắc. Ví dụ: Server gửi lần lượt 21 giá trị là
+1,6,4,4,4,3,2,6,3,4,5,4,5,2,4,5,4,6,1,5,5
+c. Tính xác suất xuất hiện của các giá trị [1,2,3,4,5,6] khi tung xúc sắc và gửi lần lượt xác suất này
+(dưới dạng float) lên server theo đúng thứ tự. Ví dụ gửi lên server lần lượt 6 giá trị là 0.0952381,
+0.0952381, 0.0952381, 0.33333334, 0.232209524, 0.14285715
+d. Đóng kết nối và kết thúc chương trình
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -1156,6 +1442,18 @@ public class TungXucXac {
         socket.close();
     }
 }
+BÀI 2. PHƯƠNG SAI
+[Mã câu hỏi (qCode): 1pKJUCce]. Một chương trình server hỗ trợ kết nối qua giao thức TCP tại
+cổng 2206 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu xây dựng chương trình
+client thực hiện kết nối tới server trên bằng các byte stream (DataInputStream/DataOutputStream)
+để trao đổi thông tin theo thứ tự:
+a. Gửi mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode". Ví dụ:
+"B16DCCN999;FF49DC02"
+b. Nhận dữ liệu từ server là một mảng gồm n số nguyên
+c. Thực hiện gửi tổng, trung bình cộng và phương sai của dãy số (TBC và phương sai dạng
+float không làm tròn)
+d. Đóng kết nối và kết thúc
+
 import java.io.*;
 import java.net.*;
 public class PhuongSai{
@@ -1212,6 +1510,13 @@ public class HieuHaiTapHop {
         bw.write(ans); bw.newLine(); bw.flush();
     }
 }
+BÀI 1. HỆ CƠ SỐ 2 VÀ 16
+[Mã câu hỏi (qCode): UsLuWWET].  Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2207 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5 giây). Yêu cầu sinh viên xây dựng chương trình client để tương tác với server, sử dụng các luồng data (DataInputStream và DataOutputStream) để trao đổi thông tin theo thứ tự sau:
+a. Gửi mã sinh viên và mã câu hỏi: Chuỗi gồm mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode". Ví dụ: "B15DCCN999;D68C93F7".
+b. Nhận một số nguyên hệ thập phân từ server. Ví dụ:: 15226.
+c. Chuyển đổi số nguyên nhận được sang hệ nhị phân và thập lục phân, ghép thành chuỗi và gửi lên server. Ví dụ: 15226 sẽ thành "11101101111010;3B7A"
+d. Đóng kết nối: Kết thúc chương trình sau khi gửi kết quả chuyển đổi.
+
 import java.net.*;
 import java.util.*;
 public class HeCoSo2Va16 {
@@ -1229,7 +1534,7 @@ public class HeCoSo2Va16 {
     }
 }
 /*
-[Mã câu hỏi (qCode): uQWRjN4f].  Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2208 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu là xây dựng một chương trình client thực hiện kết nối tới server và sử dụng luồng ký tự (BufferedWriter/BufferedReader) để trao đổi thông tin theo kịch bản
+.  Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2208 (hỗ trợ thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu là xây dựng một chương trình client thực hiện kết nối tới server và sử dụng luồng ký tự (BufferedWriter/BufferedReader) để trao đổi thông tin theo kịch bản
 a.	Gửi một chuỗi gồm mã sinh viên và mã câu hỏi với định dạng "studentCode;qCode". Ví dụ: "B15DCCN999;5E263AE1"
 b.	Nhận một chuỗi ngẫu nhiên từ server
 c.	Tách chuỗi đã nhận thành 2 chuỗi và gửi lần lượt theo thứ tự lên server
@@ -1323,6 +1628,19 @@ public class TimTuDaiNhat {
         bw.write(pos + ""); bw.newLine(); bw.flush();
     }
 }
+
+BÀI 3. PHÉP TOÁN CƠ BẢN
+[Mã câu hỏi (qCode): nkBwM6AE]. Một chương trình máy chủ cho phép kết nối qua TCP tại cổng
+2207 (hỗ trợ thời gian liên lạc tối đa cho mỗi yêu cầu là 5s). Yêu cầu là xây dựng chương trình
+client tương tác với server trên bằng các byte stream (DataInputStream/DataOutputStream) để trao
+đổi thông tin theo trình tự sau:
+a. Gửi một chuỗi chứa mã sinh viên và mã câu hỏi ở định dạng "studentCode;qCode". Ví dụ:
+"B15DCCN999;B1F1FDCD"
+b. Nhận hai số nguyên a và b tương ứng từ máy chủ
+c. Tính ước chung lớn nhất, bội chung nhỏ nhất, tổng, tích. Gửi từng giá trị số nguyên theo thứ tự
+trên đến máy chủ.
+d. Đóng kết nối và kết thúc chương trình
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -1399,6 +1717,18 @@ public class DaySoCollazt{
     }
 }
 
+BÀI 1. UCLN/BCNN
+Mã bài tập i9VhkNb
+Một chương trình server được triển khai tại địa chỉ 172.188.19.218 (hỗ trợ thời gian giao tiếp tối
+đa cho mỗi yêu cầu là 5s), yêu cầu xây dựng chương trình Client thực hiện kết nối tới server tại
+cổng 1605, sử dụng luồng byte dữ liệu (DataInputStream/DataOutputStream) để trao đổi thông tin
+theo thứ tự:
+a/ Gửi chuỗi là mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode".
+Ví dụ: "B20DCCN999;ABCDEF" với ABCDEF là mã bài tập đã đề cập ở trên.
+b. Nhận lần lượt hai số nguyên a và b từ server
+c. Thực hiện tính toán UCLN, BCNN và gửi lần lượt từng giá trị theo đúng thứ tự trên lên server
+d. Đóng kết nối và kết thúc
+
 import java.io.*;
 import java.net.*;
 
@@ -1447,6 +1777,19 @@ public class UCLNvsBCNN {
         socket.close();
     }
 }
+BÀI 1. SẮP XẾP CHẴN LẺ
+[Mã câu hỏi (qCode): rMdCliDV]. Một chương trình server cho phép kết nối qua giao thức TCP
+tại cổng 2206 (thời gian giao tiếp tối đa cho mỗi yêu cầu là 5s). Yêu cầu là xây dựng một chương
+trình client tương tác tới server ở trên sử dụng các luồng byte (InputStream/OutputStream) để trao
+đổi thông tin theo thứ tự:
+a. Gửi mã sinh viên và mã câu hỏi theo định dạng "studentCode;qCode". Ví dụ:
+"B16DCCN999;A63D9404".
+b. Nhận dữ liệu từ server là một chuỗi các số nguyên được sắp xếp ngẫu nhiên, các số được phân
+tách nhau bởi ký tự ",". Ví dụ: "2,15,4,3,6,8,10,7,1".
+c. Sắp xếp tăng dần các giá trị chẵn và sau đó tăng dần các giá trị lẻ trong dãy số. Ví dụ: "[2, 4, 6,
+8, 10];[1, 3, 7, 15]". Gửi chuỗi được sắp xếp này lên server.
+d. Đóng kết nối và kết thúc chương trình.
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -1578,6 +1921,7 @@ public class DayConKhongLapDaiNhat {
         out.flush();
     }
 }
+
 import TCP.Laptop;
 
 import java.io.*;
