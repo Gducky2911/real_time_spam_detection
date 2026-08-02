@@ -1,11 +1,11 @@
-Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2208 (hỗ trợ thời gian giao tiếp tối đa 
+/*Một chương trình server cho phép kết nối qua giao thức TCP tại cổng 2208 (hỗ trợ thời gian giao tiếp tối đa 
 cho mỗi yêu cầu là 5s). Yêu cầu là xây dựng một chương trình client tương tác với server sử dụng các luồng byte 
 (BufferedWriter/BufferedReader) theo kịch bản sau: a. Gửi một chuỗi gồm mã sinh viên và mã câu hỏi với định dạng 
 "studentCode;qCode". Ví dụ: "B15DCCN999;EC4F899B" b. Nhận một chuỗi ngẫu nhiên là danh sách các một số tên miền từ 
 server Ví dụ: giHgWHwkLf0Rd0.io, I7jpjuRw13D.io, wXf6GP3KP.vn, MdpIzhxDVtTFTF.edu, TUHuMfn25chmw.vn, HHjE9.com, 
 4hJld2m2yiweto.vn, y2L4SQwH.vn, s2aUrZGdzS.com, 4hXfJe9giAA.edu c. Tìm kiếm các tên miền .edu và gửi lên server 
 Ví dụ: MdpIzhxDVtTFTF.edu, 4hXfJe9giAA.edu d. Đóng kết nối và kết thúc chương trình.
-
+*/
 import java.io.*;
 import java.net.*;
 
@@ -8979,4 +8979,1034 @@ public class TongCacSo {
 
         System.out.println("Da gui ket qua.");
     }
+}
+/**
+ * Một dịch vụ web (hỗ trợ SOAP version 1.1) được định nghĩa và mô tả trong tệp CharacterService.wsdl, 
+ * được triển khai trên server tại URL http://:2221/CharacterService?wsdl để xử lý các bài toán về chuỗi và ký tự. 
+ * Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với CharacterService thực hiện các công việc 
+ * sau: a. Triệu gọi phương thức requestCharacter với tham số đầu vào là mã sinh viên (studentCode) 
+ * và mã câu hỏi (qCode) để nhận về một danh sách ký tự (List) từ server. 
+ * b. Thực hiện xoay vòng các ký tự trong danh sách theo chiều phải, số lần xoay vòng bằng đúng giá trị nguyên 
+ * trong bảng mã ASCII của ký tự đầu tiên. 
+ * c. Triệu gọi phương thức submitCharacterCharArray(String studentCode, String qCode, List data) để gửi mảng ký tự đã xoay vòng trở lại server. 
+ * Ví dụ: Nếu mảng ký tự nhận được từ phương thức requestCharacter là ['a', 'b', 'c', 'd'], 
+ * giá trị nguyên của ký tự 'a' trong bảng mã ASCII là 97, thực hiện xoay vòng phải 97 lần sẽ trả lại 
+ * mảng ['d', 'a', 'b', 'c']. Mảng này sẽ được gửi lại server qua phương thức submitCharacterCharArray. 
+ * d. Kết thúc chương trình client.
+ */
+import java.util.Collections;
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.CharacterService;
+
+public class XoayVongKyTu {
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN900";
+        String qCode = "dPNaMya0";
+
+        CharacterService cs = new CharacterService();
+
+        List<Integer> list
+                = cs.getSoapCharacterServicePort()
+                        .requestCharacter(studentCode, qCode);
+
+        // Số lần xoay = ASCII của phần tử đầu tiên
+        int k = list.get(0) % list.size();
+
+        // Xoay phải
+        Collections.rotate(list, k);
+
+        // Gửi lại server
+        cs.getSoapCharacterServicePort()
+                .submitCharacterCharArray(studentCode, qCode, list);
+
+        System.out.println(list);
+    }
+}
+/**
+Một dịch vụ web (hỗ trợ SOAP version 1.1) được định nghĩa và mô tả trong tệp CharacterService.wsdl, 
+* được triển khai trên server tại URL http://:2221/CharacterService?wsdl để xử lý các bài toán về chuỗi và ký tự. 
+* Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với CharacterService thực hiện các công việc 
+* sau: a. Triệu gọi phương thức requestStringArray với tham số đầu vào là mã sinh viên (studentCode) và
+* mã câu hỏi (qCode) để nhận về một danh sách chuỗi (List) từ server. 
+* b. Phân loại các từ trong mảng chuỗi thành các nhóm có cùng số lượng nguyên âm. 
+* Tạo một chuỗi cho mỗi nhóm, trong đó liệt kê các từ cách nhau bằng dấu phẩy, 
+* và sắp xếp các từ theo thứ tự từ điển trong mỗi nhóm. 
+* c. Triệu gọi phương thức submitCharacterStringArray(String studentCode, String qCode, List data) để gửi 
+* danh sách chuỗi kết quả trở lại server, trong đó mỗi phần tử là một nhóm từ với cùng số lượng nguyên âm. 
+* Ví dụ: Nếu danh sách chuỗi nhận được từ phương thức requestCharacter là 
+* ["apple", "banana", "pear", "grape", "kiwi"], các nhóm có thể là: • Nhóm 2 nguyên âm: "apple, banana" •
+* Nhóm 1 nguyên âm: "grape, kiwi, pear" Danh sách kết quả sẽ là ["apple, banana", "grape, kiwi, pear"],
+* và danh sách này sẽ được gửi lại server qua phương thức submitCharacter. d. Kết thúc chương trình client.
+ */
+
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.CharacterService;
+
+public class NhomTuTheoNguyenAm {
+
+    // Hàm đếm số nguyên âm
+    public static int demNguyenAm(String s) {
+        int dem = 0;
+        s = s.toLowerCase();
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == 'a' || c == 'e' || c == 'i'
+                    || c == 'o' || c == 'u') {
+                dem++;
+            }
+        }
+
+        return dem;
+    }
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN900";
+        String qCode = "kNTfsjX9";
+
+        CharacterService cs = new CharacterService();
+
+        // Lấy danh sách chuỗi
+        List<String> list = cs.getSoapCharacterServicePort()
+                              .requestStringArray(studentCode, qCode);
+
+        // Sắp xếp theo:
+        // 1. Số nguyên âm tăng dần
+        // 2. Nếu bằng nhau thì theo từ điển
+        Collections.sort(list, new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+
+                int c1 = demNguyenAm(s1);
+                int c2 = demNguyenAm(s2);
+
+                if (c1 != c2)
+                    return c1 - c2;
+
+                return s1.compareTo(s2);
+            }
+        });
+
+        // Ghép các từ có cùng số nguyên âm
+        List<String> result = new ArrayList<>();
+
+        String group = list.get(0);
+
+        for (int i = 1; i < list.size(); i++) {
+
+            if (demNguyenAm(list.get(i))
+                    == demNguyenAm(list.get(i - 1))) {
+
+                // Không có khoảng trắng sau dấu phẩy
+                group += "," + list.get(i);
+
+            } else {
+
+                result.add(group);
+                group = list.get(i);
+
+            }
+        }
+
+        result.add(group);
+
+        // Gửi kết quả
+        cs.getSoapCharacterServicePort()
+          .submitCharacterStringArray(studentCode, qCode, result);
+
+        System.out.println(result);
+    }
+}
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package WebService;
+
+/**
+BÀI 1. PHÂN TÍCH RA THỪA SỐ NGUYÊN TỐ
+[Mã câu hỏi (qCode): TwZpbqUg].  Một dịch vụ web được định nghĩa và mô tả trong tệp DataService?wsdl, được triển khai trên server tại URL http://<Exam_IP>:8080/JNPWS/DataService?wsdl để xử lý các bài toán với dữ liệu nguyên thủy.
+Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với DataService thực hiện các công việc sau:
+a. Triệu gọi phương thức getData với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một danh sách số nguyên (List<Integer>) từ server.
+b. Thực hiện phân tích số nguyên nhận được thành các thừa số nguyên tố của nó và lưu các thừa số này vào một chuỗi kết quả.
+c. Triệu gọi phương thức submitDataStringArray(String studentCode, String qCode, List<String> data) để gửi danh sách chuỗi các thừa số nguyên tố đã tính được trở lại server.
+Ví dụ: Nếu số nguyên trong danh sách là 28  sẽ phân tích thành các thừa số nguyên tố "2, 2, 7". Chương trình client thực hiện với từng số nguyên trong danh sách và và gửi danh sách chuỗi kết quả cho từng số này trở lại server qua phương thức submitDataStringArray.
+d. Kết thúc chương trình client.
+
+ */
+
+import java.util.ArrayList;
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.DataService;
+
+public class PhanTichRaThuaSoNguyenTo {
+
+    public static String phanTich(int n) {
+
+        List<String> list = new ArrayList<>();
+
+        for (int i = 2; i * i <= n; i++) {
+
+            while (n % i == 0) {
+                list.add(String.valueOf(i));
+                n /= i;
+            }
+
+        }
+
+        if (n > 1)
+            list.add(String.valueOf(n));
+
+        return String.join(",", list);
+    }
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN001";
+        String qCode = "TwZpbqUg";
+
+        DataService ds = new DataService();
+
+        List<Integer> numbers =
+                ds.getSoapDataServicePort()
+                  .getData(studentCode, qCode);
+
+        List<String> result = new ArrayList<>();
+
+        for (Integer x : numbers) {
+            result.add(phanTich(x));
+        }
+
+        ds.getSoapDataServicePort()
+          .submitDataStringArray(studentCode, qCode, result);
+
+        System.out.println(result);
+
+    }
+
+}
+/*
+BÀI 2. SẮP XẾP CHUỖI THEO SỐ NGUYÊN ÂM
+[Mã câu hỏi (qCode): mDN1MFUJ]. Một dịch vụ web được định nghĩa và mô tả trong tệp CharacterService.wsdl, được triển khai trên server tại URL http://<Exam_IP>:8080/JNPWS/CharacterService?wsdl để xử lý các bài toán về chuỗi và ký tự.
+Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với CharacterService thực hiện các công việc sau:
+a.	Triệu gọi phương thức requestStringArray với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một mảng chuỗi (List<String>) từ server.
+b.	Sắp xếp các chuỗi trong mảng theo số lượng nguyên âm tăng dần. Nếu hai chuỗi có cùng số lượng nguyên âm, giữ nguyên thứ tự xuất hiện ban đầu của chúng trong mảng.
+c.	Triệu gọi phương thức submitCharacterStringArray(String studentCode, String qCode, List<String> data) để gửi mảng chuỗi đã sắp xếp trở lại server.
+Ví dụ: Nếu mảng chuỗi nhận được từ phương thức requestCharacter là ["apple", "kiwi", "banana", "pear"], số lượng nguyên âm trong các từ là:
+•	"apple" có 2 nguyên âm
+•	"kiwi" có 2 nguyên âm
+•	"pear" có 2 nguyên âm
+•	"banana" có 3 nguyên âm
+Sau khi sắp xếp theo số lượng nguyên âm tăng dần, kết quả sẽ là ["apple", "kiwi", "pear", "banana"]. Mảng này sẽ được gửi lại server qua phương thức submitCharacter.
+d.	Kết thúc chương trình client.
+
+*/
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.CharacterService;
+
+public class SapXepChuoiTheoSoNguyenAm {
+
+    public static int demNguyenAm(String s) {
+
+        int dem = 0;
+
+        s = s.toLowerCase();
+
+        for (int i = 0; i < s.length(); i++) {
+
+            char c = s.charAt(i);
+
+            if (c == 'a' || c == 'e' || c == 'i'
+                    || c == 'o' || c == 'u') {
+
+                dem++;
+
+            }
+
+        }
+
+        return dem;
+
+    }
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN001";
+        String qCode = "mDN1MFUJ";
+
+        CharacterService cs = new CharacterService();
+
+        List<String> list = cs.getSoapCharacterServicePort()
+                              .requestStringArray(studentCode, qCode);
+
+        Collections.sort(list, new Comparator<String>() {
+
+            @Override
+            public int compare(String s1, String s2) {
+
+                return demNguyenAm(s1) - demNguyenAm(s2);
+
+            }
+
+        });
+
+        cs.getSoapCharacterServicePort()
+          .submitCharacterStringArray(studentCode, qCode, list);
+
+        System.out.println(list);
+
+    }
+
+}
+/*
+BÀI 1. ĐẾM SỐ LẦN XUẤT HIỆN
+[Mã câu hỏi (qCode): TU4ULIgh].  Một dịch vụ web được định nghĩa và mô tả trong tệp DataService?wsdl, được triển khai trên server tại URL http://<Exam_IP>:8080/JNPWS/DataService?wsdl để xử lý các bài toán với dữ liệu nguyên thủy.
+Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với DataService thực hiện các công việc sau:
+a. Triệu gọi phương thức getData với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một danh sách số nguyên (List<Integer>) từ server.
+b. Với mảng số nguyên nhận được, thực hiện đếm số lần xuất hiện của từng phần tử trong mảng và lưu kết quả vào một chuỗi theo định dạng: giá trị của phần tử, số lần xuất hiện tương ứng của nó.
+c. Triệu gọi phương thức submitDataStringArray(String studentCode, String qCode, List<String> data) để gửi danh sách chuỗi kết quả chứa cặp giá trị [phần tử, tần suất] của từng phần tử đã tính được trở lại server.
+Ví dụ: Nếu mảng số nguyên nhận được từ phương thức getData là [1, 2, 2, 3, 3, 3], kết quả tần suất sẽ là ["1, 1", "2, 2", "3, 3"], và danh sách kết quả này sẽ được gửi lại server qua phương thức submitDataStringArray.
+d. Kết thúc chương trình client.
+
+*/
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import ptit.dblab.judge.network.server.soap.DataService;
+
+public class DemSoLanXuatHien {
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN001";
+        String qCode = "TU4ULIgh";
+
+        DataService ds = new DataService();
+
+        List<Integer> list = ds.getSoapDataServicePort()
+                               .getData(studentCode, qCode);
+
+        // Đếm tần suất
+        Map<Integer, Integer> map = new LinkedHashMap<>();
+
+        for (Integer x : list) {
+            map.put(x, map.getOrDefault(x, 0) + 1);
+        }
+
+        // Tạo kết quả
+        List<String> result = new ArrayList<>();
+
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            result.add(entry.getKey() + "," + entry.getValue());
+        }
+
+        // Gửi lên server
+        ds.getSoapDataServicePort()
+          .submitDataStringArray(studentCode, qCode, result);
+
+        System.out.println(result);
+    }
+}
+
+/*
+BÀI 1. PHẦN TỬ LỚN THỨ K VÀ NHỎ THỨ K
+[Mã câu hỏi (qCode): WpaUTFMu].	Một dịch vụ web được định nghĩa và mô tả trong tệp DataService?wsdl,	được	triển	khai	trên	server	tại	URL http://<Exam_IP>:8080/JNPWS/DataService?wsdl để xử lý các bài toán với dữ liệu nguyên thủy. Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với DataService thực hiện các công việc sau:
+a.	Triệu gọi phương thức getData với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một mảng số nguyên (List<Integer>) từ server. Phần tử đầu tiên của mảng này là giá trị K.
+b.	Với mảng số nguyên nhận được, sử dụng giá trị K (phần tử đầu tiên của mảng) để xác định phần tử lớn thứ K và nhỏ thứ K trong các phần tử còn lại của mảng (loại bỏ phần tử đầu tiên khi tính toán).
+c.	Triệu gọi phương thức submitDataIntArray(String studentCode, String qCode, List<Integer> data) để gửi mảng kết quả chứa: phần tử lớn thứ K, phần tử nhỏ thứ K đã tìm được trở lại server.
+Ví dụ: Nếu mảng số nguyên nhận được từ phương thức getData là [3, 5, 1, 4, 2], giá trị K là 3. Chương trình client sẽ tìm phần tử lớn thứ 3 và nhỏ thứ 3 trong mảng [3, 5, 1, 4, 2], kết quả là mảng [2, 4] và gửi kết quả này trở lại server qua phương thức submitData.
+d.	Kết thúc chương trình client.
+
+*/
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.DataService;
+
+public class LonThuKNhoThuK {
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN001";
+        String qCode = "WpaUTFMu";
+
+        DataService ds = new DataService();
+
+        List<Integer> list =
+                ds.getSoapDataServicePort()
+                  .getData(studentCode, qCode);
+
+        int k = list.get(0);
+
+        list.remove(0);
+
+        Collections.sort(list);
+
+        List<Integer> result = new ArrayList<>();
+
+        result.add(list.get(list.size() - k)); // lớn thứ K
+
+        result.add(list.get(k - 1));           // nhỏ thứ K
+
+        ds.getSoapDataServicePort()
+          .submitDataIntArray(studentCode, qCode, result);
+
+        System.out.println(result);
+    }
+
+}
+/*
+BÀI 2. SẮP XẾP CHUỖI THEO ĐỘ DÀI CHUỖI
+[Mã câu hỏi (qCode): mpu9xCxR]. Một dịch vụ web được định nghĩa và mô tả trong tệp CharacterService.wsdl, được triển khai trên server tại URL http://<Exam_IP>:8080/JNPWS/CharacterService?wsdl để xử lý các bài toán về chuỗi và ký tự.
+Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với CharacterService thực hiện các công việc sau:
+a.	Triệu gọi phương thức requestStringArray với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một mảng chuỗi (List<String>) từ server.
+b.	Sắp xếp mảng theo độ dài của từ theo thứ tự tăng dần độ dài của từ.
+c.	Triệu gọi phương thức submitCharacterStringArray(String studentCode, String qCode, List<String>) để gửi mảng chuỗi đã sắp xếp trở lại server.
+Ví dụ: Nếu mảng chuỗi nhận được từ phương thức requestCharacter là ["apple", "banana", "fig", "pineapple"] mảng sắp xếp tăng dần theo độ dài sẽ là ["fig", "apple", "banana", "pineapple"].
+d.	Kết thúc chương trình client.
+
+*/
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.CharacterService;
+
+public class SapXepTheoDoDai {
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN001";
+        String qCode = "mpu9xCxR";
+
+        CharacterService cs = new CharacterService();
+
+        List<String> list =
+                cs.getSoapCharacterServicePort()
+                  .requestStringArray(studentCode, qCode);
+
+        Collections.sort(list, new Comparator<String>() {
+
+            @Override
+            public int compare(String s1, String s2) {
+
+                return s1.length() - s2.length();
+
+            }
+
+        });
+
+        cs.getSoapCharacterServicePort()
+          .submitCharacterStringArray(studentCode, qCode, list);
+
+        System.out.println(list);
+
+    }
+
+}
+/*
+BÀI 1. LIỆT KÊ CÁC ƯỚC SỐ CỦA MỘT SỐ TỰ NHIÊN
+[Mã câu hỏi (qCode): nhFjYg0F].		Một dịch vụ web được định nghĩa và mô tả trong tệp DataService?wsdl,	được	triển	khai	trên	server	tại	URL http://<Exam_IP>:8080/JNPWS/DataService?wsdl để xử lý các bài toán với dữ liệu nguyên thủy. Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với DataService thực hiện các công việc sau:
+a.	Triệu gọi phương thức getDataDouble với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một số thập phân (double) từ server.
+b.	Lấy phần nguyên của số thập phân nhận được. Liệt kê tất cả các ước số của phần nguyên này và đếm số lượng ước số. Kết quả sẽ là một danh sách số nguyên, trong đó phần tử đầu tiên là số lượng ước số và các phần tử tiếp theo là các ước số theo thứ tự tăng dần.
+c.	Triệu gọi phương thức submitDataIntArray(String studentCode, String qCode, List<Integer> data) để gửi mảng kết quả chứa số lượng ước số và danh sách các ước trở lại server.
+Ví dụ: Nếu số nguyên nhận được từ phương thức getData là 12.6758, các ước số là [1, 2, 3, 4, 6, 12], tổng số lượng ước là 6, nên mảng gửi lại sẽ là [6, 1, 2, 3, 4, 6, 12].
+d.	Kết thúc chương trình client.
+
+*/
+import java.util.ArrayList;
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.DataService;
+
+public class LietKeUocSo {
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN001";
+        String qCode = "nhFjYg0F";
+
+        DataService ds = new DataService();
+
+        double x = ds.getSoapDataServicePort()
+                     .getDataDouble(studentCode, qCode);
+
+        int n = (int) x;
+
+        List<Integer> divisors = new ArrayList<>();
+
+        for (int i = 1; i <= n; i++) {
+
+            if (n % i == 0) {
+
+                divisors.add(i);
+
+            }
+
+        }
+
+        List<Integer> result = new ArrayList<>();
+
+        result.add(divisors.size());
+
+        result.addAll(divisors);
+
+        ds.getSoapDataServicePort()
+          .submitDataIntArray(studentCode, qCode, result);
+
+        System.out.println(result);
+    }
+
+}
+
+/*
+BÀI 1. TỪ DÀI NHẤT VÀ TỪ NGẮN NHẤT
+[Mã câu hỏi (qCode): 9n2rfqST]. Một dịch vụ web được định nghĩa và mô tả trong tệp CharacterService.wsdl, được triển khai trên server tại URL http://<Exam_IP>:8080/JNPWS/CharacterService?wsdl để xử lý các bài toán về chuỗi và ký tự.
+Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với CharacterService thực hiện các công việc sau:
+a.	Triệu gọi phương thức requestString với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một chuỗi (String) từ server. Chuỗi này có thể chứa các từ và khoảng trắng.
+b.	Xử lý chuỗi nhận được để tìm từ có độ dài lớn nhất và từ có độ dài nhỏ nhất trong chuỗi. Nếu có nhiều từ có cùng độ dài lớn nhất hoặc nhỏ nhất, chọn từ xuất hiện đầu tiên trong chuỗi.
+c.	Tạo một chuỗi mới theo định dạng: "[từ lớn nhất]; [từ nhỏ nhất]".
+d.	Triệu gọi phương thức submitCharacterString(String studentCode, String qCode, String data) để gửi chuỗi kết quả đã xử lý trở lại server.
+Ví dụ: Nếu chuỗi nhận được từ phương thức requestCharacter là "this is a sample test", từ có độ dài lớn nhất là "sample" và từ có độ dài nhỏ nhất là "a". Chuỗi kết quả sẽ là "sample; a", và được gửi lại server qua phương thức submitCharacter.
+e.	Kết thúc chương trình client.
+
+*/
+import ptit.dblab.judge.network.server.soap.CharacterService;
+
+public class TuDaiNhatVaNganNhat {
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN001";
+        String qCode = "9n2rfqST";
+
+        CharacterService cs = new CharacterService();
+
+        String s = cs.getSoapCharacterServicePort()
+                     .requestString(studentCode, qCode);
+
+        String[] words = s.trim().split("\\s+");
+
+        String maxWord = words[0];
+        String minWord = words[0];
+
+        for (String word : words) {
+
+            if (word.length() > maxWord.length()) {
+                maxWord = word;
+            }
+
+            if (word.length() < minWord.length()) {
+                minWord = word;
+            }
+
+        }
+
+        String result = maxWord + "; " + minWord;
+
+        cs.getSoapCharacterServicePort()
+          .submitCharacterString(studentCode, qCode, result);
+
+        System.out.println(result);
+    }
+}
+/*
+BÀI 2. CHUẨN HOÁ CHUỖI
+[Mã câu hỏi (qCode): sBQjqANT]. Một dịch vụ web được định nghĩa và mô tả trong tệp CharacterService.wsdl, được triển khai trên server tại URL http://<Exam_IP>:8080/JNPWS/CharacterService?wsdl để xử lý các bài toán về chuỗi và ký tự.
+Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với CharacterService thực hiện các công việc sau:
+a.	Triệu gọi phương thức requestString với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một chuỗi (String) từ server. Chuỗi có thể chứa các từ được phân tách bằng dấu cách hoặc dấu gạch dưới.
+b.	Chuyển đổi chuỗi đã nhận được sang ba định dạng khác nhau:
+•	PascalCase: Mỗi từ bắt đầu bằng chữ in hoa, không có khoảng cách giữa các từ.
+•	camelCase: Từ đầu tiên viết thường, các từ tiếp theo viết hoa chữ cái đầu và viết liền nhau.
+•	snake_case: Các từ được viết thường và nối với nhau bằng dấu gạch dưới.
+c.	Triệu gọi phương thức submitCharacterStringArray(String studentCode, String qCode, List<String>) để gửi mảng kết quả chứa ba chuỗi đã định dạng trở lại server, theo thứ tự: PascalCase, camelCase, snake_case.
+Ví dụ: Nếu chuỗi nhận được từ phương thức requestCharacter là "hello world example", các chuỗi kết quả sẽ là:
+•	PascalCase: "HelloWorldExample"
+•	camelCase: "helloWorldExample"
+•	snake_case: "hello_world_example"
+Mảng kết quả sẽ là ["HelloWorldExample", "helloWorldExample", "hello_world_example"], và sẽ được gửi lại server qua phương thức submitCharacter.
+d.	Kết thúc chương trình client.
+*/
+import java.util.ArrayList;
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.CharacterService;
+
+public class ChuanHoaChuoi {
+
+    public static String vietHoa(String s){
+
+        s = s.toLowerCase();
+
+        return Character.toUpperCase(s.charAt(0))
+                + s.substring(1);
+
+    }
+
+    public static void main(String[] args) {
+
+        String studentCode="B21DCCN001";
+        String qCode="sBQjqANT";
+
+        CharacterService cs=new CharacterService();
+
+        String s=cs.getSoapCharacterServicePort()
+                .requestString(studentCode,qCode);
+
+        String[] words=s.trim().split("[\\s_]+");
+
+        String pascal="";
+
+        for(String w:words){
+
+            pascal+=vietHoa(w);
+
+        }
+
+        String camel=words[0].toLowerCase();
+
+        for(int i=1;i<words.length;i++){
+
+            camel+=vietHoa(words[i]);
+
+        }
+
+        String snake="";
+
+        for(int i=0;i<words.length;i++){
+
+            if(i>0) snake+="_";
+
+            snake+=words[i].toLowerCase();
+
+        }
+
+        List<String> result=new ArrayList<>();
+
+        result.add(pascal);
+        result.add(camel);
+        result.add(snake);
+
+        cs.getSoapCharacterServicePort()
+                .submitCharacterStringArray(studentCode,qCode,result);
+
+        System.out.println(result);
+
+    }
+
+}
+/*
+ĐỀ SỐ 7 [B21DCCN008]
+BÀI 1. LỌC KÝ TỰ
+[Mã câu hỏi (qCode): rT6Ql5GH]. Một dịch vụ web được định nghĩa và mô tả trong tệp CharacterService.wsdl, được triển khai trên server tại URL http://<Exam_IP>:8080/JNPWS/CharacterService?wsdl để xử lý các bài toán về chuỗi và ký tự.
+Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với CharacterService thực hiện các công việc sau:
+a.	Triệu gọi phương thức requestString với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một chuỗi (String) từ server. Chuỗi có thể chứa các ký tự đặc biệt và khoảng trắng.
+b.	Tạo một chuỗi mới từ chuỗi nhận được bằng cách:
+•	Loại bỏ tất cả các ký tự đặc biệt, số, chỉ các ký tự chữ cái.
+•	Đảo ngược chuỗi kết quả sau khi đã loại bỏ các ký tự đặc biệt.
+c.	Triệu gọi phương thức submitCharacterString(String studentCode, String qCode, String cleanedAndReversedString) để gửi chuỗi đã được làm sạch và đảo ngược trở lại server.
+Ví dụ: Nếu chuỗi nhận được từ phương thức requestCharacter là "hello@ world! 2024", sau khi loại bỏ các ký tự đặc biệt sẽ thành "helloworld", và khi đảo ngược sẽ là "dlrowolleh". Chuỗi kết quả "dlrowolleh" sẽ được gửi lại server qua phương thức submitCharacter.
+d.	Kết thúc chương trình client.
+
+*/
+import ptit.dblab.judge.network.server.soap.CharacterService;
+
+public class LocKyTu {
+
+    public static void main(String[] args) {
+
+        String studentCode="B21DCCN001";
+        String qCode="rT6Ql5GH";
+
+        CharacterService cs=new CharacterService();
+
+        String s=cs.getSoapCharacterServicePort()
+                .requestString(studentCode,qCode);
+
+        String clean=s.replaceAll("[^a-zA-Z]","");
+
+        String result=new StringBuilder(clean)
+                .reverse()
+                .toString();
+
+        cs.getSoapCharacterServicePort()
+                .submitCharacterString(studentCode,qCode,result);
+
+        System.out.println(result);
+
+    }
+
+}
+/*
+BÀI 2.     TỪ DÀI NHẤT VÀ TỪ NGẮN NHẤT – 2
+[Mã câu hỏi (qCode): sGJc3iD5].  Một dịch vụ web được định nghĩa và mô tả trong tệp CharacterService.wsdl, được triển khai trên server tại URL http://<Exam_IP>:8080/JNPWS/CharacterService?wsdl để xử lý các bài toán về chuỗi và ký tự.
+Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với CharacterService thực hiện các công việc sau:
+a. Triệu gọi phương thức requestStringArray với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một danh sách chuỗi (List<String>) từ server.
+b. Xác định từ có độ dài lớn nhất và từ có độ dài nhỏ nhất trong mảng chuỗi. Nếu có nhiều từ có cùng độ dài lớn nhất hoặc nhỏ nhất, chọn từ xuất hiện đầu tiên trong mảng.
+c. Tạo một chuỗi mới theo định dạng: "Longest; Shortest".
+d. Triệu gọi phương thức submitCharacterString(String studentCode, String qCode, String data) để gửi chuỗi kết quả đã xử lý trở lại server.
+Ví dụ: Nếu mảng chuỗi nhận được từ phương thức requestCharacter là ["apple", "banana", "fig", "pineapple"], từ có độ dài lớn nhất là "pineapple" và từ có độ dài nhỏ nhất là "fig". Chuỗi kết quả sẽ là "pineapple;fig", và được gửi lại server qua phương thức submitCharacter.
+e. Kết thúc chương trình client.
+*/
+
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.CharacterService;
+
+public class TuDaiNhatVaNganNhat2 {
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN001";
+        String qCode = "sGJc3iD5";
+
+        CharacterService cs = new CharacterService();
+
+        List<String> list = cs.getSoapCharacterServicePort()
+                              .requestStringArray(studentCode, qCode);
+
+        String longest = list.get(0);
+        String shortest = list.get(0);
+
+        for (String s : list) {
+
+            if (s.length() > longest.length()) {
+                longest = s;
+            }
+
+            if (s.length() < shortest.length()) {
+                shortest = s;
+            }
+
+        }
+
+        String result = longest + ";" + shortest;
+
+        cs.getSoapCharacterServicePort()
+          .submitCharacterString(studentCode, qCode, result);
+
+        System.out.println(result);
+
+    }
+
+}
+/*
+ĐỀ SỐ 9 [B21DCCN011]
+BÀI 1. CHUYỂN ĐỔI SỐ THẬP PHÂN SANG PHÂN SỐ
+[Mã câu hỏi (qCode): ny8Fb8BU].		Một dịch vụ web được định nghĩa và mô tả trong tệp DataService?wsdl,	được	triển	khai	trên	server	tại	URL http://<Exam_IP>:8080/JNPWS/DataService?wsdl để xử lý các bài toán với dữ liệu nguyên thủy. Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với DataService thực hiện các công việc sau:
+a.	Triệu gọi phương thức getDataDouble với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một số thập phân (double) từ server.
+b.	Chuyển đổi số thập phân nhận được thành phân số đơn giản nhất, biểu diễn dưới dạng tử số và mẫu số nguyên (List<Integer>) với phần tử đầu tiên là tử số và phần tử thứ hai là mẫu số.
+c.	Triệu gọi phương thức submitDataIntArray(String studentCode, String qCode, List<Integer> data) để gửi phân số đơn giản nhất đã chuyển đổi trở lại server.
+Ví dụ: Nếu số thập phân nhận được từ phương thức getData là 0.75, chương trình client sẽ chuyển đổi thành phân số đơn giản nhất là [3, 4], và gửi mảng [3, 4] trở lại server qua phương thức submitData.
+d.	Kết thúc chương trình client.
+
+*/
+import java.util.ArrayList;
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.DataService;
+
+public class DecimalToFraction {
+
+    public static int gcd(int a, int b) {
+
+        while (b != 0) {
+
+            int t = a % b;
+            a = b;
+            b = t;
+
+        }
+
+        return a;
+    }
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN001";
+        String qCode = "ny8Fb8BU";
+
+        DataService ds = new DataService();
+
+        double x = ds.getSoapDataServicePort()
+                     .getDataDouble(studentCode, qCode);
+
+        String s = String.valueOf(x);
+
+        int digits = s.length() - s.indexOf('.') - 1;
+
+        int denominator = 1;
+
+        for (int i = 0; i < digits; i++) {
+            denominator *= 10;
+        }
+
+        int numerator = (int) Math.round(x * denominator);
+
+        int g = gcd(Math.abs(numerator), denominator);
+
+        numerator /= g;
+        denominator /= g;
+
+        List<Integer> result = new ArrayList<>();
+
+        result.add(numerator);
+        result.add(denominator);
+
+        ds.getSoapDataServicePort()
+          .submitDataIntArray(studentCode, qCode, result);
+
+        System.out.println(result);
+
+    }
+
+}
+/*
+BÀI 1. CHUYỂN ĐỔI THẬP PHÂN SANG NHỊ PHÂN
+[Mã câu hỏi (qCode): 2jS1DTpU].		Một dịch vụ web được định nghĩa và mô tả trong tệp DataService?wsdl,	được	triển	khai	trên	server	tại	URL http://<Exam_IP>:8080/JNPWS/DataService?wsdl để xử lý các bài toán với dữ liệu nguyên thủy. Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với DataService thực hiện các công việc sau:
+a.	Triệu gọi phương thức getData với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một mảng số nguyên (List<Integer>) từ server.
+b.	Chuyển đổi số nguyên nhận được từ hệ thập phân sang hệ nhị phân và biểu diễn kết quả dưới dạng chuỗi nhị phân.
+c.	Triệu gọi phương thức submitDataStringArray(String studentCode, String qCode, List<String> data) để gửi chuỗi nhị phân đã chuyển đổi trở lại server.
+Ví dụ: Nếu mỗi số nguyên nhận được từ phương thức getData, chương trình client sẽ chuyển đổi sang chuỗi nhị phân là "1010", và gửi mảng chuỗi này trở lại server qua phương thức submitData.
+d.	Kết thúc chương trình client.
+
+*/
+import java.util.ArrayList;
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.DataService;
+
+public class ChuyenThapPhanSangNhiPhan {
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN001";
+        String qCode = "2jS1DTpU";
+
+        DataService ds = new DataService();
+
+        List<Integer> list = ds.getSoapDataServicePort()
+                               .getData(studentCode, qCode);
+
+        List<String> result = new ArrayList<>();
+
+        for (Integer n : list) {
+
+            result.add(Integer.toBinaryString(n));
+
+        }
+
+        ds.getSoapDataServicePort()
+          .submitDataStringArray(studentCode, qCode, result);
+
+        System.out.println(result);
+
+    }
+
+}
+/*
+BÀI 1. HỆ CƠ SỐ 8 VÀ 16
+[Mã câu hỏi (qCode): QBDJ1GGL].	Một dịch vụ web được định nghĩa và mô tả trong tệp DataService?wsdl,	được	triển	khai	trên	server	tại	URL http://<Exam_IP>:8080/JNPWS/DataService?wsdl để xử lý các bài toán với dữ liệu nguyên thủy. Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với DataService thực hiện các công việc sau:
+a.	Triệu gọi phương thức getData với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một danh sách số nguyên (List<Integer>) từ server.
+b.	Chuyển đổi số nguyên nhận được từ hệ thập phân sang cả hệ cơ số 8 (bát phân) và hệ cơ số 16 (thập lục phân). Biểu diễn kết quả dưới dạng chuỗi cho mỗi hệ cơ số.
+c.	Triệu gọi phương thức submitDataStringArray(String studentCode, String qCode, List<String> data) để gửi danh sách chuỗi kết quả. Trong đó: Mỗi phần tử là chuỗi kết hợp giữa kết quả chuyển đổi sang hệ cơ số 8 và chuỗi kết quả chuyển đổi sang hệ cơ số 16.
+Ví dụ: Nếu số nguyên nhận được là 64 thì:
+    Chuyển đổi sang hệ cơ số 8, tạo thành chuỗi "100".
+    Chuyển đổi sang hệ cơ số 16, tạo thành chuỗi "40".
+-> Chuỗi kết quả tương ứng sẽ là "100|40". Chương trình client thực hiện lần lượt và gửi danh sách chuỗi này trở lại server qua phương thức submitDataStringArray.
+d.	Kết thúc chương trình client.
+Bài này chú ý là in ra hệ hexa phải viết hoa
+*/
+import java.util.ArrayList;
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.DataService;
+
+public class HeCoSo8Va16 {
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN001";
+        String qCode = "QBDJ1GGL";
+
+        DataService ds = new DataService();
+
+        List<Integer> list = ds.getSoapDataServicePort()
+                               .getData(studentCode, qCode);
+
+        List<String> result = new ArrayList<>();
+
+        for (Integer n : list) {
+
+            String oct = Integer.toOctalString(n);
+
+            String hex = Integer.toHexString(n).toUpperCase();
+
+            result.add(oct + "|" + hex);
+
+        }
+
+        ds.getSoapDataServicePort()
+          .submitDataStringArray(studentCode, qCode, result);
+
+        System.out.println(result);
+
+    }
+
+}
+/*
+ĐỀ SỐ 15 [B21DCCN033]
+BÀI 1. LOẠI BỎ SỐ TRÙNG NHAU
+[Mã câu hỏi (qCode): E2Axwwf3].		Một dịch vụ web được định nghĩa và mô tả trong tệp DataService?wsdl,	được	triển	khai	trên	server	tại	URL http://<Exam_IP>:8080/JNPWS/DataService?wsdl để xử lý các bài toán với dữ liệu nguyên thủy. Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với DataService thực hiện các công việc sau:
+a.	Triệu gọi phương thức getData với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một danh sách số nguyên (List<Integer>) từ server.
+b.	Với mảng số nguyên nhận được, xóa tất cả các phần tử trùng lặp, giữ lại lần xuất hiện đầu tiên của mỗi phần tử. Mảng kết quả sẽ chỉ chứa các phần tử duy nhất theo thứ tự xuất hiện ban đầu.
+c.	Triệu gọi phương thức submitDataIntArray(String studentCode, String qCode, List<Integer> data) để gửi mảng kết quả đã loại bỏ các phần tử trùng lặp trở lại server.
+Ví dụ: Nếu mảng số nguyên nhận được từ phương thức getData là [1, 2, 2, 3, 4, 3, 5], mảng kết quả sau khi loại bỏ phần tử trùng lặp là [1, 2, 3, 4, 5]. Mảng này sẽ được gửi lại server qua phương thức submitData.
+d.	Kết thúc chương trình client.
+*/
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.DataService;
+
+public class LoaiBoSoTrungNhau {
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN001";
+        String qCode = "E2Axwwf3";
+
+        DataService ds = new DataService();
+
+        List<Integer> list = ds.getSoapDataServicePort()
+                               .getData(studentCode, qCode);
+
+        LinkedHashSet<Integer> set = new LinkedHashSet<>(list);
+
+        List<Integer> result = new ArrayList<>(set);
+
+        ds.getSoapDataServicePort()
+          .submitDataIntArray(studentCode, qCode, result);
+
+        System.out.println(result);
+
+    }
+
+}
+/*
+BÀI 1. TỔNG CÁC SỐ TRONG MẢNG
+[Mã câu hỏi (qCode): hnVAHv3I].		Một dịch vụ web được định nghĩa và mô tả trong tệp DataService?wsdl,	được	triển	khai	trên	server	tại	URL http://<Exam_IP>:8080/JNPWS/DataService?wsdl để xử lý các bài toán với dữ liệu nguyên thủy. Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với DataService thực hiện các công việc sau:
+a.	Triệu gọi phương thức getData với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một mảng số nguyên (List<Integer>) từ server.
+b.	Thực hiện tính toán tổng của tất cả các phần tử trong mảng số nguyên nhận được.
+c.	Triệu gọi phương thức submitDataInt(String studentCode, String qCode, int data) để gửi kết quả tổng đã tính được trở lại server.
+Ví dụ: Nếu mảng số nguyên nhận được từ phương thức getData là [1, 2, 3, 4, 5], chương trình client sẽ tính tổng là 15 và gửi kết quả này trở lại server qua phương thức submitData
+d.	Kết thúc chương trình client.
+
+*/
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.DataService;
+
+public class TongCacSoTrongMang {
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN001";
+        String qCode = "hnVAHv3I";
+
+        DataService ds = new DataService();
+
+        List<Integer> list = ds.getSoapDataServicePort()
+                               .getData(studentCode, qCode);
+
+        int sum = 0;
+
+        for (Integer x : list) {
+
+            sum += x;
+
+        }
+
+        ds.getSoapDataServicePort()
+          .submitDataInt(studentCode, qCode, sum);
+
+        System.out.println(sum);
+
+    }
+
+}
+/*
+BÀI 1. SẮP XẾP CHẴN LẺ
+[Mã câu hỏi (qCode): 0BEtJAT9].		Một dịch vụ web được định nghĩa và mô tả trong tệp DataService?wsdl,	được	triển	khai	trên	server	tại	URL http://<Exam_IP>:8080/JNPWS/DataService?wsdl để xử lý các bài toán với dữ liệu nguyên thủy. Yêu cầu: Viết chương trình tại máy trạm (WS client) để giao tiếp với DataService thực hiện các công việc sau:
+a.	Triệu gọi phương thức getData với tham số đầu vào là mã sinh viên (studentCode) và mã câu hỏi (qCode) để nhận về một mảng số nguyên (int[]) từ server.
+b.	Sắp xếp lại mảng số nguyên nhận được sao cho phần tử chẵn và lẻ xen kẽ nhau. Nếu không thể xen kẽ đều, các phần tử còn lại sẽ nối tiếp ở cuối mảng. Đảm bảo các phần tử chẵn ở vị trí đầu tiên trong mảng sắp xếp.
+c.	Triệu gọi phương thức submitDataIntArray(String studentCode, String qCode, int[] data) để gửi mảng đã sắp xếp theo thứ tự chẵn-lẻ xen kẽ trở lại server.
+Ví dụ: Nếu mảng số nguyên nhận được từ phương thức getData là [1, 2, 3, 4, 5, 6], sau khi sắp xếp xen kẽ chẵn-lẻ, mảng kết quả sẽ là [2, 1, 4, 3, 6, 5]. Mảng này sẽ được gửi lại server qua phương thức submitData.
+d.	Kết thúc chương trình client.
+
+*/
+import java.util.ArrayList;
+import java.util.List;
+import ptit.dblab.judge.network.server.soap.DataService;
+
+public class SapXepChanLe {
+
+    public static void main(String[] args) {
+
+        String studentCode = "B21DCCN001";
+        String qCode = "0BEtJAT9";
+
+        DataService ds = new DataService();
+
+        List<Integer> list = ds.getSoapDataServicePort()
+                               .getData(studentCode, qCode);
+
+        List<Integer> chan = new ArrayList<>();
+        List<Integer> le = new ArrayList<>();
+
+        for (Integer x : list) {
+
+            if (x % 2 == 0)
+                chan.add(x);
+            else
+                le.add(x);
+
+        }
+
+        List<Integer> result = new ArrayList<>();
+
+        int i = 0;
+
+        while (i < chan.size() && i < le.size()) {
+
+            result.add(chan.get(i));
+            result.add(le.get(i));
+
+            i++;
+        }
+
+        while (i < chan.size()) {
+
+            result.add(chan.get(i));
+            i++;
+
+        }
+
+        while (i < le.size()) {
+
+            result.add(le.get(i));
+            i++;
+
+        }
+
+        ds.getSoapDataServicePort()
+          .submitDataIntArray(studentCode, qCode, result);
+
+        System.out.println(result);
+
+    }
+
 }
